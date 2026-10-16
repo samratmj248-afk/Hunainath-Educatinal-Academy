@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Header Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-landmark"></i> Our Legacy & Mission
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">About Shree Hunainath Educational Academy</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            Nurturing curious minds, moral fortitude, and foundational excellence from Early Childhood Development to Grade 8 in Garjamuni, Sudurpashchim.
+        </p>
+    </div>
+</section>
+
+<!-- About Details & Story -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <span class="section-tag"><i class="fas fa-landmark text-warning"></i> Institutional Identity</span>
+                <h2 class="section-title">An Academy Dedicated to Child-Centered Growth</h2>
+                <div class="text-muted" style="line-height: 1.8;">
+                    {{ school.about_text|linebreaks }}
+                </div>
+                <div class="d-flex gap-4 mt-4 pt-2 flex-wrap">
+                    <div class="border-start border-warning border-4 ps-3">
+                        <h4 class="fw-bold mb-0 text-dark">{{ school.established_year|default:"2008" }}</h4>
+                        <span class="text-muted small">Established Year</span>
+                    </div>
+                    <div class="border-start border-warning border-4 ps-3">
+                        <h4 class="fw-bold mb-0 text-dark">{{ school.stats_students|default:"165" }}</h4>
+                        <span class="text-muted small">Active Students</span>
+                    </div>
+                    <div class="border-start border-success border-4 ps-3">
+                        <h4 class="fw-bold mb-0 text-dark">{{ school.stats_faculty|default:"16" }}+</h4>
+                        <span class="text-muted small">Caring Educators</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="position-relative rounded-4 overflow-hidden shadow-lg border border-warning" style="height: 380px;">
+                    <img src="/media/gallery/hunainath_students_outdoor.webp" alt="Shree Hunainath Educational Academy Students" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    <div class="position-absolute bottom-0 start-0 m-3 p-3 bg-white rounded-3 shadow-md border border-warning" style="max-width: 320px;">
+                        <span class="badge bg-warning text-dark mb-1">Hunainath Academy</span>
+                        <p class="small text-dark mb-0 fw-bold"><i class="fas fa-school text-warning me-1"></i> Foundational Excellence & Caring Community</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mission & Vision Cards -->
+        <div class="row g-4 my-4">
+            <div class="col-md-6">
+                <div class="p-4 rounded-4 h-100 border border-2 border-warning bg-light shadow-sm">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="h4 fw-bold mb-0 text-dark">Our Mission</h3>
+                    </div>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">
+                        {{ school.mission }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-4 rounded-4 h-100 border border-2 border-warning bg-light shadow-sm">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3 class="h4 fw-bold mb-0 text-dark">Our Vision</h3>
+                    </div>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">
+                        {{ school.vision }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Educational Philosophy & Pillars of Excellence -->
+<section class="py-5" style="background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%); border-top: 1px solid #E2E8F0;">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="fas fa-heart text-danger"></i> Our Educational Creed</span>
+            <h2 class="section-title">The Four Pillars of Hunainath Academy</h2>
+            <p class="section-desc">
+                From early childhood discovery to Grade 8 board readiness, we blend moral grounding with experiential learning to build confident, joyful learners.
+            </p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 rounded-4 border h-100 shadow-sm text-center d-flex flex-column hover-lift"
+                    style="background: white; border-top: 4px solid #F59E0B !important;">
+                    <div class="rounded-circle bg-warning bg-opacity-15 text-warning mx-auto mb-3 d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fas fa-seedling fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold text-dark mb-2">Montessori ECE Wing</h3>
+                    <p class="text-muted small flex-grow-1" style="line-height: 1.7;">
+                        Gentle, play-based sensory stimulation for Nursery, LKG, and UKG that fosters self-discipline, motor coordination, and curiosity.
+                    </p>
+                    <span class="badge bg-warning text-dark fw-bold rounded-pill px-3 py-1 mt-2">Early Years Care</span>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 rounded-4 border h-100 shadow-sm text-center d-flex flex-column hover-lift"
+                    style="background: white; border-top: 4px solid #1D4ED8 !important;">
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary mx-auto mb-3 d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fas fa-brain fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold text-dark mb-2">Bilingual Excellence</h3>
+                    <p class="text-muted small flex-grow-1" style="line-height: 1.7;">
+                        Dual-stream fluency in English communication alongside deep cultural pride in the Nepali language and national ethos.
+                    </p>
+                    <span class="badge bg-primary text-white fw-bold rounded-pill px-3 py-1 mt-2">Global Readiness</span>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 rounded-4 border h-100 shadow-sm text-center d-flex flex-column hover-lift"
+                    style="background: white; border-top: 4px solid #10B981 !important;">
+                    <div class="rounded-circle bg-success bg-opacity-10 text-success mx-auto mb-3 d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px;">
+                        <i class="fas fa-microscope fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold text-dark mb-2">STEM & Hands-on Labs</h3>
+                    <p class="text-muted small flex-grow-1" style="line-height: 1.7;">
+                        Practical science discovery, digital computer literacy, and mathematical logic connecting theory to real applications.
+                    </p>
+                    <span class="badge bg-success text-white fw-bold rounded-pill px-3 py-1 mt-2">Practical Learning</span>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="p-4 rounded-4 border h-100 shadow-sm text-center d-flex flex-column hover-lift"
+                    style="background: white; border-top: 4px solid #8B5CF6 !important;">
+                    <div class="rounded-circle bg-purple bg-opacity-10 text-primary mx-auto mb-3 d-flex align-items-center justify-content-center"
+                        style="width: 60px; height: 60px; background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
+                        <i class="fas fa-trophy fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold text-dark mb-2">BLE Board Excellence</h3>
+                    <p class="text-muted small flex-grow-1" style="line-height: 1.7;">
+                        Structured model test series, personalized mentoring, and holistic preparation for Class 8 municipal board success.
+                    </p>
+                    <span class="badge text-white fw-bold rounded-pill px-3 py-1 mt-2" style="background: #8B5CF6;">100% Pass Record</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inspiring Story & Timeline Banner -->
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden"
+            style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #172554 100%); color: white;">
+            <div class="card-body p-4 p-md-5">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-7">
+                        <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-3">Our Core Philosophy</span>
+                        <h3 class="h3 fw-bold text-white mb-3 font-heading">
+                            "Where Every Child's Unique Potential Is Recognized & Nurtured"
+                        </h3>
+                        <p class="text-white-50" style="line-height: 1.8;">
+                            At Shree Hunainath Educational Academy, education extends far beyond memorization. We inspire honesty, civic empathy, digital proficiency, and creative exploration. Our teachers mentor every learner with patience, creating a safe family environment where children love coming to school every day.
+                        </p>
+                        <div class="d-flex align-items-center gap-3 pt-2 flex-wrap">
+                            <a href="{% url 'admissions' %}" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm">
+                                <i class="fas fa-user-plus me-1"></i> Enroll Your Child for 2083 B.S.
+                            </a>
+                            <a href="{% url 'contact' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold">
+                                <i class="fas fa-envelope me-1"></i> Speak with Principal Office
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="p-4 rounded-4" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);">
+                            <h4 class="h5 fw-bold text-warning mb-3"><i class="fas fa-award me-2"></i>Institutional Standards</h4>
+                            <ul class="list-unstyled text-white-50 small d-flex flex-column gap-3 mb-0" style="line-height: 1.7;">
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-check-circle text-warning mt-1"></i>
+                                    <span><strong>Government Approved:</strong> Recognized by Ministry of Education and Shuklaphanta Municipality.</span>
+                                </li>
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-check-circle text-warning mt-1"></i>
+                                    <span><strong>Complete Foundational Scope:</strong> Nursery, LKG, UKG and Grades 1 to 8 BLE.</span>
+                                </li>
+                                <li class="d-flex align-items-start gap-2">
+                                    <i class="fas fa-check-circle text-warning mt-1"></i>
+                                    <span><strong>Reliable Yellow Bus Service:</strong> Daily monitored school commute across regional routes.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Leadership Team -->
+<section class="py-5" style="background: #FAFAFA; border-top: 1px solid #E2E8F0;">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="fas fa-user-tie text-warning"></i> Academic Leadership</span>
+            <h2 class="section-title">Guiding Lights of Our Institution</h2>
+            <p class="section-desc">Led by Principal <strong>Bashu Dev Bhatt</strong> and our committed teaching coordinators.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            {% for leader in leadership %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card border shadow-sm rounded-4 overflow-hidden h-100 text-center p-4 bg-white" style="border-top: 3px solid #F59E0B !important;">
+                    <div class="mx-auto mb-3" style="width: 110px; height: 110px;">
+                        {% if leader.photo %}
+                        <img src="{{ leader.photo.url }}" alt="{{ leader.name }}" class="w-100 h-100 rounded-circle object-fit-cover shadow-sm border border-3 border-warning">
+                        {% else %}
+                        <div class="w-100 h-100 rounded-circle d-flex align-items-center justify-content-center fs-2 fw-bold shadow-sm" style="background: linear-gradient(135deg, #FDE047 0%, #F59E0B 100%); color: #0F172A; border: 2px solid #FBBF24;">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h3 class="h5 fw-bold mb-1 text-dark">{{ leader.name }}</h3>
+                    <div class="text-warning small fw-bold mb-2" style="color: #D97706 !important;">{{ leader.designation }}</div>
+                    <div class="badge bg-light text-muted border mb-3">{{ leader.qualification }}</div>
+                    <p class="text-muted small mb-0">{{ leader.bio|truncatewords:24 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

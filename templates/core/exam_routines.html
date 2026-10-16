@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Exam Routines Hero Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'academics_hub' %}" class="text-white-50">Academics</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Exam Routines</li>
+                    </ol>
+                </nav>
+                <span class="badge-header-pill mb-2"><i class="fas fa-calendar-alt text-warning me-1"></i> Official Timetables</span>
+                <h1 class="display-5 fw-bold text-white mb-2">Examination Routines & Schedules</h1>
+                <p class="text-white-50 fs-5 mb-0">Published terminal examination and board timetables for Nursery to Grade 8.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a href="{% url 'exam_results' %}" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm">
+                    <i class="fas fa-poll-h me-1"></i> Check Published Results
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Tabs -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'exam_routines' %}" class="btn btn-sm {% if not term_filter %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
+                    All Examinations
+                </a>
+                <a href="{% url 'exam_routines' %}?term=ANNUAL" class="btn btn-sm {% if term_filter == 'ANNUAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
+                    Annual / BLE Board
+                </a>
+                <a href="{% url 'exam_routines' %}?term=SECOND_TERMINAL" class="btn btn-sm {% if term_filter == 'SECOND_TERMINAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
+                    Second Terminal
+                </a>
+                <a href="{% url 'exam_routines' %}?term=FIRST_TERMINAL" class="btn btn-sm {% if term_filter == 'FIRST_TERMINAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
+                    First Terminal
+                </a>
+            </div>
+
+            <form method="GET" action="{% url 'exam_routines' %}" class="d-flex align-items-center gap-2">
+                {% if term_filter %}<input type="hidden" name="term" value="{{ term_filter }}">{% endif %}
+                <input type="text" name="grade" value="{{ grade_filter }}" placeholder="Filter by Class (e.g. 8)" class="form-control form-control-sm rounded-pill px-3" style="width: 200px;">
+                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">Filter</button>
+                {% if grade_filter or term_filter %}
+                <a href="{% url 'exam_routines' %}" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Clear Filters"><i class="fas fa-times"></i></a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Exam Routines List -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-4">
+            {% for r in routines %}
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100" style="border: 1px solid #E2E8F0 !important;">
+                    <div class="card-header bg-dark text-white p-4" style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #1E3A8A 100%) !important; border-bottom: 3px solid #F59E0B;">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-warning text-dark fw-bold px-3 py-1">{{ r.academic_year }}</span>
+                            <span class="badge bg-white bg-opacity-15 text-white fw-bold px-3 py-1 small">{{ r.get_exam_term_display }}</span>
+                        </div>
+                        <h3 class="h4 fw-bold text-white mb-1">{{ r.title }}</h3>
+                        <p class="text-white-50 small mb-0"><i class="fas fa-users-rectangle me-1 text-warning"></i> Applicable For: <strong>{{ r.grade }}</strong></p>
+                    </div>
+
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div>
+                            <!-- Date Range Banner -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-sm-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="extra-small text-muted text-uppercase fw-bold">Commencement</div>
+                                        <div class="fw-bold text-dark fs-6 mt-1"><i class="fas fa-calendar-day text-success me-1"></i> {{ r.start_date|date:"l, M d, Y" }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="extra-small text-muted text-uppercase fw-bold">Conclusion</div>
+                                        <div class="fw-bold text-dark fs-6 mt-1"><i class="fas fa-calendar-check text-danger me-1"></i> {{ r.end_date|date:"l, M d, Y" }}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Examination Hall Rules -->
+                            <h6 class="fw-bold text-dark mb-2 small"><i class="fas fa-circle-exclamation text-warning me-1"></i> Examination Hall Rules & Guidelines</h6>
+                            <div class="p-3 rounded-3 bg-light border text-muted small mb-3" style="line-height: 1.8; white-space: pre-line;">
+                                {{ r.instructions }}
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            {% if r.routine_file %}
+                            <a href="{{ r.routine_file.url }}" download class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">
+                                <i class="fas fa-download me-1 text-warning"></i> Download Timetable PDF
+                            </a>
+                            {% else %}
+                            <span class="badge bg-light text-muted border px-3 py-2 small">Full Timetable Displayed Above</span>
+                            {% endif %}
+                            <a href="{% url 'exam_results' %}?term={{ r.exam_term }}" class="text-primary text-decoration-none small fw-bold">
+                                Related Results &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-calendar-xmark text-muted fs-1 mb-3"></i>
+                <h4 class="h5 fw-bold text-dark">No Examination Routines Found</h4>
+                <p class="text-muted small">No active routine matches the selected filters. Please check back soon or browse all examinations.</p>
+                <a href="{% url 'exam_routines' %}" class="btn btn-primary rounded-pill px-4 py-2 fw-bold text-white">View All Routines</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

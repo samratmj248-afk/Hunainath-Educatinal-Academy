@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Notice Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb small mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'notices' %}" class="text-white-50">Notices</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">{{ notice.title|truncatewords:6 }}</li>
+            </ol>
+        </nav>
+        <span class="badge-header-pill mb-2">{{ notice.get_category_display }}</span>
+        <h1 class="display-6 fw-bold text-white mb-3">{{ notice.title }}</h1>
+        <div class="text-white-50 small d-flex flex-wrap gap-4 align-items-center">
+            <span><i class="far fa-calendar-alt me-1"></i> Published: {{ notice.published_at|date:"F d, Y • h:i A" }}</span>
+            <span><i class="far fa-eye me-1"></i> {{ notice.views_count }} Total Views</span>
+            <span><i class="fas fa-shield-halved me-1"></i> Official Verified Notice</span>
+        </div>
+    </div>
+</section>
+
+<!-- Notice Content & Document View -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <article class="p-4 p-md-5 bg-light rounded-4 border shadow-sm mb-4">
+                    <div class="notice-body-text fs-6 text-dark" style="line-height: 1.9;">
+                        {{ notice.content|linebreaks }}
+                    </div>
+
+                    {% if notice.attachment %}
+                    <div class="mt-5 p-4 bg-white rounded-3 border d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-file-pdf text-danger fs-1"></i>
+                            <div>
+                                <h4 class="h6 fw-bold mb-0 text-dark">Official Attachment Document</h4>
+                                <span class="text-muted extra-small">Download circular PDF / Image</span>
+                            </div>
+                        </div>
+                        <a href="{{ notice.attachment.url }}" target="_blank" download class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="fas fa-download me-2"></i> Download File
+                        </a>
+                    </div>
+                    {% endif %}
+                </article>
+
+                <div class="d-flex justify-content-between align-items-center pt-3">
+                    <a href="{% url 'notices' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
+                        &larr; Back to Notice Board
+                    </a>
+                    <button onclick="navigator.share ? navigator.share({title: '{{ notice.title|escapejs }}', url: window.location.href}) : alert('URL copied: ' + window.location.href)" class="btn btn-light border rounded-pill px-4 fw-bold text-dark">
+                        <i class="fas fa-share-nodes me-2"></i> Share Circular
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar: Recent Notices -->
+            <div class="col-lg-4">
+                <div class="p-4 bg-white rounded-4 border shadow-sm mb-4">
+                    <h3 class="h6 fw-bold text-dark mb-3 border-bottom pb-2">Recent Circulars</h3>
+                    <ul class="list-unstyled mb-0">
+                        {% for r in related_notices %}
+                        <li class="mb-3 pb-2 border-bottom">
+                            <span class="badge bg-light text-muted border extra-small mb-1">{{ r.get_category_display }}</span>
+                            <a href="{% url 'notice_detail' r.slug %}" class="d-block fw-semibold text-dark text-decoration-none small">
+                                {{ r.title }}
+                            </a>
+                            <span class="text-muted extra-small">{{ r.published_at|date:"M d, Y" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="p-4 rounded-4 bg-primary text-white shadow-sm">
+                    <h4 class="h6 fw-bold text-white mb-2"><i class="fas fa-bell me-2"></i>Stay Notified Instantly</h4>
+                    <p class="small text-white-50 mb-3">Enable web push notifications to get new exam schedules and results on your phone.</p>
+                    <button onclick="togglePushNotifications()" class="btn btn-warning rounded-pill w-100 fw-bold text-dark btn-sm">
+                        Turn On Push Alerts
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

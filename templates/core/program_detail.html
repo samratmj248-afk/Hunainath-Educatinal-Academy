@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Detail Hero Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'programs' %}" class="text-white-50">Programs</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">{{ program.title }}</li>
+                    </ol>
+                </nav>
+                <span class="badge-header-pill mb-2">{{ program.get_level_display }}</span>
+                <h1 class="display-5 fw-bold text-white mb-2">{{ program.title }}</h1>
+                <p class="text-white-50 fs-5 mb-0">{{ program.grade_span }}</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a href="{% url 'admissions' %}?grade={{ program.grade_span|urlencode }}" class="btn btn-warning rounded-pill px-4 py-3 fw-bold text-dark shadow-sm">
+                    <i class="fas fa-file-pen me-1"></i> Apply for {{ program.title }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content & Curriculum Section -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h2 class="h4 fw-bold text-dark mb-3">Overview & Pedagogical Approach</h2>
+                    <p class="text-muted" style="line-height: 1.8; font-size: 1.05rem;">
+                        {{ program.short_summary }}
+                    </p>
+                </div>
+
+                <div class="mb-5">
+                    <h2 class="h4 fw-bold text-dark mb-3">Detailed Curriculum & Subject Modules</h2>
+                    <div class="text-muted bg-light p-4 rounded-4 border" style="line-height: 1.8;">
+                        {{ program.detailed_curriculum|linebreaks }}
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h2 class="h4 fw-bold text-dark mb-3">Program Highlights & Learning Outcomes</h2>
+                    <div class="row g-3">
+                        {% for feat in program.get_features %}
+                        <div class="col-md-6">
+                            <div class="p-3 bg-white border rounded-3 shadow-xs d-flex align-items-center gap-3">
+                                <i class="fas fa-check-circle text-primary fs-5"></i>
+                                <span class="fw-semibold text-dark">{{ feat }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="p-4 rounded-4 border bg-light shadow-sm mb-4">
+                    <h3 class="h5 fw-bold text-dark mb-3">Quick Program Summary</h3>
+                    <ul class="list-unstyled small mb-4">
+                        <li class="py-2 border-bottom d-flex justify-content-between">
+                            <span class="text-muted">Academic Level:</span>
+                            <span class="fw-bold text-dark">{{ program.get_level_display }}</span>
+                        </li>
+                        <li class="py-2 border-bottom d-flex justify-content-between">
+                            <span class="text-muted">Target Grades:</span>
+                            <span class="fw-bold text-dark">{{ program.grade_span }}</span>
+                        </li>
+                        <li class="py-2 border-bottom d-flex justify-content-between">
+                            <span class="text-muted">Medium of Instruction:</span>
+                            <span class="fw-bold text-dark">English & Nepali</span>
+                        </li>
+                        <li class="py-2 d-flex justify-content-between">
+                            <span class="text-muted">Session:</span>
+                            <span class="fw-bold text-primary">2082 / 2026</span>
+                        </li>
+                    </ul>
+
+                    <a href="{% url 'admissions' %}?grade={{ program.grade_span|urlencode }}" class="btn btn-primary rounded-pill w-100 fw-bold py-2 mb-2">
+                        Submit Online Application
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-secondary rounded-pill w-100 fw-bold py-2 small">
+                        Inquire with Coordinator
+                    </a>
+                </div>
+
+                <!-- Other Programs list -->
+                {% if other_programs %}
+                <div class="p-4 rounded-4 border bg-white shadow-sm">
+                    <h4 class="h6 fw-bold text-dark mb-3">Other Academic Programs</h4>
+                    <ul class="list-unstyled mb-0">
+                        {% for other in other_programs %}
+                        <li class="mb-2">
+                            <a href="{% url 'program_detail' other.slug %}" class="text-decoration-none fw-semibold text-dark small d-flex align-items-center justify-content-between py-1">
+                                <span>{{ other.title }}</span>
+                                <i class="fas fa-chevron-right fs-xs text-muted"></i>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

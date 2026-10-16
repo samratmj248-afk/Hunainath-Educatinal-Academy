@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-5 bg-light min-vh-75 d-flex align-items-center">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+                <div class="card border-0 rounded-4 shadow-lg overflow-hidden text-center p-5 bg-white">
+                    <div class="mb-4">
+                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center shadow" style="width: 80px; height: 80px; font-size: 2.2rem;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 mb-2 fs-6">Submission Confirmed</span>
+                    <h1 class="h3 fw-bold text-dark mb-2">Application Successfully Received!</h1>
+                    <p class="text-muted small mb-4">
+                        Thank you for applying to Shree Hunainath Educational Academy. Your application has been logged into our admissions database.
+                    </p>
+
+                    <div class="bg-light p-4 rounded-4 border mb-4 text-start">
+                        <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+                            <span class="text-muted small">Tracking Reference ID:</span>
+                            <span class="fw-bold fs-5 text-primary">{{ application.reference_id }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between pb-2">
+                            <span class="text-muted small">Applicant Student:</span>
+                            <span class="fw-semibold text-dark">{{ application.student_name }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between pb-2">
+                            <span class="text-muted small">Grade Applied For:</span>
+                            <span class="fw-semibold text-dark">{{ application.grade_applying_for }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between pb-2">
+                            <span class="text-muted small">Parent / Guardian:</span>
+                            <span class="fw-semibold text-dark">{{ application.parent_name }} ({{ application.parent_phone }})</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Status:</span>
+                            <span class="badge bg-warning text-dark">{{ application.get_status_display }}</span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                        <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
+                            <i class="fas fa-print me-2"></i> Print Slip
+                        </button>
+                        <a href="{% url 'admission_status' %}?ref={{ application.reference_id }}" class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="fas fa-magnifying-glass me-2"></i> Track Application
+                        </a>
+                        <a href="{% url 'index' %}" class="btn btn-light rounded-pill px-4 fw-bold text-dark border">
+                            Return Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

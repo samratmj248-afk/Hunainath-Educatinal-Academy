@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Frequently Asked Questions (FAQ) - {{ school.name }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5" style="background: linear-gradient(135deg, #0A1128 0%, #172554 60%, #1E3A8A 100%); color: white;">
+    <div class="container py-4 text-center">
+        <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
+            <i class="fas fa-question-circle me-1"></i> Help & Guidance
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-3 font-heading">Frequently Asked Questions (FAQ)</h1>
+        <p class="lead text-white-50 mx-auto" style="max-width: 720px;">
+            Find quick answers to common questions about admissions, classes (Nursery to Grade 8), examinations, fee policies, transportation, and school rules.
+        </p>
+    </div>
+</section>
+
+<!-- FAQ Accordion Content -->
+<section class="py-5 bg-light">
+    <div class="container py-3">
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-9">
+                {% for category in faqs %}
+                <div class="mb-5">
+                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                        <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                            <i class="{{ category.icon }} fs-6"></i>
+                        </div>
+                        <h2 class="h4 fw-bold text-dark mb-0">{{ category.category }}</h2>
+                    </div>
+
+                    <div class="accordion shadow-sm rounded-4 overflow-hidden" id="faqAccordion{{ forloop.counter }}">
+                        {% for item in category.items %}
+                        <div class="accordion-item border-0 border-bottom">
+                            <h3 class="accordion-header" id="heading{{ forloop.parentloop.counter }}_{{ forloop.counter }}">
+                                <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}" aria-expanded="false"
+                                    aria-controls="collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}">
+                                    <i class="fas fa-circle-question text-warning me-2"></i> {{ item.q }}
+                                </button>
+                            </h3>
+                            <div id="collapse{{ forloop.parentloop.counter }}_{{ forloop.counter }}" class="accordion-collapse collapse"
+                                aria-labelledby="heading{{ forloop.parentloop.counter }}_{{ forloop.counter }}"
+                                data-bs-parent="#faqAccordion{{ forloop.parentloop.counter }}">
+                                <div class="accordion-body text-muted" style="line-height: 1.8;">
+                                    {{ item.a }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Still have questions card -->
+                <div class="card border-0 rounded-4 shadow-sm p-4 text-center mt-5" style="background: linear-gradient(135deg, #0A1128 0%, #1D4ED8 100%); color: white;">
+                    <div class="card-body">
+                        <i class="fas fa-headset text-warning display-5 mb-3"></i>
+                        <h3 class="h4 fw-bold text-white mb-2">Still Have Questions?</h3>
+                        <p class="text-white-50 mb-4 mx-auto" style="max-width: 600px;">
+                            Principal Bashu Dev Bhatt and our administrative team are here to assist you with any inquiries regarding your child's education.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="tel:+9779848701283" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark">
+                                <i class="fas fa-phone me-1"></i> Call Principal Office (+977 984-8701283)
+                            </a>
+                            <a href="{% url 'contact' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold">
+                                <i class="fas fa-envelope me-1"></i> Send an Inquiry
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

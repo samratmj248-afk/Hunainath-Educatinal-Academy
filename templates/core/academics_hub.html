@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Academics Hero Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Academics</li>
+                    </ol>
+                </nav>
+                <span class="badge-header-pill mb-2"><i class="fas fa-graduation-cap text-warning me-1"></i> Nursery to Grade 8 Excellence</span>
+                <h1 class="display-5 fw-bold text-white mb-2">Academics & Examination Portal</h1>
+                <p class="text-white-50 fs-5 mb-0">Empowering foundational brilliance through modern curricula, terminal routines, and student marksheet tracking.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-2">
+                    <a href="{% url 'exam_routines' %}" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm">
+                        <i class="fas fa-calendar-alt me-1"></i> Exam Routines
+                    </a>
+                    <a href="{% url 'exam_results' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold">
+                        <i class="fas fa-poll-h text-warning me-1"></i> Result Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Action Shortcuts -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-calendar-days fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1">Published Exam Routine</h6>
+                        <a href="{% url 'exam_routines' %}" class="small text-primary fw-bold text-decoration-none">
+                            View 2082 Schedules &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-warning bg-opacity-15 text-warning p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-award fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1">Exam Result System</h6>
+                        <a href="{% url 'exam_results' %}" class="small text-primary fw-bold text-decoration-none">
+                            Check GPA & Marksheets &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3 bg-white rounded-4 border shadow-sm d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-success bg-opacity-10 text-success p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                        <i class="fas fa-user-check fs-4"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1">Session 2083 Admissions</h6>
+                        <a href="{% url 'admissions' %}" class="small text-primary fw-bold text-decoration-none">
+                            Register Student Online &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Academic Programs Grid -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="fas fa-book-open"></i> Grade Pathways</span>
+            <h2 class="section-title">Foundational Stages from Nursery to Grade 8</h2>
+            <p class="section-desc">Each tier is purposefully designed to encourage inquiry, critical thinking, bilingual fluency, and character building.</p>
+        </div>
+
+        <div class="row g-4">
+            {% for prog in programs %}
+            <div class="col-lg-4 col-md-6">
+                <div class="program-card h-100">
+                    <div class="program-card-header">
+                        {% if prog.image %}
+                        <img src="{{ prog.image.url }}" alt="{{ prog.title }}" class="program-card-img" loading="lazy">
+                        {% else %}
+                        <img src="/media/gallery/hunainath_real_campus_buses.webp" alt="{{ prog.title }}" class="program-card-img" loading="lazy">
+                        {% endif %}
+                        <div class="program-card-overlay"></div>
+                        <span class="program-badge">{{ prog.get_level_display }}</span>
+                        <span class="program-grade-pill">{{ prog.grade_span }}</span>
+                    </div>
+                    <div class="program-card-body">
+                        <h3 class="h5 fw-bold text-dark mb-2">{{ prog.title }}</h3>
+                        <p class="text-muted small mb-3">{{ prog.short_summary }}</p>
+                        <div class="pt-3 border-top mt-auto d-flex align-items-center justify-content-between">
+                            <a href="{% url 'program_detail' prog.slug %}" class="fw-bold text-primary small text-decoration-none">
+                                Curriculum Details &rarr;
+                            </a>
+                            <a href="{% url 'admissions' %}?grade={{ prog.grade_span|urlencode }}" class="btn btn-sm btn-primary text-white rounded-pill px-3 py-1 fw-bold">
+                                Enroll Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Active Examination Timetables Preview -->
+<section class="py-5" style="background: #F8FAFC;">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <span class="section-tag"><i class="fas fa-calendar-check"></i> Examination Schedules</span>
+                <h2 class="section-title mb-1">Upcoming & Published Exam Routines</h2>
+                <p class="text-muted small mb-0">Official terminal timetables for Garjamuni students</p>
+            </div>
+            <a href="{% url 'exam_routines' %}" class="btn btn-outline-primary rounded-pill px-4 py-2 fw-bold small">
+                View All Timetables &rarr;
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for r in routines %}
+            <div class="col-lg-4 col-md-6">
+                <div class="bg-white p-4 rounded-4 shadow-sm border border-light h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary text-white fw-bold px-3 py-1">{{ r.academic_year }}</span>
+                            <span class="badge bg-warning bg-opacity-25 text-warning-emphasis fw-bold px-2 py-1 small">{{ r.get_exam_term_display }}</span>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2">{{ r.title }}</h3>
+                        <p class="small text-muted mb-3"><i class="fas fa-chalkboard text-primary me-1"></i> Target: <strong>{{ r.grade }}</strong></p>
+                        <div class="p-3 bg-light rounded-3 mb-3 small text-muted border">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="fas fa-hourglass-start text-success"></i>
+                                <span>Starts: <strong>{{ r.start_date|date:"F d, Y" }}</strong></span>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-flag-checkered text-danger"></i>
+                                <span>Ends: <strong>{{ r.end_date|date:"F d, Y" }}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
+                        <a href="{% url 'exam_routines' %}" class="small text-primary fw-bold text-decoration-none">
+                            Read Timetable & Rules &rarr;
+                        </a>
+                        {% if r.routine_file %}
+                        <a href="{{ r.routine_file.url }}" download class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1">
+                            <i class="fas fa-file-pdf text-danger me-1"></i> PDF
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">No active exam schedules posted currently.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

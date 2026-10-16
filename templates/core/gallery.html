@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-camera-retro"></i> Moments & Memories
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">School Life Photo Gallery</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            Exploring classroom learning, early childhood Montessori care, sports athletics, and festival celebrations at Garjamuni.
+        </p>
+    </div>
+</section>
+
+<!-- Gallery Filter & Grid -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <!-- Category Filter -->
+        <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center">
+            <a href="{% url 'gallery' %}" class="btn btn-sm {% if active_category == 'ALL' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">All Moments</a>
+            <a href="{% url 'gallery' %}?category=CAMPUS" class="btn btn-sm {% if active_category == 'CAMPUS' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">School & Environment</a>
+            <a href="{% url 'gallery' %}?category=ACADEMICS" class="btn btn-sm {% if active_category == 'ACADEMICS' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Classroom & ECD</a>
+            <a href="{% url 'gallery' %}?category=SPORTS" class="btn btn-sm {% if active_category == 'SPORTS' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Sports & Athletics</a>
+            <a href="{% url 'gallery' %}?category=CULTURAL" class="btn btn-sm {% if active_category == 'CULTURAL' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Cultural & Festivals</a>
+        </div>
+
+        <div class="row g-4">
+            {% for item in items %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100 position-relative group">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-100 h-100 object-fit-cover" loading="lazy" style="transition: transform 0.6s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">{{ item.get_category_display }}</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">{{ item.title }}</h3>
+                        {% if item.caption %}
+                        <p class="text-muted extra-small mb-0">{{ item.caption }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default Genuine Photos if none uploaded via admin yet -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/inter_house_quiz_competition.jpg" alt="Inter-House Quiz Competition" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Academic Competitions</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">Inter-House Quiz Competition</h3>
+                        <p class="text-muted extra-small mb-0">Students and teachers gathered on the school assembly ground for academic quiz contest.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/hunainath_real_campus_buses.webp" alt="Academy Campus & Buses" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Campus & Transport</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">Golden 3-Story Campus & Bus Fleet</h3>
+                        <p class="text-muted extra-small mb-0">The 3-story school building and dedicated transport buses in Garjamuni.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/sports_race.jpg" alt="Sports & Athletics" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Sports & Athletics</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">Annual Student Sports & Pencil Race</h3>
+                        <p class="text-muted extra-small mb-0">Joyful outdoor races and physical education activities.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/dhan_diwas_celebration.webp" alt="Dhan Diwas Celebration" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Cultural Celebrations</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">National Dhan Diwas Festival</h3>
+                        <p class="text-muted extra-small mb-0">Students celebrating agricultural heritage and Nepali culture.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/holi_colors_activity.webp" alt="Holi Festival of Colors" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Festival Life</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">Holi Festival of Colors</h3>
+                        <p class="text-muted extra-small mb-0">Joyful, friendly celebrations promoting harmony and togetherness.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 rounded-4 overflow-hidden shadow-sm h-100">
+                    <div style="height: 260px; overflow: hidden; background: #071938;">
+                        <img src="/media/gallery/campus_teachers_and_students.webp" alt="Faculty Mentors & Students" class="w-100 h-100 object-fit-cover" loading="lazy">
+                    </div>
+                    <div class="card-body p-3 bg-white">
+                        <span class="badge bg-light text-primary border extra-small mb-1">Mentorship & Leadership</span>
+                        <h3 class="h6 fw-bold mb-1 text-dark">Faculty Mentors & Student Assembly</h3>
+                        <p class="text-muted extra-small mb-0">Dedicated teaching educators interacting with students during morning assemblies.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

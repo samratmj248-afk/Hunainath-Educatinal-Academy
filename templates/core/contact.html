@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-location-dot"></i> Connect With Us
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">Contact & Visit Our School</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            We welcome parents, guardians, and visitors to Shree Hunainath Educational Academy in Garjamuni,
+            Sudurpashchim.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Form & Directory -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+            <!-- Left: Contact Details & Office Hours -->
+            <div class="col-lg-5">
+                <span class="section-tag"><i class="fas fa-location-dot text-warning"></i> School Location</span>
+                <h2 class="h3 fw-bold text-dark mb-4">Garjamuni School Information</h2>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="contact-icon-circle">
+                        <i class="fas fa-school fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold mb-1 text-dark">School Premises</h4>
+                        <p class="text-muted small mb-0 fw-bold text-dark">Garjamuni, Shuklaphanta Municipality-07, Kanchanpur</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="contact-icon-circle">
+                        <i class="fas fa-user-tie fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold mb-1 text-dark">Principal</h4>
+                        <p class="text-muted small mb-0 fw-bold text-dark">{{ school.principal_name|default:"Bashu Dev Bhatt" }}</p>
+                        <span class="extra-small text-muted">{{ school.principal_designation|default:"Principal & Academic Lead" }}</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="contact-icon-circle">
+                        <i class="fas fa-phone fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold mb-1 text-dark">Contact Phone</h4>
+                        <p class="text-muted small mb-0">
+                            <a href="tel:{{ school.phone|default:'+9779848701283' }}"
+                                class="text-dark fw-bold text-decoration-none">
+                                {{ school.phone|default:"+977 984-8701283" }}
+                            </a>
+                        </p>
+                        <span class="extra-small text-muted">Direct Helpline / Principal's Desk</span>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="contact-icon-circle">
+                        <i class="fas fa-envelope fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold mb-1 text-dark">Contact Email</h4>
+                        <p class="text-muted small mb-0">
+                            <a href="mailto:{{ school.email|default:'bhattbashu35@gmail.com' }}"
+                                class="text-dark fw-bold text-decoration-none">
+                                {{ school.email|default:"bhattbashu35@gmail.com" }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="contact-icon-circle">
+                        <i class="fas fa-clock fs-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="h6 fw-bold mb-1 text-dark">Office & School Hours</h4>
+                        <p class="text-muted small mb-0">Sunday &ndash; Thursday: 9:00 AM &ndash; 4:00 PM</p>
+                        <p class="text-muted small mb-0">Friday: 9:00 AM &ndash; 2:00 PM (ECA & Sports)</p>
+                    </div>
+                </div>
+
+
+
+                <!-- Direct Map Jump Link -->
+                <div class="p-3 bg-light rounded-4 border">
+                    <h5 class="h6 fw-bold text-dark mb-2"><i class="fas fa-map-location-dot me-1 text-primary"></i> School Navigation</h5>
+                    <p class="extra-small text-muted mb-2">Detailed interactive directions are available in the map below.</p>
+                    <a href="#interactive-map"
+                        class="btn btn-outline-dark btn-sm rounded-pill fw-bold w-100 shadow-sm">
+                        <i class="fas fa-arrow-down me-1"></i> Jump to Interactive School Map
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Interactive Inquiry Form -->
+            <div class="col-lg-7">
+                <div class="form-card-container">
+                    <h3 class="h4 fw-bold text-dark mb-2">Send Us an Inquiry</h3>
+                    <p class="text-muted small mb-4">Fill out the form below and Principal Bashu Dev Bhatt or the
+                        administrative office will respond promptly.</p>
+
+                    <form method="POST" action="{% url 'contact' %}" autocomplete="off">
+                        {% csrf_token %}
+
+                        <!-- Invisible Honeypot to block spam bots -->
+                        <div class="website-hp-field">
+                            <label for="address_check_hp">Leave empty</label>
+                            <input type="text" name="address_check_hp" id="address_check_hp" tabindex="-1"
+                                autocomplete="off">
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Your Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control-custom no-autofill"
+                                    placeholder="Full name" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Email Address <span
+                                        class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control-custom no-autofill"
+                                    placeholder="name@example.com" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Phone Number<span class="text-danger">*</span></label>
+                                <input type="tel" name="phone" class="form-control-custom no-autofill"
+                                    placeholder="+977 9800000000" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Subject / Grade Interested <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="subject" class="form-control-custom no-autofill"
+                                    placeholder="e.g. Admission for Grade 2 / ECD" required autocomplete="off"
+                                    spellcheck="false" data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Your Message <span class="text-danger">*</span></label>
+                                <textarea name="message" class="form-control-custom no-autofill" rows="5"
+                                    placeholder="Write your inquiry or question here..." required autocomplete="off"
+                                    spellcheck="false" data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit"
+                                    class="btn btn-primary rounded-pill px-5 py-3 fw-bold text-white w-100 shadow-sm">
+                                    <i class="fas fa-paper-plane me-2"></i> Submit Inquiry
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Embedded Google Maps Section -->
+        <div class="row mt-5" id="interactive-map">
+            <div class="col-12">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center flex-wrap gap-2"
+                        style="background: linear-gradient(135deg, #0A1128 0%, #1D4ED8 100%) !important;">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fas fa-map-marked-alt text-warning fs-5"></i>
+                            <span class="fw-bold">Interactive School Map: Hunainath Educational Academy</span>
+                            <span class="badge bg-warning text-dark fw-bold ms-2">Shuklaphanta-07, Kanchanpur</span>
+                        </div>
+                        <a href="https://maps.google.com/?q=28.9113,80.3245"
+                            target="_blank" rel="noopener"
+                            class="btn btn-warning btn-sm rounded-pill fw-bold text-dark px-3 shadow-sm">
+                            <i class="fas fa-directions me-1"></i> Get Directions in Google Maps
+                        </a>
+                    </div>
+                    <div class="ratio ratio-21x9" style="min-height: 420px;">
+                        <iframe
+                            src="https://maps.google.com/maps?q=28.9113,80.3245+(Hunainath+Educational+Academy)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                            style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Hunainath Educational Academy Google Map">
+                        </iframe>
+                    </div>
+                    <div
+                        class="card-footer bg-white p-3 d-flex justify-content-between align-items-center flex-wrap gap-2 text-muted small">
+                        <div>
+                            <i class="fas fa-map-pin text-danger me-1"></i>
+                            <strong>Garjamuni, Shuklaphanta Municipality-07</strong>, Kanchanpur District, Sudurpashchim
+                            Province 10400, Nepal
+                        </div>
+                        <div>
+                            <span class="badge bg-light text-dark border me-2"><i
+                                    class="fas fa-clock text-warning me-1"></i> Visiting Hours: 9:00 AM – 4:30 PM
+                                (Sun–Fri)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector('form[action="{% url 'contact' %}"]');
+        if (form) {
+            form.addEventListener('submit', function () {
+                form.querySelectorAll('.no-autofill').forEach(function (el) {
+                    el.removeAttribute('readonly');
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

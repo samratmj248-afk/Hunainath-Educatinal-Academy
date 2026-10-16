@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-5 min-vh-75 d-flex align-items-center text-center bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="p-5 bg-white rounded-4 shadow-lg border border-light">
+                    <div class="mb-4">
+                        <div class="rounded-circle bg-warning bg-opacity-25 text-warning d-inline-flex align-items-center justify-content-center" style="width: 90px; height: 90px; font-size: 2.5rem;">
+                            <i class="fas fa-wifi-slash"></i>
+                        </div>
+                    </div>
+                    <span class="badge bg-secondary mb-2">Offline Mode</span>
+                    <h1 class="h3 fw-bold text-dark mb-2">You Are Currently Offline</h1>
+                    <p class="text-muted small mb-4">
+                        It looks like your internet connection is unavailable. Cached content is still accessible, and the app will automatically synchronize as soon as you are reconnected.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button onclick="window.location.reload()" class="btn btn-primary rounded-pill px-4 fw-bold">
+                            <i class="fas fa-rotate-right me-2"></i> Retry Connection
+                        </button>
+                        <a href="{% url 'index' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
+                            Cached Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Blog Detail Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-9">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'blog_list' %}" class="text-white-50">Blog</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">{{ post.title|truncatewords:6 }}</li>
+                    </ol>
+                </nav>
+                <span class="badge-header-pill mb-2">{{ post.get_category_display }}</span>
+                <h1 class="display-6 fw-bold text-white mb-2">{{ post.title }}</h1>
+                <div class="d-flex align-items-center gap-3 text-white-50 small mt-3 flex-wrap">
+                    <span><i class="fas fa-user-pen text-warning me-1"></i> By <strong>{{ post.author_name }}</strong> ({{ post.author_role }})</span>
+                    <span>•</span>
+                    <span><i class="far fa-calendar-alt text-warning me-1"></i> {{ post.published_at|date:"F d, Y" }}</span>
+                    <span>•</span>
+                    <span><i class="far fa-eye text-warning me-1"></i> {{ post.views_count }} Reads</span>
+                </div>
+            </div>
+            <div class="col-lg-3 text-lg-end mt-4 mt-lg-0">
+                <a href="{% url 'blog_list' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold btn-sm">
+                    &larr; Back to All Stories
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Article Content -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+            <div class="col-lg-8">
+                <!-- Article Hero Image -->
+                <div class="rounded-4 overflow-hidden mb-4 shadow-sm" style="max-height: 420px; background: #070F26;">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="w-100 h-100 object-fit-cover">
+                    {% else %}
+                    <img src="/media/gallery/hunainath_students_outdoor.webp" alt="{{ post.title }}" class="w-100 h-100 object-fit-cover">
+                    {% endif %}
+                </div>
+
+                <!-- Summary Callout -->
+                <div class="p-4 rounded-4 mb-4" style="background: rgba(30, 58, 138, 0.05); border-left: 4px solid #1E3A8A;">
+                    <p class="fs-5 text-dark fw-semibold mb-0" style="line-height: 1.7;">
+                        {{ post.summary }}
+                    </p>
+                </div>
+
+                <!-- Main Content Body -->
+                <div class="article-body text-dark" style="line-height: 1.9; font-size: 1.08rem; white-space: pre-line;">
+                    {{ post.content }}
+                </div>
+
+                <!-- Author Signature Card -->
+                <div class="p-4 rounded-4 bg-light border mt-5 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-4 flex-shrink-0" style="width: 56px; height: 56px;">
+                        {{ post.author_name|slice:":1" }}
+                    </div>
+                    <div>
+                        <h5 class="h6 fw-bold text-dark mb-1">Written by {{ post.author_name }}</h5>
+                        <p class="small text-muted mb-0">{{ post.author_role }} • Shree Hunainath Educational Academy, Garjamuni</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Academics Shortcut Widget -->
+                <div class="p-4 rounded-4 text-white mb-4 shadow-sm" style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #1E3A8A 100%); border-top: 3px solid #F59E0B;">
+                    <h5 class="h6 fw-bold text-white mb-2"><i class="fas fa-graduation-cap text-warning me-2"></i>Academics Quick Access</h5>
+                    <p class="small text-white-50 mb-3">Looking for routine timetables or online student GPA results?</p>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{% url 'exam_routines' %}" class="btn btn-warning rounded-pill fw-bold text-dark btn-sm py-2">
+                            <i class="fas fa-calendar-alt me-1"></i> Published Exam Routines
+                        </a>
+                        <a href="{% url 'exam_results' %}" class="btn btn-outline-light rounded-pill fw-bold btn-sm py-2">
+                            <i class="fas fa-award text-warning me-1"></i> Check Exam Result
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Related Articles Widget -->
+                {% if related_posts %}
+                <div class="p-4 rounded-4 bg-light border shadow-sm">
+                    <h5 class="h6 fw-bold text-dark mb-3"><i class="fas fa-book-open text-primary me-2"></i>Related Articles</h5>
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                        {% for r_post in related_posts %}
+                        <li class="pb-3 border-bottom">
+                            <span class="badge bg-white text-muted border extra-small mb-1">{{ r_post.get_category_display }}</span>
+                            <h6 class="small fw-bold mb-1">
+                                <a href="{% url 'blog_detail' r_post.slug %}" class="text-dark text-decoration-none hover-primary">
+                                    {{ r_post.title }}
+                                </a>
+                            </h6>
+                            <span class="extra-small text-muted">{{ r_post.published_at|date:"M d, Y" }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

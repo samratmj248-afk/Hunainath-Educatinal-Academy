@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-graduation-cap"></i> Academic Intake 2082 / 2026 • Nursery to Grade 8
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">Student Admission Application</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 680px; font-size: 1.05rem;">
+            Enroll your child in Shree Hunainath Educational Academy, Garjamuni. Fill out this official registration form to initiate admission.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row g-5">
+            <!-- Left: Guidelines & Document Checklist -->
+            <div class="col-lg-4">
+                <div class="p-4 rounded-4 bg-light border mb-4 shadow-sm">
+                    <h3 class="h5 fw-bold text-dark mb-3"><i class="fas fa-list-check text-primary me-2"></i>Admission
+                        Process</h3>
+                    <ol class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
+                        <li class="mb-2"><strong>Online Application:</strong> Complete the student registration form on
+                            this page.</li>
+                        <li class="mb-2"><strong>Reference Generation:</strong> Receive your unique tracking ID (e.g.
+                            <code>HNA-2026-XXXX</code>).
+                        </li>
+                        <li class="mb-2"><strong>Review & Verification:</strong> Our admissions committee evaluates the
+                            application within 2 working days.</li>
+                        <li class="mb-2"><strong>Interview / Interaction:</strong> Parent and child visit the school for
+                            orientation and confirmation.</li>
+                    </ol>
+                </div>
+
+                <div class="p-4 rounded-4 bg-light border mb-4 shadow-sm">
+                    <h4 class="h6 fw-bold text-dark mb-3"><i class="fas fa-folder-open text-warning me-2"></i>Required
+                        Documents</h4>
+                    <ul class="list-unstyled small text-muted mb-0" style="line-height: 1.8;">
+                        <li><i class="fas fa-check text-success me-2"></i>Birth Certificate copy</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Transfer Certificate (for Grade 2 & above)
+                        </li>
+                        <li><i class="fas fa-check text-success me-2"></i>Previous School Grade Sheet / Marksheet</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Passport-sized student photo</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 rounded-4 border bg-primary text-white shadow-sm">
+                    <h4 class="h6 fw-bold text-white mb-2"><i class="fas fa-magnifying-glass me-2"></i>Already Applied?
+                    </h4>
+                    <p class="small text-white-50 mb-3">Track your application review status and entrance schedule using
+                        your reference ID.</p>
+                    <a href="{% url 'admission_status' %}"
+                        class="btn btn-warning rounded-pill w-100 fw-bold text-dark btn-sm">
+                        Check Application Status &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Application Form with Anti-Spam Honeypot -->
+            <div class="col-lg-8">
+                <div class="form-card-container">
+                    <h2 class="h4 fw-bold text-dark mb-4 border-bottom pb-3">Online Registration Form</h2>
+
+                    <form method="POST" action="{% url 'admissions' %}" enctype="multipart/form-data"
+                        autocomplete="off">
+                        {% csrf_token %}
+
+                        <!-- Anti-Bot Honeypot Field (Invisible to real humans, bots fill this and get rejected) -->
+                        <div class="website-hp-field">
+                            <label for="website_url_hp">Leave this field blank</label>
+                            <input type="text" name="website_url_hp" id="website_url_hp" tabindex="-1"
+                                autocomplete="off">
+                        </div>
+
+                        <!-- Section 1: Student Information -->
+                        <h5 class="fw-bold text-primary mb-3"><i class="fas fa-child me-2"></i> Student Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-8">
+                                <label class="form-label-custom">Student Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="student_name" class="form-control-custom no-autofill"
+                                    placeholder="e.g. Ramesh Joshi" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label-custom">Gender <span class="text-danger">*</span></label>
+                                <select name="gender" class="form-select-custom" required>
+                                    <option value="MALE">Male</option>
+                                    <option value="FEMALE">Female</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Date of Birth <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="date_of_birth" class="form-control-custom" required
+                                    autocomplete="off">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Grade / Class Applying For <span
+                                        class="text-danger">*</span></label>
+                                <select name="grade_applying_for" id="grade_applying_for" class="form-select-custom"
+                                    required>
+                                    <option value="" disabled selected>Select class level...</option>
+                                    <option value="Playgroup / Nursery">Playgroup / Nursery</option>
+                                    <option value="LKG / UKG">LKG / UKG</option>
+                                    <option value="Grade 1">Grade 1</option>
+                                    <option value="Grade 2">Grade 2</option>
+                                    <option value="Grade 3">Grade 3</option>
+                                    <option value="Grade 4">Grade 4</option>
+                                    <option value="Grade 5">Grade 5</option>
+                                    <option value="Grade 6">Grade 6</option>
+                                    <option value="Grade 7">Grade 7</option>
+                                    <option value="Grade 8">Grade 8</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label-custom">Previous School Attended (If applicable)</label>
+                                <input type="text" name="previous_school" class="form-control-custom no-autofill"
+                                    placeholder="Name of previous school" autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label-custom">Previous GPA / Percentage</label>
+                                <input type="text" name="previous_gpa" class="form-control-custom no-autofill"
+                                    placeholder="e.g. 3.65 GPA" autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Parent / Guardian Details -->
+                        <h5 class="fw-bold text-primary mb-3 pt-3 border-top"><i class="fas fa-user-tie me-2"></i>Parent / Guardian Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Parent Full Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="parent_name" class="form-control-custom no-autofill"
+                                    placeholder="Father or Mother name" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom"> Contact Number <span
+                                        class="text-danger">*</span></label>
+                                <input type="tel" name="parent_phone" class="form-control-custom no-autofill"
+                                    placeholder="e.g. +977-9800000000" required autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Email Address (Optional)</label>
+                                <input type="email" name="parent_email" class="form-control-custom no-autofill"
+                                    placeholder="parent@example.com" autocomplete="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Occupation / Profession</label>
+                                <input type="text" name="parent_occupation" class="form-control-custom no-autofill"
+                                    placeholder="e.g. Business, Agriculture, Teaching" autocomplete="off"
+                                    spellcheck="false" data-lpignore="true" data-form-type="other" readonly
+                                    onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Residential Address <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="address" class="form-control-custom no-autofill" rows="2"
+                                    placeholder="Municipality, Ward No., Tole/Village (e.g. Shuklaphanta-5, Garjamani, Kanchanpur)"
+                                    required autocomplete="off" spellcheck="false" data-lpignore="true"
+                                    data-form-type="other" readonly onfocus="this.removeAttribute('readonly');"
+                                    onblur="this.setAttribute('readonly', 'readonly');"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Optional Document Uploads & Notes -->
+                        <h5 class="fw-bold text-primary mb-3 pt-3 border-top"><i
+                                class="fas fa-file-arrow-up me-2"></i>Documents & Additional Notes</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Student Photo <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="student_photo" class="form-control-custom" accept="image/*">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom"> Marksheet <span class="text-danger">*</span></label>
+                                <input type="file" name="Marksheet" class="form-control-custom" accept=".pdf,image/*">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom">Transfer Certificate <span class="text-danger">*</span>
+                                </label>
+                                <input type="file" name="transfer_certificate" class="form-control-custom"
+                                    accept=".pdf,image/*">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label-custom"> Birth Certificate <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="BirthCertificate" class="form-control-custom"
+                                    accept=".pdf,image/*">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Additional Remarks / Transportation Request</label>
+                                <textarea name="additional_notes" class="form-control-custom" rows="2"
+                                    placeholder="Mention if you require school bus pickup, hostel boarding inquiry, or special learning assistance."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Declaration & Submit Button -->
+                        <div class="p-3 bg-light rounded-3 mb-4 border">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="declarationCheck" required>
+                                <label class="form-check-label small text-muted" for="declarationCheck">
+                                    I hereby certify that all information submitted in this application is accurate and
+                                    genuine to the best of my knowledge.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit"
+                                class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm btn-ripple">
+                                Submit Application <i class="fas fa-paper-plane ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector('form[action="{% url 'admissions' %}"]');
+        if (form) {
+            form.addEventListener('submit', function () {
+                form.querySelectorAll('.no-autofill').forEach(function (el) {
+                    el.removeAttribute('readonly');
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Header Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-book-open"></i> Nursery through Grade 8
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">Academic Programs & Curricula</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            Structured learning pathways from Early Childhood Development (Montessori ECD) through Grade 8 Basic Level in Garjamuni, Sudurpashchim.
+        </p>
+    </div>
+</section>
+
+<!-- Programs Grid with Filters -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <!-- Filter Bar -->
+        <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center">
+            <a href="{% url 'programs' %}" class="btn btn-sm {% if active_filter == 'all' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">All Levels</a>
+            <a href="{% url 'programs' %}?level=ECE" class="btn btn-sm {% if active_filter == 'ECE' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Early Childhood (ECD)</a>
+            <a href="{% url 'programs' %}?level=PRIMARY" class="btn btn-sm {% if active_filter == 'PRIMARY' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Primary (Grade 1 - 5)</a>
+            <a href="{% url 'programs' %}?level=LOWER_SEC" class="btn btn-sm {% if active_filter == 'LOWER_SEC' %}btn-primary text-white fw-bold shadow-sm{% else %}btn-outline-secondary{% endif %} rounded-pill px-4 py-2">Lower Secondary (Grade 6 - 8)</a>
+        </div>
+
+        <div class="row g-4">
+            {% for prog in programs %}
+            <div class="col-lg-6">
+                <div class="program-card">
+                    <div class="program-card-header" style="height: 230px;">
+                        {% if prog.image %}
+                        <img src="{{ prog.image.url }}" alt="{{ prog.title }}" class="program-card-img" loading="lazy">
+                        {% else %}
+                        <img src="/media/gallery/sports_race.jpg" alt="{{ prog.title }}" class="program-card-img" loading="lazy">
+                        {% endif %}
+                        <div class="program-card-overlay"></div>
+                        <span class="program-badge">{{ prog.get_level_display }}</span>
+                        <span class="program-grade-pill">{{ prog.grade_span }}</span>
+                    </div>
+                    <div class="program-card-body">
+                        <h3 class="fw-bold text-dark">{{ prog.title }}</h3>
+                        <p class="text-muted">{{ prog.short_summary }}</p>
+                        
+                        <div class="mb-4">
+                            <span class="text-dark fw-bold small d-block mb-2"><i class="fas fa-star text-warning me-1"></i> Key Curriculum Highlights:</span>
+                            <ul class="list-unstyled small text-muted mb-0">
+                                {% for feat in prog.get_features %}
+                                <li class="mb-2 d-flex align-items-center gap-2">
+                                    <i class="fas fa-check-circle text-warning"></i>
+                                    <span>{{ feat }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-auto">
+                            <a href="{% url 'program_detail' prog.slug %}" class="fw-bold text-dark small d-inline-flex align-items-center gap-1">
+                                Curriculum Details <i class="fas fa-chevron-right fs-xs text-warning"></i>
+                            </a>
+                            <a href="{% url 'admissions' %}?grade={{ prog.grade_span|urlencode }}" class="btn btn-sm btn-primary text-white rounded-pill px-4 py-2 fw-bold shadow-sm">
+                                Apply Online
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No programs found for selected category.</p>
+                <a href="{% url 'programs' %}" class="btn btn-primary rounded-pill px-4 py-2 text-white fw-bold">View All Programs</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

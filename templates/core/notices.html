@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-bullhorn"></i> School Circulars
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">Notice Board & Official Publications</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            Stay updated with academic calendars, exam routines, admission deadlines, holiday announcements, and event circulars.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <!-- Search & Filter Controls -->
+        <div class="row g-3 mb-5 align-items-center">
+            <div class="col-lg-7">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'notices' %}" class="btn btn-sm {% if not category %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">All</a>
+                    <a href="{% url 'notices' %}?category=ACADEMIC" class="btn btn-sm {% if category == 'ACADEMIC' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Academic</a>
+                    <a href="{% url 'notices' %}?category=EXAM" class="btn btn-sm {% if category == 'EXAM' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Examinations</a>
+                    <a href="{% url 'notices' %}?category=ADMISSION" class="btn btn-sm {% if category == 'ADMISSION' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Admissions</a>
+                    <a href="{% url 'notices' %}?category=EVENT" class="btn btn-sm {% if category == 'EVENT' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Events & Sports</a>
+                    <a href="{% url 'notices' %}?category=HOLIDAY" class="btn btn-sm {% if category == 'HOLIDAY' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Holidays</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <form method="GET" action="{% url 'notices' %}" class="d-flex">
+                    {% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
+                    <input type="text" name="q" class="form-control form-control-sm rounded-start-pill px-3" placeholder="Search notices by keyword..." value="{{ search_query }}">
+                    <button type="submit" class="btn btn-primary btn-sm rounded-end-pill px-3 fw-bold">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notices Cards Grid -->
+        <div class="row g-4">
+            {% for notice in notices %}
+            <div class="col-lg-4 col-md-6">
+                <article class="notice-card">
+                    <div class="notice-meta">
+                        <span class="notice-category-badge category-{{ notice.category }}">
+                            {{ notice.get_category_display }}
+                        </span>
+                        <span class="notice-date"><i class="far fa-calendar-alt me-1"></i>{{ notice.published_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h3><a href="{% url 'notice_detail' notice.slug %}">{{ notice.title }}</a></h3>
+                    <p>{{ notice.content|truncatewords:24 }}</p>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
+                        <a href="{% url 'notice_detail' notice.slug %}" class="fw-bold text-primary small">
+                            Read Circular &rarr;
+                        </a>
+                        <div class="text-muted extra-small">
+                            <i class="far fa-eye me-1"></i>{{ notice.views_count }} views
+                        </div>
+                    </div>
+                </article>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No notices found matching your criteria.</p>
+                <a href="{% url 'notices' %}" class="btn btn-outline-primary rounded-pill btn-sm">Clear Search</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if notices.has_other_pages %}
+        <nav class="mt-5" aria-label="Notices pagination">
+            <ul class="pagination justify-content-center">
+                {% if notices.has_previous %}
+                <li class="page-item">
+                    <a class="page-link rounded-pill me-1" href="?page={{ notices.previous_page_number }}{% if category %}&category={{ category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link rounded-pill me-1">{{ notices.number }}</span>
+                </li>
+                {% if notices.has_next %}
+                <li class="page-item">
+                    <a class="page-link rounded-pill" href="?page={{ notices.next_page_number }}{% if category %}&category={{ category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

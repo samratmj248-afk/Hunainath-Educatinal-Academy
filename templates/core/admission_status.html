@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="page-header-banner py-5">
+    <div class="container py-4 text-center position-relative">
+        <span class="badge-header-pill mb-3">
+            <i class="fas fa-id-card"></i> Admissions Portal
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-2">Track Admission Application</h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
+            Enter your registration reference number to check the current review stage and interview schedule.
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <!-- Search Box -->
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-light mb-4">
+                    <form method="GET" action="{% url 'admission_status' %}">
+                        <label class="form-label-custom mb-2">Application Reference ID</label>
+                        <div class="input-group">
+                            <input type="text" name="ref" class="form-control form-control-lg border-2" placeholder="e.g. HNA-2026-XXXX" value="{{ query }}" required>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="fas fa-search me-1"></i> Check
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Result Card -->
+                {% if searched %}
+                    {% if application %}
+                    <div class="card border-0 rounded-4 shadow-md overflow-hidden p-4 bg-white border border-light">
+                        <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+                            <div>
+                                <span class="badge bg-primary mb-1">Found Application</span>
+                                <h3 class="h5 fw-bold text-dark mb-0">{{ application.student_name }}</h3>
+                            </div>
+                            <div class="text-end">
+                                <span class="text-muted extra-small d-block">Current Status</span>
+                                <span class="badge {% if application.status == 'ACCEPTED' %}bg-success{% elif application.status == 'REJECTED' %}bg-danger{% else %}bg-warning text-dark{% endif %} fs-6 py-2 px-3">
+                                    {{ application.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="small text-muted mb-3">
+                            <div class="row g-2">
+                                <div class="col-6"><strong>Reference ID:</strong> {{ application.reference_id }}</div>
+                                <div class="col-6"><strong>Grade:</strong> {{ application.grade_applying_for }}</div>
+                                <div class="col-6"><strong>Guardian:</strong> {{ application.parent_name }}</div>
+                                <div class="col-6"><strong>Submitted On:</strong> {{ application.created_at|date:"M d, Y" }}</div>
+                            </div>
+                        </div>
+
+                        {% if application.admin_feedback %}
+                        <div class="p-3 bg-light rounded-3 border mb-3">
+                            <strong class="text-dark small d-block mb-1"><i class="fas fa-comment-dots text-primary me-1"></i> Office Note:</strong>
+                            <p class="small text-muted mb-0">{{ application.admin_feedback }}</p>
+                        </div>
+                        {% endif %}
+
+                        <div class="p-3 rounded-3" style="background: rgba(0, 82, 204, 0.05);">
+                            <p class="extra-small text-muted mb-0">
+                                <i class="fas fa-info-circle text-primary me-1"></i> For further inquiries, contact our admission hotline at <strong>{{ school.phone|default:'+977-99-402120' }}</strong> or visit our school office during working hours.
+                            </p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card border-0 rounded-4 shadow-sm p-4 text-center bg-white border">
+                        <i class="fas fa-triangle-exclamation text-warning fs-1 mb-3"></i>
+                        <h4 class="h5 fw-bold text-dark mb-2">No Application Found</h4>
+                        <p class="text-muted small mb-3">
+                            We could not find an application matching reference <strong>"{{ query }}"</strong>. Please verify the code or apply again.
+                        </p>
+                        <a href="{% url 'admissions' %}" class="btn btn-outline-primary rounded-pill btn-sm fw-bold">
+                            Fill New Application Form
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

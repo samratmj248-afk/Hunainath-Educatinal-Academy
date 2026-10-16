@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Exam Results Hero Banner -->
+<section class="page-header-banner py-5">
+    <div class="container py-3 position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb small mb-2">
+                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-white-50">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'academics_hub' %}"
+                                class="text-white-50">Academics</a></li>
+                        <li class="breadcrumb-item active text-white" aria-current="page">Exam Result System</li>
+                    </ol>
+                </nav>
+                <span class="badge-header-pill mb-2"><i class="fas fa-poll-h text-warning me-1"></i> Student Marksheet &
+                    GPA Portal</span>
+                <h1 class="display-5 fw-bold text-white mb-2">Online Examination Result System</h1>
+                <p class="text-white-50 fs-5 mb-0">Search terminal examination and board results by Symbol Number and
+                    Date of Birth.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a href="{% url 'exam_routines' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold">
+                    <i class="fas fa-calendar-alt text-warning me-1"></i> View Exam Routines
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Form & Result Viewer -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Search Box Card -->
+                <div class="p-4 p-md-5 rounded-4 border shadow-sm mb-5 bg-light position-relative overflow-hidden"
+                    style="border-top: 4px solid #1E3A8A !important;">
+                    <div class="text-center mb-4">
+                        <span class="badge bg-primary text-white fw-bold px-3 py-1 mb-2">Instant Verification</span>
+                        <h2 class="h4 fw-bold text-dark mb-1">Check Student Examination Marksheet</h2>
+                        <p class="text-muted small">Enter the student's Symbol Number as printed on the Admit Card.</p>
+                    </div>
+
+                    <form method="GET" action="{% url 'exam_results' %}" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label-custom">Symbol / Roll Number <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i
+                                        class="fas fa-id-card text-primary"></i></span>
+                                <input type="text" name="symbol_no" value="{{ symbol_no }}" placeholder="e.g. HNA-801"
+                                    required class="form-control-custom border-start-0 text-uppercase fw-bold">
+                            </div>
+                            <span class="extra-small text-muted">Try sample: <strong>HNA-801</strong> or
+                                <strong>HNA-802</strong></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label-custom">Date of Birth <span class="text-danger">*</span></label>
+                            <input type="date" name="dob" value="{{ dob_str }}" class="form-control-custom">
+                            <span class="extra-small text-muted">Format: YYYY-MM-DD</span>
+                        </div>
+
+                        <div class="col-12 mt-4 text-center">
+                            <button type="submit"
+                                class="btn btn-primary rounded-pill px-5 py-3 fw-bold text-white shadow-sm">
+                                <i class="fas fa-magnifying-glass me-2 text-warning"></i> View Official Result
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Error Alert if Not Found -->
+                {% if searched and error_message %}
+                <div class="alert alert-warning rounded-4 p-4 shadow-sm border-0 d-flex align-items-start gap-3 mb-5">
+                    <i class="fas fa-triangle-exclamation text-warning fs-3 flex-shrink-0 mt-1"></i>
+                    <div>
+                        <h5 class="h6 fw-bold mb-1">Record Not Found</h5>
+                        <p class="small mb-0">{{ error_message }}</p>
+                        <div class="mt-2 extra-small text-muted">
+                            Tip: For demonstration, try Symbol Number <strong>HNA-801</strong> (Aarav Joshi) or
+                            <strong>HNA-802</strong> (Pooja Chaudhary).
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Official Marksheet Card Result -->
+                {% if result %}
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5" id="printableMarksheet">
+                    <!-- Institutional Header -->
+                    <div class="p-4 text-white text-center position-relative"
+                        style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #1E3A8A 100%); border-bottom: 4px solid #F59E0B;">
+                        <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                            <img src="/static/images/logo.png" alt="Hunainath Emblem" style="height: 44px; width: 44px;"
+                                class="rounded-circle bg-white p-1">
+                            <h3 class="h5 fw-bold text-white mb-0">Shree Hunainath Educational Academy</h3>
+                        </div>
+                        <p class="extra-small text-white-50 mb-1">Shuklaphanta-5, Garjamuni, Kanchanpur • Approved by
+                            Ministry of Education</p>
+                        <div
+                            class="d-inline-block bg-warning text-dark fw-bold px-3 py-1 rounded-pill extra-small mt-1">
+                            OFFICIAL GRADE SHEET & PROGRESS REPORT • {{ result.academic_year }}
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+                        <!-- Student Demographics -->
+                        <div class="p-3 bg-light rounded-3 border mb-4">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="extra-small text-muted">Student Name:</div>
+                                    <div class="fw-bold text-dark fs-6">{{ result.student_name }}</div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="extra-small text-muted">Symbol Number:</div>
+                                    <div class="fw-bold text-primary">{{ result.symbol_number }}</div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="extra-small text-muted">Class / Grade:</div>
+                                    <div class="fw-bold text-dark">{{ result.grade }}</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="extra-small text-muted">Examination:</div>
+                                    <div class="fw-bold text-dark">{{ result.get_exam_term_display }}</div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="extra-small text-muted">Date of Birth:</div>
+                                    <div class="fw-bold text-muted">{{ result.date_of_birth|date:"M d, Y" }}</div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="extra-small text-muted">Academic Year:</div>
+                                    <div class="fw-bold text-muted">{{ result.academic_year }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subject Grade Table -->
+                        <div class="table-responsive mb-4">
+                            <table class="table table-bordered table-striped align-middle mb-0">
+                                <thead class="table-dark" style="background: #0F172A;">
+                                    <tr>
+                                        <th class="ps-3" style="width: 50px;">#</th>
+                                        <th>Subject Name</th>
+                                        <th class="text-center" style="width: 150px;">Obtained Grade / GPA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in result.get_subject_list %}
+                                    <tr>
+                                        <td class="ps-3 fw-bold text-muted">{{ forloop.counter }}</td>
+                                        <td class="fw-semibold text-dark">{{ row.subject }}</td>
+                                        <td class="text-center fw-bold text-primary">{{ row.score }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Breakdown recorded under GPA
+                                            summary.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <td colspan="2" class="text-end fw-bold ps-3">Total Aggregate Score:</td>
+                                        <td class="text-center fw-bold text-dark">{{ result.total_marks }}</td>
+                                    </tr>
+                                    <tr style="background: rgba(30, 58, 138, 0.08);">
+                                        <td colspan="2" class="text-end fw-bold text-primary fs-6">Cumulative Grade
+                                            Point Average (GPA):</td>
+                                        <td class="text-center fw-bold text-primary fs-5">{{ result.gpa }} / 4.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Result Summary Box -->
+                        <div class="row g-3 align-items-center p-3 rounded-3 mb-4"
+                            style="background: #F8FAFC; border: 1.5px solid #E2E8F0;">
+                            <div class="col-md-4 text-center border-end">
+                                <div class="extra-small text-muted text-uppercase fw-bold">Overall Grade</div>
+                                <div class="display-6 fw-bold text-primary">{{ result.grade_letter }}</div>
+                            </div>
+                            <div class="col-md-4 text-center border-end">
+                                <div class="extra-small text-muted text-uppercase fw-bold">Result Status</div>
+                                <span
+                                    class="badge {% if result.result_status == 'PASSED' %}bg-success{% else %}bg-warning text-dark{% endif %} fs-6 px-3 py-2 rounded-pill mt-1">
+                                    {{ result.get_result_status_display }}
+                                </span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="extra-small text-muted text-uppercase fw-bold">Class Standing</div>
+                                <div class="fs-5 fw-bold text-dark mt-1">{% if result.rank %}Rank {{ result.rank }}{%
+                                    else %}Passed{% endif %}</div>
+                            </div>
+                        </div>
+
+                        <!-- Remarks & Authentication Footer -->
+                        <div class="p-3 bg-light rounded-3 border mb-4">
+                            <span class="extra-small text-muted d-block mb-1">Faculty Remarks:</span>
+                            <p class="small text-dark fst-italic mb-0">"{{ result.remarks }}"</p>
+                        </div>
+
+                        <!-- Print / Download Button -->
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3 border-top">
+                            <span class="extra-small text-muted"><i class="fas fa-lock text-success me-1"></i> Digitally
+                                verified by Hunainath Academy Examination Department</span>
+                            <button onclick="window.print()"
+                                class="btn btn-outline-dark rounded-pill px-4 fw-bold btn-sm">
+                                <i class="fas fa-print me-1"></i> Print / Save Marksheet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

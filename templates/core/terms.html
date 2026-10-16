@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Terms & Conditions & Student Code of Conduct - {{ school.name }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5" style="background: linear-gradient(135deg, #0A1128 0%, #172554 60%, #1E3A8A 100%); color: white;">
+    <div class="container py-4 text-center">
+        <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill mb-3">
+            <i class="fas fa-file-contract me-1"></i> Official Academy Policies
+        </span>
+        <h1 class="display-5 fw-bold text-white mb-3 font-heading">Terms & Conditions</h1>
+        <p class="lead text-white-50 mx-auto" style="max-width: 720px;">
+            Institutional guidelines, student code of conduct, admission criteria, and digital services policy for Shree Hunainath Educational Academy.
+        </p>
+    </div>
+</section>
+
+<!-- Terms Content -->
+<section class="py-5 bg-white">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                    
+                    <div class="mb-4">
+                        <span class="badge bg-light text-muted border mb-2">Effective: Academic Session 2082–2083 B.S.</span>
+                        <h2 class="h3 fw-bold text-dark">1. Institutional Scope & Scope of Operation</h2>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Shree Hunainath Educational Academy is an officially recognized educational institution affiliated with the Ministry of Education and Shuklaphanta Municipality Education Department. The institution currently provides academic instruction from Early Childhood Development (Montessori Nursery, LKG, UKG) through Grade 8 (Basic Level Education - BLE).
+                        </p>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-dark">2. Admissions & Student Enrollment</h2>
+                        <ul class="text-muted" style="line-height: 1.8;">
+                            <li>Admissions into ECD to Grade 8 are granted subject to seat availability, document verification, and age criteria set by educational regulations.</li>
+                            <li>Parents/Guardians must furnish authentic certificates (birth registration, previous academic grade sheets, transfer certificates). Providing false information will lead to cancellation of enrollment.</li>
+                            <li>The online admission portal allows tracking review status; final admission is confirmed upon fee clearance and verification by the Principal.</li>
+                        </ul>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-dark">3. Attendance, Punctuality & Leave Rules</h2>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            A minimum of 80% attendance is strictly required for students to be eligible for Terminal and Annual Board Examinations. In case of illness or unforeseen absence, guardians must submit a written leave application or notify the school administration promptly.
+                        </p>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-dark">4. Examination Rules & Results Portal</h2>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Terminal and Annual Examinations follow standard grading scales (GPA system) approved by the Ministry of Education. The online Exam Results Portal is provided as an official communication channel for guardians. Any tampering or unauthorized data extraction is strictly prohibited.
+                        </p>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-dark">5. Student Code of Conduct & School Safety</h2>
+                        <ul class="text-muted" style="line-height: 1.8;">
+                            <li>Students must arrive in proper clean school uniform with school ID card daily.</li>
+                            <li>Respect for teachers, staff, peers, and school property is mandatory. Bullying, physical altercations, and inappropriate behavior carry strict disciplinary actions.</li>
+                            <li>Electronic gadgets or unnecessary valuables are prohibited on school premises unless specifically authorized for educational projects.</li>
+                        </ul>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <h2 class="h3 fw-bold text-dark">6. Website Development & Attribution</h2>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            This official web portal and school management platform was engineered and deployed by <a href="https://masterjunction.com.np" target="_blank" rel="noopener" class="fw-bold text-primary text-decoration-none">masterjunction.com.np</a> on behalf of Shree Hunainath Educational Academy. All contents, logos, institutional marks, and student data are protected under applicable copyright and institutional agreements.
+                        </p>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-light rounded-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <span class="small text-muted"><i class="fas fa-check-circle text-success me-1"></i> Authorized by Principal Bashu Dev Bhatt</span>
+                        <a href="{% url 'contact' %}" class="btn btn-primary btn-sm rounded-pill px-3">Contact School Office</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
