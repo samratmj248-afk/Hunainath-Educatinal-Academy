@@ -744,33 +744,37 @@ header.sticky-nav.scrolled {
 
 /* Hero Showcase Card */
 .hero-glass-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-xl, 20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
   position: relative;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s ease;
 }
 
-.hero-board-badge-wrap {
-  position: relative;
-  z-index: 10;
-}
-
-.hero-board-badge-wrap .rounded-pill {
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
+.hero-glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.45), 0 0 25px rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.45);
 }
 
 .hero-carousel-inner {
-  height: 340px;
-  border-radius: inherit;
+  height: 380px;
+  border-radius: calc(var(--radius-xl, 20px) - 6px);
+  overflow: hidden;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .hero-carousel-inner {
-    height: 260px;
+    height: 320px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-carousel-inner {
+    height: 250px;
   }
 }
 
@@ -779,11 +783,15 @@ header.sticky-nav.scrolled {
   height: 100%;
   object-fit: cover;
   transform: scale(1);
-  transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+}
+
+.hero-glass-card:hover .hero-carousel-img {
+  filter: brightness(1.03) contrast(1.02);
 }
 
 .carousel-item.active .hero-carousel-img {
-  animation: heroKenBurns 7s ease-out infinite alternate;
+  animation: heroKenBurns 8s ease-out infinite alternate;
 }
 
 @keyframes heroKenBurns {
@@ -791,7 +799,7 @@ header.sticky-nav.scrolled {
     transform: scale(1);
   }
   100% {
-    transform: scale(1.08);
+    transform: scale(1.06);
   }
 }
 
