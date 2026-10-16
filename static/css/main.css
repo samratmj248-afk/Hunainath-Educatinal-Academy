@@ -949,13 +949,13 @@ header.sticky-nav.scrolled {
 
 .feature-pillar-card {
   background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: var(--radius-lg);
-  padding: 30px 20px;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: var(--radius-xl, 20px);
+  padding: 32px 22px;
   text-align: center;
   height: 100%;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -969,36 +969,41 @@ header.sticky-nav.scrolled {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #F59E0B, #1D4ED8);
+  height: 4px;
+  background: linear-gradient(90deg, #1D4ED8 0%, #F59E0B 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: scaleX(0.2);
+  transform-origin: center;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .feature-pillar-card:hover {
   transform: translateY(-8px);
-  border-color: #CBD5E1;
-  box-shadow: 0 18px 36px -8px rgba(15, 23, 42, 0.12);
+  border-color: rgba(29, 78, 216, 0.25);
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12), 0 0 20px rgba(245, 158, 11, 0.08);
 }
 
 .feature-pillar-card:hover::before {
   opacity: 1;
+  transform: scaleX(1);
 }
 
 .feature-pillar-icon-box {
-  width: 62px;
-  height: 62px;
-  border-radius: 18px;
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1.75rem;
+  margin-bottom: 22px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
 }
 
 .feature-pillar-card:hover .feature-pillar-icon-box {
-  transform: scale(1.1) rotate(4deg);
+  transform: scale(1.12) translateY(-3px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
 }
 
 .bg-blue-subtle { background: #EFF6FF; }
@@ -1018,15 +1023,21 @@ header.sticky-nav.scrolled {
 .text-gold-accent { color: #CA8A04; }
 
 .feature-pillar-card h3 {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: #0F172A;
   line-height: 1.35;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.feature-pillar-card:hover h3 {
+  color: #1D4ED8;
 }
 
 .feature-pillar-card p {
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   color: #64748B;
   margin: 0;
   line-height: 1.65;
