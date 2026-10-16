@@ -761,14 +761,20 @@ header.sticky-nav.scrolled {
 }
 
 .hero-carousel-inner {
-  height: 380px;
+  height: 410px;
   border-radius: calc(var(--radius-xl, 20px) - 6px);
   overflow: hidden;
 }
 
+@media (max-width: 1200px) {
+  .hero-carousel-inner {
+    height: 360px;
+  }
+}
+
 @media (max-width: 991px) {
   .hero-carousel-inner {
-    height: 320px;
+    height: 310px;
   }
 }
 
