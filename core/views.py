@@ -304,17 +304,30 @@ def gallery(request):
 
 def faculty(request):
     """
-    Faculty & Staff Directory.
+    Staff Directory with interactive role filtering:
+    Teaching Staff, Canteen Staff, Security Staff, Cleaning Staff, Administration, and Others.
     """
     school = get_school_profile()
-    leadership = FacultyMember.objects.filter(is_leadership=True).order_by("order")
-    teaching_staff = FacultyMember.objects.filter(is_leadership=False).order_by("department", "order")
+    category = request.GET.get("category", "ALL").strip().upper()
+    
+    staff_qs = FacultyMember.objects.all().order_by("order", "name")
+    
+    if category != "ALL":
+        if category == "TEACHING":
+            # Include specific subject departments under teaching
+            staff_qs = staff_qs.filter(department__in=["TEACHING", "SCIENCE", "MATHS", "LANGUAGES", "SOCIAL", "PRIMARY", "SPORTS"])
+        else:
+            staff_qs = staff_qs.filter(department=category)
+
+    leadership = staff_qs.filter(is_leadership=True)
+    general_staff = staff_qs.filter(is_leadership=False)
 
     context = {
         "school": school,
         "leadership": leadership,
-        "teaching_staff": teaching_staff,
-        "page_title": "Our Dedicated Educators & Staff",
+        "general_staff": general_staff,
+        "active_category": category,
+        "page_title": "Academy Staff Directory - Shree Hunainath",
     }
     return render(request, "core/faculty.html", context)
 
@@ -452,11 +465,16 @@ def push_unsubscribe(request):
 
 def send_web_push_notification(title, body, url="/"):
     """
-    Helper to broadcast web push notifications to all active subscribers.
+    Helper to broadcast web push notifications concurrently to all active subscribers.
+    Dispatches in parallel using ThreadPoolExecutor for instant simultaneous arrival on all devices.
     """
     from pywebpush import webpush, WebPushException
+    from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    subscribers = PushSubscription.objects.filter(is_active=True)
+    subscribers = list(PushSubscription.objects.filter(is_active=True))
+    if not subscribers:
+        return 0
+
     vapid_private_key = getattr(settings, "VAPID_PRIVATE_KEY", "")
     vapid_claims = {"sub": getattr(settings, "VAPID_CLAIMS_SUB", "mailto:admin@hunainath.edu.np")}
 
@@ -467,11 +485,11 @@ def send_web_push_notification(title, body, url="/"):
             "url": url,
             "icon": "/static/images/icons/icon-192x192.png",
             "badge": "/static/images/icons/icon-72x72.png",
+            "sound": "/static/sounds/notification.wav",
         }
     )
 
-    success_count = 0
-    for sub in subscribers:
+    def dispatch_to_subscriber(sub):
         sub_info = {
             "endpoint": sub.endpoint,
             "keys": {
@@ -485,14 +503,27 @@ def send_web_push_notification(title, body, url="/"):
                 data=payload,
                 vapid_private_key=vapid_private_key,
                 vapid_claims=vapid_claims,
+                ttl=86400,
             )
-            success_count += 1
+            print(f"[WebPush] Successfully sent to subscriber #{sub.id}")
+            return True
         except WebPushException as ex:
+            print(f"[WebPush] Push failed for subscriber #{sub.id}: {ex}")
             if ex.response and ex.response.status_code in (404, 410):
                 # Subscription expired or unsubscribed
                 sub.delete()
-        except Exception:
-            pass
+            return False
+        except Exception as ex:
+            print(f"[WebPush] Unexpected error for subscriber #{sub.id}: {ex}")
+            return False
+
+    success_count = 0
+    max_workers = min(32, len(subscribers)) if subscribers else 1
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_sub = {executor.submit(dispatch_to_subscriber, sub): sub for sub in subscribers}
+        for future in as_completed(future_to_sub):
+            if future.result():
+                success_count += 1
 
     return success_count
 
@@ -681,38 +712,47 @@ def exam_routines(request):
 def exam_results(request):
     """
     Interactive Student Examination Result Portal.
-    Parents/Students look up terminal or board results by Symbol/Roll No & DOB.
+    Parents/Students look up terminal or board results by Symbol/Roll Number, Student Name, and Class/Grade.
+    (Date of Birth removed as per user instruction).
     """
     school = get_school_profile()
     symbol_no = request.GET.get("symbol_no", "").strip().upper()
-    dob_str = request.GET.get("dob", "").strip()
+    student_name = request.GET.get("student_name", "").strip()
+    grade = request.GET.get("grade", "").strip()
     term = request.GET.get("term", "").strip()
 
     result = None
     searched = False
     error_message = ""
 
-    if symbol_no:
+    if symbol_no or student_name:
         searched = True
-        qs = ExamResult.objects.filter(symbol_number__iexact=symbol_no, is_published=True)
+        qs = ExamResult.objects.filter(is_published=True)
+        if symbol_no:
+            qs = qs.filter(symbol_number__iexact=symbol_no)
+        if student_name:
+            qs = qs.filter(student_name__icontains=student_name)
+        if grade:
+            qs = qs.filter(grade__iexact=grade)
         if term:
             qs = qs.filter(exam_term=term)
 
-        if dob_str:
-            try:
-                dob_val = datetime.strptime(dob_str, "%Y-%m-%d").date()
-                qs = qs.filter(date_of_birth=dob_val)
-            except ValueError:
-                pass  # if invalid date format, proceed with symbol number lookup
-
         result = qs.first()
         if not result:
-            error_message = f"No published examination record found for Symbol Number '{symbol_no}'. Please check your Admit Card or Date of Birth."
+            error_message = f"No published examination record found for the provided details. Please verify the Symbol/Roll Number, Name, and Class."
+
+    # Available classes for filter dropdown
+    available_classes = [
+        "Nursery", "LKG", "UKG", "Grade 1", "Grade 2", "Grade 3", 
+        "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8"
+    ]
 
     context = {
         "school": school,
         "symbol_no": symbol_no,
-        "dob_str": dob_str,
+        "student_name": student_name,
+        "grade": grade,
+        "available_classes": available_classes,
         "term": term,
         "result": result,
         "searched": searched,
@@ -720,6 +760,7 @@ def exam_results(request):
         "page_title": "Online Examination Result Portal - Hunainath Educational Academy",
     }
     return render(request, "core/exam_results.html", context)
+
 
 
 # ==============================================================================

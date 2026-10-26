@@ -44,23 +44,42 @@
                     </div>
 
                     <form method="GET" action="{% url 'exam_results' %}" class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label class="form-label-custom">Symbol / Roll Number <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i
                                         class="fas fa-id-card text-primary"></i></span>
                                 <input type="text" name="symbol_no" value="{{ symbol_no }}" placeholder="e.g. HNA-801"
-                                    required class="form-control-custom border-start-0 text-uppercase fw-bold">
+                                    class="form-control-custom border-start-0 text-uppercase fw-bold">
                             </div>
-                            <span class="extra-small text-muted">Try sample: <strong>HNA-801</strong> or
-                                <strong>HNA-802</strong></span>
+                            <span class="extra-small text-muted">Sample: <strong>HNA-801</strong> or <strong>HNA-802</strong></span>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label-custom">Date of Birth</label>
-                            <input type="date" name="dob" value="{{ dob_str }}" class="form-control-custom">
-                            <span class="extra-small text-muted">Format: YYYY-MM-DD</span>
+                        <div class="col-md-4">
+                            <label class="form-label-custom">Student Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i
+                                        class="fas fa-user text-primary"></i></span>
+                                <input type="text" name="student_name" value="{{ student_name }}" placeholder="e.g. Aarav Joshi"
+                                    class="form-control-custom border-start-0">
+                            </div>
+                            <span class="extra-small text-muted">Optional: Search by name</span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label-custom">Class / Grade</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0"><i
+                                        class="fas fa-graduation-cap text-primary"></i></span>
+                                <select name="grade" class="form-select border-start-0" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1; height: 48px;">
+                                    <option value="">All Classes</option>
+                                    {% for cls in available_classes %}
+                                    <option value="{{ cls }}" {% if grade == cls %}selected{% endif %}>{{ cls }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <span class="extra-small text-muted">Select Grade</span>
                         </div>
 
                         <div class="col-12 mt-4 text-center">

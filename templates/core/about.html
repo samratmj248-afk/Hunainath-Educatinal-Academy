@@ -15,71 +15,171 @@
 </section>
 
 <!-- About Details & Story -->
-<section class="py-5 bg-white">
-    <div class="container py-4">
-        <div class="row align-items-center g-5 mb-5">
-            <div class="col-lg-6">
-                <span class="section-tag"><i class="fas fa-landmark text-warning"></i> Institutional Identity</span>
-                <h2 class="section-title">An Academy Dedicated to Child-Centered Growth</h2>
-                <div class="text-muted" style="line-height: 1.8;">
-                    {{ school.about_text|linebreaks }}
+<section class="py-5 bg-white position-relative">
+    <div class="container py-3">
+        <!-- Main Institutional Showcase Card -->
+        <div class="about-hero-showcase bg-light border border-2 border-warning border-opacity-50 rounded-4 p-4 p-lg-5 mb-5 shadow-sm">
+            <div class="row align-items-center g-4 g-lg-5">
+                <div class="col-lg-6">
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3"
+                        style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); color: #B45309; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <i class="fas fa-landmark text-warning"></i> Institutional Identity
+                    </div>
+                    <h2 class="display-6 fw-bold text-dark mb-3 font-heading" style="line-height: 1.25; letter-spacing: -0.01em;">
+                        An Academy Dedicated to <span style="color: #1E3A8A;">Child-Centered</span> <span style="color: #D97706;">Growth</span>
+                    </h2>
+                    
+                    <div class="text-secondary mb-4" style="font-size: 1.02rem; line-height: 1.85;">
+                        <p class="mb-0">
+                            {{ school.about_text|default:"Shree Hunainath Educational Academy is a premier co-educational institution located in Garjamuni, Shuklaphanta-07, Kanchanpur. Catering to students from Early Childhood Development (Nursery) through Grade 8 (Basic Level), the academy offers modern child-centric teaching methodologies, interactive classrooms, dedicated sports facilities, and cultural enrichment." }}
+                        </p>
+                    </div>
+
+                    <!-- Core Institutional Value Badges -->
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge rounded-pill bg-white text-dark border px-3 py-2 shadow-xs d-inline-flex align-items-center gap-2">
+                            <i class="fas fa-check-circle text-success"></i> ECD to Grade 8 (BLE)
+                        </span>
+                        <span class="badge rounded-pill bg-white text-dark border px-3 py-2 shadow-xs d-inline-flex align-items-center gap-2">
+                            <i class="fas fa-check-circle text-warning"></i> English & Nepali Medium
+                        </span>
+                        <span class="badge rounded-pill bg-white text-dark border px-3 py-2 shadow-xs d-inline-flex align-items-center gap-2">
+                            <i class="fas fa-check-circle text-primary"></i> Govt. Recognized
+                        </span>
+                    </div>
+
+                    <!-- Highlighted Stats Grid -->
+                    <div class="row g-3 pt-2">
+                        <div class="col-4">
+                            <div class="p-3 bg-white rounded-3 border-start border-4 border-warning shadow-xs h-100 text-center text-sm-start">
+                                <div class="h3 fw-bold mb-0 text-dark font-heading">{{ school.established_year|default:"2008" }}</div>
+                                <span class="text-muted extra-small fw-semibold d-block mt-1">Established Year</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 bg-white rounded-3 border-start border-4 border-primary shadow-xs h-100 text-center text-sm-start">
+                                <div class="h3 fw-bold mb-0 text-primary font-heading">{{ school.stats_students|default:"165" }}</div>
+                                <span class="text-muted extra-small fw-semibold d-block mt-1">Active Students</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-3 bg-white rounded-3 border-start border-4 border-success shadow-xs h-100 text-center text-sm-start">
+                                <div class="h3 fw-bold mb-0 text-success font-heading">{{ school.stats_faculty|default:"16" }}+</div>
+                                <span class="text-muted extra-small fw-semibold d-block mt-1">Caring Educators</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex gap-4 mt-4 pt-2 flex-wrap">
-                    <div class="border-start border-warning border-4 ps-3">
-                        <h4 class="fw-bold mb-0 text-dark">{{ school.established_year|default:"2008" }}</h4>
-                        <span class="text-muted small">Established Year</span>
-                    </div>
-                    <div class="border-start border-warning border-4 ps-3">
-                        <h4 class="fw-bold mb-0 text-dark">{{ school.stats_students|default:"165" }}</h4>
-                        <span class="text-muted small">Active Students</span>
-                    </div>
-                    <div class="border-start border-success border-4 ps-3">
-                        <h4 class="fw-bold mb-0 text-dark">{{ school.stats_faculty|default:"16" }}+</h4>
-                        <span class="text-muted small">Caring Educators</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="position-relative rounded-4 overflow-hidden shadow-lg border border-warning" style="height: 380px;">
-                    <img src="/media/gallery/hunainath_students_outdoor.webp" alt="Shree Hunainath Educational Academy Students" class="w-100 h-100 object-fit-cover" loading="lazy">
-                    <div class="position-absolute bottom-0 start-0 m-3 p-3 bg-white rounded-3 shadow-md border border-warning" style="max-width: 320px;">
-                        <span class="badge bg-warning text-dark mb-1">Hunainath Academy</span>
-                        <p class="small text-dark mb-0 fw-bold"><i class="fas fa-school text-warning me-1"></i> Foundational Excellence & Caring Community</p>
+
+                <div class="col-lg-6">
+                    <div class="position-relative rounded-4 overflow-hidden shadow-lg border border-warning" style="min-height: 380px; max-height: 440px;">
+                        <img src="/media/gallery/hunainath_students_outdoor.webp" alt="Shree Hunainath Educational Academy Students" class="w-100 h-100 object-fit-cover" loading="lazy" style="transition: transform 0.6s ease;">
+                        <div class="position-absolute bottom-0 start-0 end-0 p-3 p-md-4 text-white" style="background: linear-gradient(180deg, transparent 0%, rgba(10, 17, 40, 0.88) 70%, #0A1128 100%);">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-warning text-dark fw-bold px-2 py-1">Garjamuni Campus</span>
+                                <span class="small text-white-50"><i class="fas fa-map-marker-alt text-warning me-1"></i> Shuklaphanta-07</span>
+                            </div>
+                            <h4 class="h6 text-white fw-bold mb-0">Nurturing Bright Minds with Care, Discipline & Joy</h4>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Mission & Vision Cards -->
-        <div class="row g-4 my-4">
+        <!-- Mission & Vision Cards (Refined Side-by-Side Symmetrical Grid) -->
+        <div class="row g-4 my-2">
             <div class="col-md-6">
-                <div class="p-4 rounded-4 h-100 border border-2 border-warning bg-light shadow-sm">
+                <div class="p-4 p-lg-5 rounded-4 h-100 bg-white border border-2 border-warning shadow-sm d-flex flex-column"
+                    style="border-top: 5px solid #F59E0B !important;">
                     <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center shadow-xs flex-shrink-0" style="width: 52px; height: 52px; font-size: 1.35rem;">
                             <i class="fas fa-bullseye"></i>
                         </div>
-                        <h3 class="h4 fw-bold mb-0 text-dark">Our Mission</h3>
+                        <div>
+                            <span class="badge bg-warning bg-opacity-20 text-dark extra-small fw-bold px-2 py-1 rounded">Our Purpose</span>
+                            <h3 class="h4 fw-bold mb-0 text-dark">Our Mission</h3>
+                        </div>
                     </div>
-                    <p class="text-muted mb-0" style="line-height: 1.8;">
-                        {{ school.mission }}
+                    <p class="text-secondary flex-grow-1 mb-0" style="line-height: 1.85; font-size: 0.98rem;">
+                        {{ school.mission|default:"To provide inclusive, high-caliber foundational education that stimulates critical thinking, emotional intelligence, strong moral values, and global readiness for every child in our community." }}
                     </p>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="p-4 rounded-4 h-100 border border-2 border-warning bg-light shadow-sm">
+                <div class="p-4 p-lg-5 rounded-4 h-100 bg-white border border-2 border-primary shadow-sm d-flex flex-column"
+                    style="border-top: 5px solid #1D4ED8 !important;">
                     <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-xs flex-shrink-0" style="width: 52px; height: 52px; font-size: 1.35rem;">
                             <i class="fas fa-eye"></i>
                         </div>
-                        <h3 class="h4 fw-bold mb-0 text-dark">Our Vision</h3>
+                        <div>
+                            <span class="badge bg-primary bg-opacity-15 text-primary extra-small fw-bold px-2 py-1 rounded">Our Future</span>
+                            <h3 class="h4 fw-bold mb-0 text-dark">Our Vision</h3>
+                        </div>
                     </div>
-                    <p class="text-muted mb-0" style="line-height: 1.8;">
-                        {{ school.vision }}
+                    <p class="text-secondary flex-grow-1 mb-0" style="line-height: 1.85; font-size: 0.98rem;">
+                        {{ school.vision|default:"To be recognized as Sudurpashchim province's benchmark foundational academy where curious young learners grow into disciplined, responsible, compassionate, and visionary future leaders." }}
                     </p>
                 </div>
             </div>
         </div>
+
+        {% if enrollment_records %}
+        <!-- Verified Enrollment Growth Record (Academic Year Comparison) -->
+        <div class="mt-5 pt-3">
+            <div class="card border border-2 border-warning rounded-4 shadow-sm overflow-hidden bg-white">
+                <div class="card-header bg-gradient-navy text-white p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2"
+                    style="background: linear-gradient(135deg, #070F26 0%, #1E3A8A 100%);">
+                    <div>
+                        <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-1">Academic Progress</span>
+                        <h4 class="h5 fw-bold text-white mb-0 font-heading">Institutional Student Enrollment Statistics</h4>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 px-3 py-2 small">
+                            <i class="fas fa-users text-warning me-1"></i> Current Total: <strong>{{ total_2081_82|default:school.stats_students }}</strong> Students
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-center">
+                            <thead style="background: #F8FAFC; color: #0F172A; font-weight: 700; font-size: 0.9rem;">
+                                <tr>
+                                    <th class="py-3 px-3 text-start">Class / Level</th>
+                                    <th class="py-3 px-3">2080-81 B.S. Enrolled</th>
+                                    <th class="py-3 px-3">2081-82 B.S. Enrolled</th>
+                                    <th class="py-3 px-3">Growth Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rec in enrollment_records %}
+                                <tr>
+                                    <td class="py-3 px-3 text-start fw-bold text-dark">{{ rec.grade_name }}</td>
+                                    <td class="py-3 px-3 text-muted">{{ rec.count_2080_81 }}</td>
+                                    <td class="py-3 px-3 fw-bold text-primary">{{ rec.count_2081_82 }}</td>
+                                    <td class="py-3 px-3">
+                                        <span class="badge bg-success bg-opacity-15 text-success rounded-pill px-3 py-1 fw-bold">Active</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot style="background: #FFFBEB; font-weight: 800; font-size: 0.95rem; color: #B45309;">
+                                <tr>
+                                    <td class="py-3 px-3 text-start">Total School Strength</td>
+                                    <td class="py-3 px-3">{{ total_2080_81 }}</td>
+                                    <td class="py-3 px-3 text-dark">{{ total_2081_82 }}</td>
+                                    <td class="py-3 px-3 text-success">
+                                        <i class="fas fa-arrow-trend-up me-1"></i> Continuous Growth
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
 

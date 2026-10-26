@@ -311,7 +311,12 @@ class FacultyMember(models.Model):
     School educators, coordinators, and administrative leaders.
     """
     DEPARTMENT_CHOICES = [
+        ("TEACHING", "Teaching Faculty / Educators"),
         ("ADMIN", "School Administration & Leadership"),
+        ("CANTEEN", "Canteen & Dining Staff"),
+        ("SECURITY", "Security & Safety Staff"),
+        ("CLEANING", "Sanitation & Cleaning Staff"),
+        ("OTHER", "Support & Transport Staff"),
         ("SCIENCE", "Science & Technology"),
         ("MATHS", "Mathematics & Computing"),
         ("LANGUAGES", "Languages (Nepali, English, Sanskrit)"),

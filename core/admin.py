@@ -258,6 +258,16 @@ class BroadcastNotificationAdmin(ModelAdmin):
     search_fields = ("title", "body")
     actions = ["dispatch_notification"]
 
+    def save_model(self, request, obj, form, change):
+        is_new = obj.pk is None
+        super().save_model(request, obj, form, change)
+        if is_new:
+            from .views import send_web_push_notification
+            count = send_web_push_notification(obj.title, obj.body, obj.url)
+            obj.sent_count = count
+            obj.save(update_fields=["sent_count"])
+            messages.success(request, f"🔔 Notification sent instantly to {count} device(s) with audio chime.")
+
     @admin.action(description="Broadcast this notification to all active web push subscribers")
     def dispatch_notification(self, request, queryset):
         from .views import send_web_push_notification

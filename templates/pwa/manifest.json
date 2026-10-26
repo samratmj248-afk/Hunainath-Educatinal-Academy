@@ -1,6 +1,7 @@
 {
+  "id": "/",
   "name": "Shree Hunainath Educational Academy",
-  "short_name": "Hunainath Edu Academy",
+  "short_name": "Hunainath Academy",
   "description": "Empowering Minds, Inspiring Futures - Shuklaphanta-5, Garjamani, Kanchanpur, Nepal",
   "start_url": "/",
   "scope": "/",
@@ -11,6 +12,7 @@
   "lang": "en-US",
   "dir": "ltr",
   "categories": ["education", "academics", "schools"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/static/images/icons/icon-72x72.png",

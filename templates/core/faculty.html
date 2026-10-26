@@ -5,70 +5,155 @@
 <section class="page-header-banner py-5">
     <div class="container py-4 text-center position-relative">
         <span class="badge-header-pill mb-3">
-            <i class="fas fa-chalkboard-user"></i> Our Educators
+            <i class="fas fa-users-gear"></i> Hunainath Team
         </span>
-        <h1 class="display-5 fw-bold text-white mb-2">Dedicated Faculty & Mentors</h1>
+        <h1 class="display-5 fw-bold text-white mb-2">Academy Staff Directory</h1>
         <p class="text-white-50 mx-auto mb-0" style="max-width: 650px; font-size: 1.05rem;">
-            Passionate teachers, curriculum specialists, and coaches inspiring excellence in every classroom.
+            Meet our dedicated teaching faculty, administrative leaders, canteen caretakers, security guards, and support staff.
         </p>
     </div>
 </section>
 
-<!-- Faculty Directory -->
+<!-- Staff Filter & Directory -->
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <!-- Staff Role Dropdown Filter -->
+            <div class="d-flex align-items-center gap-2">
+                <label class="fw-bold text-dark small me-1"><i class="fas fa-filter text-primary me-1"></i> Filter by Role / Department:</label>
+                <div class="dropdown">
+                    <button class="btn btn-white bg-white border dropdown-toggle rounded-pill px-4 py-2 fw-bold text-dark shadow-xs"
+                        type="button" id="staffRoleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if active_category == 'ALL' or not active_category %}
+                            <i class="fas fa-users me-1 text-primary"></i> All Staff Members
+                        {% elif active_category == 'TEACHING' %}
+                            <i class="fas fa-chalkboard-user me-1 text-primary"></i> Teaching Faculty
+                        {% elif active_category == 'ADMIN' %}
+                            <i class="fas fa-user-tie me-1 text-primary"></i> School Administration
+                        {% elif active_category == 'CANTEEN' %}
+                            <i class="fas fa-utensils me-1 text-warning"></i> Canteen Staff
+                        {% elif active_category == 'SECURITY' %}
+                            <i class="fas fa-shield-halved me-1 text-danger"></i> Security Staff
+                        {% elif active_category == 'CLEANING' %}
+                            <i class="fas fa-broom me-1 text-success"></i> Cleaning & Sanitation Staff
+                        {% elif active_category == 'OTHER' %}
+                            <i class="fas fa-bus me-1 text-info"></i> Support & Transport Staff
+                        {% else %}
+                            {{ active_category }}
+                        {% endif %}
+                    </button>
+                    <ul class="dropdown-menu border-0 shadow-lg rounded-4 p-2" aria-labelledby="staffRoleDropdown" style="min-width: 260px;">
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'ALL' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=ALL"><i class="fas fa-users me-2"></i> All Staff Members</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'TEACHING' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=TEACHING"><i class="fas fa-chalkboard-user me-2 text-primary"></i> Teaching Staff</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'ADMIN' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=ADMIN"><i class="fas fa-user-tie me-2 text-primary"></i> School Administration</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'CANTEEN' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=CANTEEN"><i class="fas fa-utensils me-2 text-warning"></i> Canteen Staff</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'SECURITY' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=SECURITY"><i class="fas fa-shield-halved me-2 text-danger"></i> Security Staff</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'CLEANING' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=CLEANING"><i class="fas fa-broom me-2 text-success"></i> Cleaning Staff</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 px-3 fw-semibold {% if active_category == 'OTHER' %}active bg-primary text-white{% endif %}" href="{% url 'faculty' %}?category=OTHER"><i class="fas fa-bus me-2 text-info"></i> Support & Transport Staff</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Pill Filter Buttons -->
+            <div class="d-none d-md-flex flex-wrap gap-2">
+                <a href="{% url 'faculty' %}?category=ALL" class="btn btn-sm {% if active_category == 'ALL' or not active_category %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-1 fw-bold">All</a>
+                <a href="{% url 'faculty' %}?category=TEACHING" class="btn btn-sm {% if active_category == 'TEACHING' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-1 fw-bold">Teaching</a>
+                <a href="{% url 'faculty' %}?category=CANTEEN" class="btn btn-sm {% if active_category == 'CANTEEN' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-1 fw-bold">Canteen</a>
+                <a href="{% url 'faculty' %}?category=SECURITY" class="btn btn-sm {% if active_category == 'SECURITY' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-1 fw-bold">Security</a>
+                <a href="{% url 'faculty' %}?category=CLEANING" class="btn btn-sm {% if active_category == 'CLEANING' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-1 fw-bold">Cleaning</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Staff Cards Section -->
 <section class="py-5 bg-white">
-    <div class="container py-3">
-        <!-- Leadership Section -->
+    <div class="container py-2">
+        <!-- Leadership / Coordinators (if any in filtered set) -->
+        {% if leadership %}
         <div class="mb-5">
-            <h2 class="h4 fw-bold text-dark mb-4 border-bottom pb-2">Academic Leadership & Administration</h2>
+            <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
+                <h2 class="h4 fw-bold text-dark mb-0"><i class="fas fa-award text-warning me-2"></i>Administration & Leadership</h2>
+                <span class="badge bg-primary bg-opacity-10 text-primary fw-bold">{{ leadership|length }} Leaders</span>
+            </div>
             <div class="row g-4">
                 {% for leader in leadership %}
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-light h-100">
-                        <div class="mx-auto mb-3" style="width: 110px; height: 110px;">
-                            {% if leader.photo %}
-                            <img src="{{ leader.photo.url }}" alt="{{ leader.name }}" class="w-100 h-100 rounded-circle object-fit-cover border border-3 border-primary shadow-xs">
-                            {% else %}
-                            <div class="w-100 h-100 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fs-2 fw-bold">
-                                {{ leader.name|slice:":1" }}
+                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-light h-100 hover-card">
+                        <div class="mx-auto mb-3 position-relative" style="width: 120px; height: 120px;">
+                            <div style="padding: 3px; background: linear-gradient(135deg, #FDE047 0%, #F59E0B 100%); border-radius: 50%;">
+                                {% if leader.photo %}
+                                <img src="{{ leader.photo.url }}" alt="{{ leader.name }}" class="w-100 h-100 rounded-circle object-fit-cover border border-3 border-white shadow-xs">
+                                {% else %}
+                                <div class="w-100 h-100 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fs-2 fw-bold">
+                                    {{ leader.name|slice:":1" }}
+                                </div>
+                                {% endif %}
                             </div>
-                            {% endif %}
+                            <span class="position-absolute bottom-0 end-0 bg-warning text-dark rounded-circle p-1 shadow-xs" style="width: 28px; height: 28px; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-check"></i>
+                            </span>
                         </div>
                         <h3 class="h5 fw-bold text-dark mb-1">{{ leader.name }}</h3>
                         <div class="text-primary small fw-bold mb-2">{{ leader.designation }}</div>
+                        {% if leader.qualification %}
                         <div class="badge bg-white text-muted border mb-3">{{ leader.qualification }}</div>
+                        {% endif %}
+                        {% if leader.bio %}
                         <p class="text-muted small mb-0">{{ leader.bio }}</p>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
+        {% endif %}
 
-        <!-- Teaching Staff Section -->
+        <!-- General Staff Members -->
         <div>
-            <h2 class="h4 fw-bold text-dark mb-4 border-bottom pb-2">Department Faculty Members</h2>
+            <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
+                <h2 class="h4 fw-bold text-dark mb-0"><i class="fas fa-users-gear text-primary me-2"></i>Staff Members</h2>
+                <span class="badge bg-light text-muted border">{{ general_staff|length }} Members</span>
+            </div>
             <div class="row g-4">
-                {% for teacher in teaching_staff %}
+                {% for staff in general_staff %}
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="card border rounded-4 p-3 text-center bg-white h-100 shadow-xs hover-card">
-                        <div class="mx-auto mb-2" style="width: 80px; height: 80px;">
-                            {% if teacher.photo %}
-                            <img src="{{ teacher.photo.url }}" alt="{{ teacher.name }}" class="w-100 h-100 rounded-circle object-fit-cover border border-2 border-primary">
+                        <div class="mx-auto mb-3" style="width: 90px; height: 90px;">
+                            {% if staff.photo %}
+                            <img src="{{ staff.photo.url }}" alt="{{ staff.name }}" class="w-100 h-100 rounded-circle object-fit-cover border border-2 border-primary shadow-xs">
                             {% else %}
-                            <div class="w-100 h-100 rounded-circle bg-light text-primary border border-2 border-primary d-flex align-items-center justify-content-center fs-4 fw-bold">
-                                {{ teacher.name|slice:":1" }}
+                            <div class="w-100 h-100 rounded-circle bg-light text-primary border border-2 border-primary d-flex align-items-center justify-content-center fs-3 fw-bold">
+                                {{ staff.name|slice:":1" }}
                             </div>
                             {% endif %}
                         </div>
-                        <h4 class="h6 fw-bold text-dark mb-1">{{ teacher.name }}</h4>
-                        <div class="text-primary extra-small fw-bold mb-1">{{ teacher.designation }}</div>
-                        <div class="text-muted extra-small mb-2">{{ teacher.qualification }}</div>
-                        <span class="badge bg-light text-muted border extra-small mt-auto">{{ teacher.get_department_display }}</span>
+                        <h4 class="h6 fw-bold text-dark mb-1">{{ staff.name }}</h4>
+                        <div class="text-primary extra-small fw-bold mb-1">{{ staff.designation }}</div>
+                        {% if staff.qualification %}
+                        <div class="text-muted extra-small mb-2">{{ staff.qualification }}</div>
+                        {% endif %}
+                        <div class="mt-auto pt-2">
+                            <span class="badge rounded-pill extra-small 
+                                {% if staff.department == 'CANTEEN' %}bg-warning text-dark
+                                {% elif staff.department == 'SECURITY' %}bg-danger text-white
+                                {% elif staff.department == 'CLEANING' %}bg-success text-white
+                                {% elif staff.department == 'ADMIN' %}bg-dark text-white
+                                {% else %}bg-primary text-white{% endif %}">
+                                {{ staff.get_department_display }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <div class="col-12 text-center py-4">
-                    <p class="text-muted">Faculty profiles will be listed here.</p>
+                {% if not leadership %}
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-users-slash text-muted fs-1 mb-3"></i>
+                    <h4 class="h5 fw-bold text-dark">No Staff Records Found</h4>
+                    <p class="text-muted small">No staff members are currently listed under this category. Choose another department above.</p>
+                    <a href="{% url 'faculty' %}?category=ALL" class="btn btn-outline-primary btn-sm rounded-pill px-4 fw-bold">View All Staff</a>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>

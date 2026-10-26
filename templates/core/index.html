@@ -52,8 +52,19 @@
                     <!-- Single Animated Hero Slider (One Image At A Time with Smooth Ken Burns Crossfade) -->
                     <div id="heroPhotoCarousel" class="carousel slide carousel-fade position-relative rounded-4 overflow-hidden shadow-lg" data-bs-ride="carousel" data-bs-interval="4000">
                         <div class="carousel-inner hero-carousel-inner" style="background: #071938;">
-                            <!-- Slide 1: Primary Building & Student Assembly / Speech -->
+                            <!-- Slide 1: 54th World Environment Day Cleaning Program 2083 -->
                             <div class="carousel-item active h-100">
+                                <img src="/media/gallery/environment_day_cleaning_program.jpg?v=3"
+                                    alt="५४औँ विश्व वातावरण दिवसको उपलक्ष्यमा सरसफाइ कार्यक्रम - २०८३"
+                                    class="w-100 h-100 object-fit-cover hero-carousel-img"
+                                    style="object-position: center 25%;">
+                                <div class="carousel-caption-overlay">
+                                    <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-1">Community Action • २०८३</span>
+                                    <h3 class="h6 text-white mb-0 fw-bold">५४औँ विश्व वातावरण दिवस सरसफाइ कार्यक्रम</h3>
+                                </div>
+                            </div>
+                            <!-- Slide 2: Primary Building & Student Assembly / Speech -->
+                            <div class="carousel-item h-100">
                                 <img src="/media/gallery/quiz_speech_assembly.jpg"
                                     alt="Academic Assembly & Campus Building"
                                     class="w-100 h-100 object-fit-cover hero-carousel-img"
@@ -430,7 +441,7 @@
 
         <div class="row g-4">
             {% for prog in programs %}
-            <div class="col-lg-4 col-md-6 filterable-card" data-category="{{ prog.level }}">
+            <div class="col-xl-3 col-lg-6 col-md-6 filterable-card" data-category="{{ prog.level }}">
                 <div class="program-card">
                     <div class="program-card-header">
                         {% if prog.image %}
@@ -473,7 +484,7 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-5">
-                <div class="principal-executive-card p-4 p-md-5 rounded-4 position-relative overflow-hidden shadow-lg"
+                <div class="principal-executive-card p-4 p-md-5 rounded-4 position-relative overflow-hidden shadow-lg text-center"
                     style="background: linear-gradient(145deg, #070F26 0%, #0F172A 55%, #172554 100%); color: white; border: 1.5px solid rgba(245, 158, 11, 0.45); box-shadow: 0 20px 50px rgba(7, 15, 38, 0.35);">
 
                     <!-- Decorative Radial Glow Accents -->
@@ -485,51 +496,39 @@
                     </div>
 
                     <div class="text-center position-relative mb-4">
-                        <!-- Portrait with Royal Gold Halo & Verified Badge -->
+                        <!-- Extra Large Portrait with Royal Gold Halo & Verified Badge -->
                         <div class="position-relative d-inline-block mb-3">
                             <div
-                                style="padding: 4px; background: linear-gradient(135deg, #FDE047 0%, #F59E0B 50%, #D97706 100%); border-radius: 50%; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.35);">
+                                style="padding: 5px; background: linear-gradient(135deg, #FDE047 0%, #F59E0B 50%, #D97706 100%); border-radius: 50%; box-shadow: 0 14px 38px rgba(245, 158, 11, 0.45);">
                                 {% if school.principal_photo %}
                                 <img src="{{ school.principal_photo.url }}"
                                     alt="{{ school.principal_name|default:'Bashu Dev Bhatt' }}" class="rounded-circle"
-                                    width="144" height="144"
-                                    style="object-fit: cover; border: 3px solid #0F172A; display: block;">
+                                    width="200" height="200"
+                                    style="object-fit: cover; border: 4px solid #0F172A; display: block;">
                                 {% else %}
                                 <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width: 144px; height: 144px; background: #0F172A; border: 3px solid #0F172A;">
-                                    <i class="fas fa-user-tie text-warning" style="font-size: 3.5rem;"></i>
+                                    style="width: 200px; height: 200px; background: #0F172A; border: 4px solid #0F172A;">
+                                    <i class="fas fa-user-tie text-warning" style="font-size: 5rem;"></i>
                                 </div>
                                 {% endif %}
                             </div>
                             <!-- Verified Executive Badge on Avatar -->
                             <span
                                 class="position-absolute bottom-0 end-0 text-dark rounded-circle d-flex align-items-center justify-content-center shadow"
-                                style="width: 34px; height: 34px; background: #FBBF24; border: 3px solid #0F172A;"
+                                style="width: 38px; height: 38px; background: #FBBF24; border: 3px solid #0F172A;"
                                 title="Verified Principal">
-                                <i class="fas fa-check fw-bold" style="font-size: 0.85rem;"></i>
+                                <i class="fas fa-check fw-bold" style="font-size: 0.95rem;"></i>
                             </span>
                         </div>
 
                         <!-- Name & Designation -->
-                        <h3 class="h4 fw-bold text-white mb-2 font-heading" style="letter-spacing: -0.01em;">
+                        <h3 class="h3 fw-bold text-white mb-2 font-heading" style="letter-spacing: -0.01em;">
                             {{ school.principal_name|default:"Bashu Dev Bhatt" }}
                         </h3>
-                        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2"
-                            style="background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(245, 158, 11, 0.45); color: #FBBF24; font-size: 0.84rem; font-weight: 600;">
+                        <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3"
+                            style="background: rgba(245, 158, 11, 0.16); border: 1px solid rgba(245, 158, 11, 0.45); color: #FBBF24; font-size: 0.88rem; font-weight: 600;">
                             <i class="fas fa-award text-warning"></i>
                             {{ school.principal_designation|default:"Principal & Academic Lead" }}
-                        </div>
-                    </div>
-
-                    <!-- Mission Quote Banner with Glassmorphic Card -->
-                    <div class="p-3 rounded-4 mb-4 position-relative"
-                        style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);">
-                        <div class="d-flex align-items-start gap-2">
-                            <i class="fas fa-quote-left text-warning fs-5 flex-shrink-0 mt-1 opacity-75"></i>
-                            <p class="small text-white-50 fst-italic mb-0" style="line-height: 1.65;">
-                                "Our mission is to nurture character, critical thinking, and joyful learning from Early
-                                Childhood Development to Grade 8."
-                            </p>
                         </div>
                     </div>
 
@@ -554,7 +553,14 @@
             <div class="col-lg-7">
                 <span class="section-tag"><i class="fas fa-comment-dots"></i> Message from the Principal</span>
                 <h2 class="section-title">Welcome to Shree Hunainath Educational Academy</h2>
-                <div class="text-muted" style="line-height: 1.8;">
+                <div class="p-4 rounded-4 mb-3 border-start border-4 border-warning shadow-xs"
+                    style="background: #F8FAFC;">
+                    <p class="fst-italic text-dark fw-semibold mb-0" style="line-height: 1.7; font-size: 1.05rem;">
+                        <i class="fas fa-quote-left text-warning me-2"></i>
+                        "Our mission is to nurture character, critical thinking, and joyful learning from Early Childhood Development to Grade 8."
+                    </p>
+                </div>
+                <div class="text-muted" style="line-height: 1.85; font-size: 0.98rem;">
                     {{ school.principal_message|linebreaks }}
                 </div>
                 <div class="d-flex gap-3 mt-4 flex-wrap">
@@ -562,7 +568,7 @@
                         class="btn btn-primary rounded-pill px-4 py-2 fw-bold text-white shadow-sm">
                         <i class="fas fa-landmark me-1"></i> Read Full Institutional Profile
                     </a>
-                    <a href="#school-map-section" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold">
+                    <a href="{% url 'contact' %}#interactive-map" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold">
                         <i class="fas fa-map-location-dot text-primary me-1"></i> Interactive School Map
                     </a>
                 </div>
@@ -626,117 +632,7 @@
     </div>
 </section>
 
-<!-- 7. ACADEMICS & BLOG SPOTLIGHT (Exam Routines, Result Portal & Insights) -->
-<section class="py-5" style="background: #ffffff;">
-    <div class="container">
-        <div class="row align-items-end justify-content-between mb-4">
-            <div class="col-lg-7">
-                <span class="section-tag"><i class="fas fa-graduation-cap"></i> Academics & Insights</span>
-                <h2 class="section-title mb-2">Excellence in Academics & School Stories</h2>
-                <p class="section-desc mb-0" style="margin: 0; max-width: 650px;">
-                    Stay informed with our published examination schedules, online student GPA result portal, and inspiring classroom stories.
-                </p>
-            </div>
-            <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
-                <div class="d-inline-flex gap-2">
-                    <a href="{% url 'exam_results' %}" class="btn btn-outline-primary rounded-pill px-3 py-2 fw-bold small">
-                        <i class="fas fa-poll-h me-1 text-warning"></i> Check Exam Result
-                    </a>
-                    <a href="{% url 'blog_list' %}" class="btn btn-primary rounded-pill px-3 py-2 fw-bold text-white small">
-                        Read All Articles &rarr;
-                    </a>
-                </div>
-            </div>
-        </div>
 
-        <div class="row g-4">
-            <!-- Left Card: Academics & Examination Quick Access -->
-            <div class="col-lg-5">
-                <div class="p-4 rounded-4 text-white h-100 d-flex flex-column justify-content-between shadow-sm position-relative overflow-hidden"
-                    style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #1E3A8A 100%); border-top: 3px solid #F59E0B;">
-                    <div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <span class="badge bg-warning text-dark fw-bold px-3 py-1">Session 2082 B.S.</span>
-                            <span class="text-white-50 extra-small"><i class="fas fa-shield-alt text-warning me-1"></i> Official Portal</span>
-                        </div>
-                        <h3 class="h4 fw-bold text-white mb-2">Examination & Academic Center</h3>
-                        <p class="text-white-50 small mb-4">
-                            Access published terminal schedules, board guidelines for Grade 8 (BLE), and instant GPA marksheet verification.
-                        </p>
-
-                        <!-- Action List -->
-                        <div class="d-flex flex-column gap-2 mb-4">
-                            <a href="{% url 'exam_routines' %}" class="p-3 rounded-3 bg-white bg-opacity-10 text-white text-decoration-none d-flex align-items-center justify-content-between border border-white border-opacity-10 hover-lift">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-calendar-alt text-warning fs-5"></i>
-                                    <div>
-                                        <div class="fw-bold small">Published Exam Routines</div>
-                                        <div class="text-white-50 extra-small">Timetables for Classes 1 to 8</div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-arrow-right fs-xs text-warning"></i>
-                            </a>
-
-                            <a href="{% url 'exam_results' %}" class="p-3 rounded-3 bg-white bg-opacity-10 text-white text-decoration-none d-flex align-items-center justify-content-between border border-white border-opacity-10 hover-lift">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-award text-warning fs-5"></i>
-                                    <div>
-                                        <div class="fw-bold small">Student Result Verification</div>
-                                        <div class="text-white-50 extra-small">Enter Symbol No & View Marksheet</div>
-                                    </div>
-                                </div>
-                                <i class="fas fa-arrow-right fs-xs text-warning"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-top border-white border-opacity-15 d-flex align-items-center justify-content-between">
-                        <span class="text-white-50 extra-small">Montessori to Grade 8 BLE</span>
-                        <a href="{% url 'academics_hub' %}" class="text-warning text-decoration-none small fw-bold">
-                            Explore Academics Hub &rarr;
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Card: Latest Educational Stories & Blog Post -->
-            <div class="col-lg-7">
-                <div class="p-4 rounded-4 bg-light border h-100 d-flex flex-column justify-content-between shadow-sm">
-                    <div>
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <span class="badge bg-primary text-white fw-bold px-3 py-1">Featured Article</span>
-                            <span class="text-muted extra-small"><i class="fas fa-book-reader me-1 text-primary"></i> 4 min read</span>
-                        </div>
-                        <h3 class="h4 fw-bold text-dark mb-2">
-                            <a href="{% url 'blog_list' %}" class="text-dark text-decoration-none hover-primary">
-                                Cultivating 21st Century Skills: STEM & Montessori Learning at Hunainath
-                            </a>
-                        </h3>
-                        <p class="text-muted small mb-3" style="line-height: 1.7;">
-                            Discover how our dual-track curriculum blends Montessori early childhood development with bilingual instruction, digital computer literacy, and practical science experiments.
-                        </p>
-                        <div class="d-flex align-items-center gap-3 pt-2">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 0.85rem;">
-                                PJ
-                            </div>
-                            <div>
-                                <div class="fw-bold small text-dark">Padam Raj Joshi</div>
-                                <div class="text-muted extra-small">Principal & Academic Director • Garjamuni</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-3 border-top mt-4 d-flex align-items-center justify-content-between">
-                        <a href="{% url 'blog_list' %}" class="text-decoration-none fw-bold small text-primary d-inline-flex align-items-center gap-1">
-                            Read Academic Insights <i class="fas fa-arrow-right fs-xs"></i>
-                        </a>
-                        <span class="text-muted extra-small">Updated Weekly by Faculty</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- 8. COMMUNITY TESTIMONIALS & VOICES -->
 <section class="py-5" style="background: #f8fafc;">
@@ -777,109 +673,6 @@
                 <p class="text-muted">Testimonials will be showcased here.</p>
             </div>
             {% endfor %}
-<!-- 8.5 ESSENTIAL SCHOOL SERVICES & PARENT QUICK HUB -->
-<section class="py-5" style="background: white;">
-    <div class="container">
-        <div class="text-center mb-5">
-            <span class="section-tag"><i class="fas fa-shield-halved text-primary"></i> Parent & Student Portal</span>
-            <h2 class="section-title">Essential Academy Portals & Services</h2>
-            <p class="section-desc">Streamlined digital access for parents, students, and guardians of Hunainath Educational Academy.</p>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="p-4 rounded-4 border h-100 shadow-sm d-flex flex-column text-center hover-lift" style="background: #F8FAFC;">
-                    <div class="rounded-circle bg-primary bg-opacity-10 text-primary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
-                        <i class="fas fa-calendar-days fs-4"></i>
-                    </div>
-                    <h3 class="h5 fw-bold text-dark mb-2">Exam Routines</h3>
-                    <p class="text-muted small flex-grow-1">Download and view official First Terminal, Mid-Term, and BLE Class 8 Board exam routines.</p>
-                    <a href="{% url 'exam_routines' %}" class="btn btn-outline-primary btn-sm rounded-pill fw-bold">View Routines &rarr;</a>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="p-4 rounded-4 border h-100 shadow-sm d-flex flex-column text-center hover-lift" style="background: #F8FAFC;">
-                    <div class="rounded-circle bg-success bg-opacity-10 text-success mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
-                        <i class="fas fa-square-poll-vertical fs-4"></i>
-                    </div>
-                    <h3 class="h5 fw-bold text-dark mb-2">Exam Results Portal</h3>
-                    <p class="text-muted small flex-grow-1">Instant digital marksheet and GPA lookup by entering student Symbol Number and DOB.</p>
-                    <a href="{% url 'exam_results' %}" class="btn btn-outline-success btn-sm rounded-pill fw-bold">Check Results &rarr;</a>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="p-4 rounded-4 border h-100 shadow-sm d-flex flex-column text-center hover-lift" style="background: #F8FAFC;">
-                    <div class="rounded-circle bg-warning bg-opacity-15 text-warning mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
-                        <i class="fas fa-user-graduate fs-4"></i>
-                    </div>
-                    <h3 class="h5 fw-bold text-dark mb-2">Online Admissions</h3>
-                    <p class="text-muted small flex-grow-1">Register your child for Session 2082/83 (ECD to Grade 8) and track review status online.</p>
-                    <a href="{% url 'admissions' %}" class="btn btn-outline-dark btn-sm rounded-pill fw-bold">Enroll Online &rarr;</a>
-                </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-                <div class="p-4 rounded-4 border h-100 shadow-sm d-flex flex-column text-center hover-lift" style="background: #F8FAFC;">
-                    <div class="rounded-circle bg-info bg-opacity-10 text-info mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
-                        <i class="fas fa-circle-question fs-4"></i>
-                    </div>
-                    <h3 class="h5 fw-bold text-dark mb-2">Parent FAQ & Rules</h3>
-                    <p class="text-muted small flex-grow-1">Answers regarding school bus routes, fees, dress code, Montessori ECD care, and policies.</p>
-                    <a href="{% url 'faq' %}" class="btn btn-outline-info btn-sm rounded-pill fw-bold">Read FAQ &rarr;</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- 9. SCHOOL LOCATION & INTERACTIVE GOOGLE MAP -->
-<section id="school-map-section" class="py-5" style="background: #F8FAFC;">
-    <div class="container">
-        <div class="text-center mb-4">
-            <span class="section-tag"><i class="fas fa-location-dot"></i> Visit Our School</span>
-            <h2 class="section-title">School Location & Interactive Map</h2>
-            <p class="section-desc">Hunainath Educational Academy is situated in Garjamuni, Shuklaphanta Municipality-07, Kanchanpur, Sudurpashchim Province.</p>
-        </div>
-
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center flex-wrap gap-2"
-                style="background: linear-gradient(135deg, #0A1128 0%, #1D4ED8 100%) !important;">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="fas fa-school text-warning fs-5"></i>
-                    <span class="fw-bold">Hunainath Educational Academy</span>
-                    <span class="badge bg-warning text-dark fw-bold ms-2">Shuklaphanta-07, Kanchanpur</span>
-                </div>
-                <a href="https://maps.google.com/?q=28.9113,80.3245"
-                    target="_blank" rel="noopener"
-                    class="btn btn-warning btn-sm rounded-pill fw-bold text-dark px-3 shadow-sm">
-                    <i class="fas fa-directions me-1"></i> Get Directions in Google Maps
-                </a>
-            </div>
-            <div class="ratio ratio-21x9" style="min-height: 400px;">
-                <iframe
-                    src="https://maps.google.com/maps?q=28.9113,80.3245+(Hunainath+Educational+Academy)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                    style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade" title="Hunainath Educational Academy Google Map">
-                </iframe>
-            </div>
-            <div
-                class="card-footer bg-white p-3 d-flex justify-content-between align-items-center flex-wrap gap-3 text-muted small">
-                <div class="d-flex align-items-center gap-2">
-                    <i class="fas fa-map-marker-alt text-danger fs-5"></i>
-                    <span><strong>Garjamuni, Shuklaphanta Municipality-07</strong>, Kanchanpur, Sudurpashchim Province, Nepal</span>
-                </div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="badge bg-light text-dark border"><i class="fas fa-clock text-warning me-1"></i> Office: 9:00 AM – 4:00 PM</span>
-                    <a href="tel:+9779848701283" class="text-dark fw-bold text-decoration-none">
-                        <i class="fas fa-phone text-warning me-1"></i> +977 984-8701283
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- 10. CALL TO ACTION BANNER -->
 <section class="container py-5 my-3">

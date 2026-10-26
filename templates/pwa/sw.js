@@ -3,7 +3,7 @@
 // Offline Cache Management, Resilient Fallback & Web Push Notifications
 // ==============================================================================
 
-const CACHE_NAME = 'hunainath-pwa-v1.0.2';
+const CACHE_NAME = 'hunainath-pwa-v1.0.3';
 const STATIC_ASSETS = [
     '/',
     '/offline/',
@@ -11,16 +11,21 @@ const STATIC_ASSETS = [
     '/static/js/main.js',
     '/static/images/logo.png',
     '/static/images/icons/icon-192x192.png',
+    '/static/sounds/notification.wav',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
 ];
 
-// Install Event: Pre-cache static shells
+// Install Event: Resilient Pre-cache of static shells
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             console.log('[SW] Pre-caching offline essentials');
-            return cache.addAll(STATIC_ASSETS);
+            return Promise.allSettled(
+                STATIC_ASSETS.map((url) =>
+                    cache.add(url).catch((err) => console.warn('[SW] Cache item skipped:', url, err))
+                )
+            );
         }).then(() => self.skipWaiting())
     );
 });
@@ -98,12 +103,13 @@ self.addEventListener('push', (event) => {
         body: 'New urgent announcement published. Tap to view details.',
         url: '/notices/',
         icon: '/static/images/icons/icon-192x192.png',
-        badge: '/static/images/icons/icon-72x72.png'
+        badge: '/static/images/icons/icon-72x72.png',
+        sound: '/static/sounds/notification.wav'
     };
 
     if (event.data) {
         try {
-            data = event.data.json();
+            data = Object.assign(data, event.data.json());
         } catch (e) {
             data.body = event.data.text();
         }
@@ -113,7 +119,9 @@ self.addEventListener('push', (event) => {
         body: data.body,
         icon: data.icon || '/static/images/icons/icon-192x192.png',
         badge: data.badge || '/static/images/icons/icon-72x72.png',
-        vibrate: [100, 50, 100],
+        vibrate: [250, 100, 250, 100, 250],
+        sound: data.sound || '/static/sounds/notification.wav',
+        requireInteraction: true,
         data: {
             url: data.url || '/'
         },
@@ -124,8 +132,20 @@ self.addEventListener('push', (event) => {
         tag: 'hunainath-broadcast-' + Date.now()
     };
 
+    // Broadcast chime to active window tabs and display push notification concurrently
+    const notifyClientsPromise = self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+        windowClients.forEach((client) => {
+            client.postMessage({
+                type: 'PLAY_NOTIFICATION_SOUND',
+                data: data
+            });
+        });
+    }).catch((e) => console.warn('[SW] Client message error:', e));
+
+    const showNotifPromise = self.registration.showNotification(data.title, options);
+
     event.waitUntil(
-        self.registration.showNotification(data.title, options)
+        Promise.all([notifyClientsPromise, showNotifPromise])
     );
 });
 
