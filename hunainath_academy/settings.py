@@ -34,15 +34,29 @@ ALLOWED_HOSTS = [
 if "*" not in ALLOWED_HOSTS and DEBUG:
     ALLOWED_HOSTS.append("*")
 
-# CSRF Trusted Origins for Ngrok and custom domains
+# CSRF Trusted Origins for Cloudflare, Ngrok and custom domains
+_env_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.getenv(
-        "CSRF_TRUSTED_ORIGINS",
-        "http://localhost:8000,http://127.0.0.1:8000,https://*.ngrok-free.app,https://*.ngrok-free.dev,https://*.ngrok.io,https://*.ngrok.app",
-    ).split(",")
+    for origin in _env_csrf.split(",")
     if origin.strip()
 ]
+
+# Ensure Cloudflare and tunnel origins are always trusted
+_always_trusted = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://*.trycloudflare.com",
+    "https://needed-budgets-winds-recognition.trycloudflare.com",
+    "https://*.ngrok-free.app",
+    "https://*.ngrok-free.dev",
+    "https://*.ngrok.io",
+    "https://*.ngrok.app",
+]
+for _t in _always_trusted:
+    if _t not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_t)
+
 
 # ------------------------------------------------------------------------------
 # APPLICATION DEFINITION
@@ -182,11 +196,15 @@ if not DEBUG:
 # DJANGO UNFOLD THEME CMS CONFIGURATION
 # ------------------------------------------------------------------------------
 UNFOLD = {
-    "SITE_TITLE": "Hunainath Academy CMS",
-    "SITE_HEADER": "Hunainath Educational Academy",
-    "SITE_SUBHEADER": "Administration & Content Management",
+    "SITE_TITLE": "Hunainath Academy Management System",
+    "SITE_HEADER": "Welcome to Hunainath Management System",
+    "SITE_SUBHEADER": "Administration & Operations Portal",
     "SITE_URL": "/",
     "SITE_SYMBOL": "school",
+    "SITE_LOGO": {
+        "light": lambda request: "/static/images/logo.png",
+        "dark": lambda request: "/static/images/logo.png",
+    },
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
     "COLORS": {
@@ -210,24 +228,63 @@ UNFOLD = {
         "show_all_applications": True,
         "navigation": [
             {
-                "title": "Academy Operations",
-                "separator": True,
+                "title": "Dashboard",
+                "separator": False,
                 "collapsible": False,
                 "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "dashboard",
+                        "link": lambda request: reverse_lazy("admin:index"),
+                    },
                     {
                         "title": "Live Website",
                         "icon": "open_in_new",
                         "link": lambda request: "/",
                     },
                     {
-                        "title": "School Profile & Info",
-                        "icon": "account_balance",
-                        "link": lambda request: reverse_lazy("admin:core_schoolprofile_changelist"),
+                        "title": "App QR & A4 Standee",
+                        "icon": "qr_code_2",
+                        "link": lambda request: reverse_lazy("admin_qr_standee"),
                     },
+                ],
+            },
+            {
+                "title": "Content Management",
+                "separator": True,
+                "collapsible": True,
+                "items": [
                     {
-                        "title": "Notice Board & Ticker",
+                        "title": "Notices & Circulars",
                         "icon": "campaign",
                         "link": lambda request: reverse_lazy("admin:core_notice_changelist"),
+                    },
+                    {
+                        "title": "Blog & Articles",
+                        "icon": "article",
+                        "link": lambda request: reverse_lazy("admin:core_blogpost_changelist"),
+                    },
+                    {
+                        "title": "Gallery Photos",
+                        "icon": "photo_library",
+                        "link": lambda request: reverse_lazy("admin:core_galleryitem_changelist"),
+                    },
+                    {
+                        "title": "Testimonials",
+                        "icon": "star",
+                        "link": lambda request: reverse_lazy("admin:core_testimonial_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "School",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "School Profile",
+                        "icon": "account_balance",
+                        "link": lambda request: reverse_lazy("admin:core_schoolprofile_changelist"),
                     },
                     {
                         "title": "Academic Programs",
@@ -239,32 +296,49 @@ UNFOLD = {
                         "icon": "how_to_reg",
                         "link": lambda request: reverse_lazy("admin:core_admissionapplication_changelist"),
                     },
-                ],
-            },
-            {
-                "title": "Community & Engagement",
-                "separator": True,
-                "collapsible": True,
-                "items": [
-                    {
-                        "title": "Campus Photo Gallery",
-                        "icon": "photo_library",
-                        "link": lambda request: reverse_lazy("admin:core_galleryitem_changelist"),
-                    },
                     {
                         "title": "Teachers & Staff",
                         "icon": "badge",
                         "link": lambda request: reverse_lazy("admin:core_facultymember_changelist"),
                     },
+                ],
+            },
+            {
+                "title": "Exams & Results",
+                "separator": True,
+                "collapsible": True,
+                "items": [
                     {
-                        "title": "Parent & Student Testimonials",
-                        "icon": "star",
-                        "link": lambda request: reverse_lazy("admin:core_testimonial_changelist"),
+                        "title": "Exam Routines",
+                        "icon": "event_note",
+                        "link": lambda request: reverse_lazy("admin:core_examroutine_changelist"),
                     },
+                    {
+                        "title": "Exam Results",
+                        "icon": "analytics",
+                        "link": lambda request: reverse_lazy("admin:core_examresult_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Engagement",
+                "separator": True,
+                "collapsible": True,
+                "items": [
                     {
                         "title": "Inquiries & Messages",
                         "icon": "mark_email_unread",
                         "link": lambda request: reverse_lazy("admin:core_contactinquiry_changelist"),
+                    },
+                    {
+                        "title": "Newsletter Issues",
+                        "icon": "forward_to_inbox",
+                        "link": lambda request: reverse_lazy("admin:core_newsletter_changelist"),
+                    },
+                    {
+                        "title": "Newsletter Subscribers",
+                        "icon": "group_add",
+                        "link": lambda request: reverse_lazy("admin:core_newslettersubscriber_changelist"),
                     },
                     {
                         "title": "Web Push Subscribers",
@@ -275,6 +349,23 @@ UNFOLD = {
                         "title": "Broadcast Notifications",
                         "icon": "send",
                         "link": lambda request: reverse_lazy("admin:core_broadcastnotification_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Settings",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "User Accounts",
+                        "icon": "person",
+                        "link": lambda request: reverse_lazy("admin:auth_user_changelist"),
+                    },
+                    {
+                        "title": "User Groups & Roles",
+                        "icon": "groups",
+                        "link": lambda request: reverse_lazy("admin:auth_group_changelist"),
                     },
                 ],
             },
@@ -291,3 +382,22 @@ VAPID_PUBLIC_KEY = os.getenv(
 )
 VAPID_PRIVATE_KEY = os.getenv("VAPID_PRIVATE_KEY", "AVN_VAPID_PRIVATE_KEY_SECURE_TOKEN_2026")
 VAPID_CLAIMS_SUB = os.getenv("VAPID_CLAIMS_SUB", "mailto:admin@hunainath.edu.np")
+
+# ------------------------------------------------------------------------------
+# EMAIL (Newsletter delivery)
+# Default: console backend (emails printed in terminal). Set EMAIL_HOST etc. in .env for real SMTP.
+# ------------------------------------------------------------------------------
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend" if EMAIL_HOST else "django.core.mail.backends.console.EmailBackend",
+)
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() in ("true", "1", "yes")
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", f"Hunainath Educational Academy <{EMAIL_HOST_USER or 'no-reply@hunainath.edu.np'}>"
+)
+
+

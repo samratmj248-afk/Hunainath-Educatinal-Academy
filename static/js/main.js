@@ -114,4 +114,70 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 5000);
     });
+
+    // 6. Mobile Offcanvas Backdrop & Body Scroll Lock
+    const mobileDrawer = document.getElementById('mobileNavDrawer');
+    if (mobileDrawer) {
+        mobileDrawer.addEventListener('show.bs.offcanvas', function () {
+            document.body.classList.add('drawer-open-lock');
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+        });
+        mobileDrawer.addEventListener('hidden.bs.offcanvas', function () {
+            document.body.classList.remove('drawer-open-lock');
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+        });
+
+        // Allow anchor tags inside the drawer to navigate normally
+        const drawerLinks = mobileDrawer.querySelectorAll('a');
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                // Ensure scroll locks are cleared immediately upon navigation
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
+                document.body.classList.remove('drawer-open-lock');
+            });
+        });
+    }
+});
+
+// Newsletter subscribe (AJAX with graceful fallback)
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('newsletterForm');
+    if (!form) return;
+    const input = document.getElementById('newsletterEmail');
+    const btn = document.getElementById('newsletterSubmitBtn');
+    const msg = document.getElementById('newsletterMsg');
+    const show = (text, ok) => {
+        msg.textContent = text;
+        msg.className = 'ft-nl-msg ' + (ok ? 'is-ok' : 'is-err');
+    };
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = input.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            show('Please enter a valid email address.', false);
+            input.focus();
+            return;
+        }
+        btn.disabled = true;
+        const icon = btn.querySelector('i');
+        icon.className = 'fas fa-spinner fa-spin';
+        try {
+            const res = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
+            const data = await res.json();
+            show(data.message, data.ok);
+            if (data.ok) form.reset();
+        } catch (err) {
+            show('Network error. Please try again.', false);
+        } finally {
+            btn.disabled = false;
+            icon.className = 'fas fa-paper-plane';
+        }
+    });
 });

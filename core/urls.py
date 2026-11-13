@@ -26,6 +26,10 @@ urlpatterns = [
     path("faq/", views.faq, name="faq"),
     path("terms-and-conditions/", views.terms_and_conditions, name="terms_and_conditions"),
 
+    # Newsletter
+    path("newsletter/subscribe/", views.newsletter_subscribe, name="newsletter_subscribe"),
+    path("newsletter/unsubscribe/<uuid:token>/", views.newsletter_unsubscribe, name="newsletter_unsubscribe"),
+
     # PWA Endpoints
     path("sw.js", views.service_worker, name="service_worker"),
     path("manifest.json", views.manifest, name="manifest_json"),
@@ -41,3 +45,4 @@ urlpatterns = [
     path("robots.txt", views.robots_txt, name="robots_txt"),
     path("sitemap.xml", views.sitemap_xml, name="sitemap_xml"),
 ]
+

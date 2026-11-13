@@ -20,12 +20,24 @@
         <div class="row g-3 mb-5 align-items-center">
             <div class="col-lg-7">
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'notices' %}" class="btn btn-sm {% if not category %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">All</a>
-                    <a href="{% url 'notices' %}?category=ACADEMIC" class="btn btn-sm {% if category == 'ACADEMIC' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Academic</a>
-                    <a href="{% url 'notices' %}?category=EXAM" class="btn btn-sm {% if category == 'EXAM' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Examinations</a>
-                    <a href="{% url 'notices' %}?category=ADMISSION" class="btn btn-sm {% if category == 'ADMISSION' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Admissions</a>
-                    <a href="{% url 'notices' %}?category=EVENT" class="btn btn-sm {% if category == 'EVENT' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Events & Sports</a>
-                    <a href="{% url 'notices' %}?category=HOLIDAY" class="btn btn-sm {% if category == 'HOLIDAY' %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-1 fw-bold">Holidays</a>
+                    <a href="{% url 'notices' %}" class="tab-pill-filter {% if not category %}active{% endif %}">
+                        <i class="fas fa-layer-group me-1"></i> All
+                    </a>
+                    <a href="{% url 'notices' %}?category=ACADEMIC" class="tab-pill-filter {% if category == 'ACADEMIC' %}active{% endif %}">
+                        <i class="fas fa-book-bookmark me-1"></i> Academic
+                    </a>
+                    <a href="{% url 'notices' %}?category=EXAM" class="tab-pill-filter {% if category == 'EXAM' %}active{% endif %}">
+                        <i class="fas fa-file-pen me-1"></i> Examinations
+                    </a>
+                    <a href="{% url 'notices' %}?category=ADMISSION" class="tab-pill-filter {% if category == 'ADMISSION' %}active{% endif %}">
+                        <i class="fas fa-id-card me-1"></i> Admissions
+                    </a>
+                    <a href="{% url 'notices' %}?category=EVENT" class="tab-pill-filter {% if category == 'EVENT' %}active{% endif %}">
+                        <i class="fas fa-volleyball me-1"></i> Events & Sports
+                    </a>
+                    <a href="{% url 'notices' %}?category=HOLIDAY" class="tab-pill-filter {% if category == 'HOLIDAY' %}active{% endif %}">
+                        <i class="fas fa-umbrella-beach me-1"></i> Holidays
+                    </a>
                 </div>
             </div>
             <div class="col-lg-5">

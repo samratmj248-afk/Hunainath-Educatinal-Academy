@@ -302,3 +302,67 @@ class ExamResultAdmin(ModelAdmin):
     list_filter = ("grade", "academic_year", "exam_term", "result_status", "is_published")
     search_fields = ("student_name", "symbol_number", "grade", "remarks")
 
+
+
+# ------------------------------------------------------------------------------
+# NEWSLETTER
+# ------------------------------------------------------------------------------
+from .models import NewsletterSubscriber, Newsletter  # noqa: E402
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(ModelAdmin):
+    list_display = ("email", "name", "is_active", "subscribed_at")
+    list_filter = ("is_active", "subscribed_at")
+    search_fields = ("email", "name")
+    list_editable = ("is_active",)
+    readonly_fields = ("unsubscribe_token", "subscribed_at")
+    actions = ["activate", "deactivate"]
+
+    @admin.action(description="Activate selected subscribers")
+    def activate(self, request, queryset):
+        self.message_user(request, f"{queryset.update(is_active=True)} subscriber(s) activated.")
+
+    @admin.action(description="Deactivate selected subscribers")
+    def deactivate(self, request, queryset):
+        self.message_user(request, f"{queryset.update(is_active=False)} subscriber(s) deactivated.")
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(ModelAdmin):
+    list_display = ("subject", "status", "recipients_count", "sent_at", "created_at")
+    list_filter = ("status",)
+    search_fields = ("subject", "content")
+    readonly_fields = ("status", "recipients_count", "sent_at", "created_at")
+    fields = ("subject", "preheader", "cover_image", "content", "status", "recipients_count", "sent_at", "created_at")
+    actions = ["send_to_subscribers", "send_test_to_me"]
+
+    @admin.action(description="Send selected newsletter(s) to all active subscribers")
+    def send_to_subscribers(self, request, queryset):
+        from .newsletter import send_newsletter
+
+        total_active = NewsletterSubscriber.objects.filter(is_active=True).count()
+        if not total_active:
+            self.message_user(request, "There are no active subscribers yet.", messages.WARNING)
+            return
+        for nl in queryset:
+            try:
+                sent = send_newsletter(nl, request=request)
+                self.message_user(request, f"'{nl.subject}' sent to {sent} subscriber(s).", messages.SUCCESS)
+            except Exception as exc:  # SMTP / network errors
+                self.message_user(request, f"Failed to send '{nl.subject}': {exc}", messages.ERROR)
+
+    @admin.action(description="Send a test email to my admin address")
+    def send_test_to_me(self, request, queryset):
+        from .newsletter import send_newsletter
+
+        if not request.user.email:
+            self.message_user(request, "Add an email address to your admin user first.", messages.WARNING)
+            return
+        test_sub = NewsletterSubscriber(email=request.user.email, name=request.user.get_full_name())
+        for nl in queryset:
+            try:
+                send_newsletter(nl, request=request, recipients=[test_sub])
+                self.message_user(request, f"Test of '{nl.subject}' sent to {request.user.email}.", messages.SUCCESS)
+            except Exception as exc:
+                self.message_user(request, f"Test send failed: {exc}", messages.ERROR)

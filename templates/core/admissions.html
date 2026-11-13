@@ -1,239 +1,454 @@
 {% extends "base.html" %}
 
+{% block title %}Admissions - {{ school.name }}{% endblock %}
+
 {% block content %}
-<!-- Page Header -->
+<style>
+    /* Shree Hunainath Admissions Page Theme & AVN Layout Harmonization */
+    .admissions-overview-section {
+        padding: 50px 0 60px;
+        background-color: var(--light-bg, #f8fafc);
+    }
+
+    .info-card {
+        background: #ffffff;
+        padding: 34px 30px;
+        border-radius: var(--radius-lg, 20px);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+        margin-bottom: 25px;
+        transition: var(--transition-smooth, all 0.35s ease);
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-top: 3px solid #f59e0b;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.09);
+        border-color: #cbd5e1;
+    }
+
+    .info-card h2 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-card h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.12rem;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-top: 20px;
+        margin-bottom: 12px;
+    }
+
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-card ul li {
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 0.94rem;
+        color: #334155;
+    }
+
+    .info-card ul li:last-child {
+        border-bottom: none;
+    }
+
+    .info-card ul li i {
+        margin-top: 4px;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .contact-item-row {
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .contact-item-row:last-of-type {
+        border-bottom: none;
+    }
+
+    .highlight-box {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-left: 4px solid #f59e0b;
+        padding: 18px 20px;
+        border-radius: 12px;
+        margin: 22px 0 8px;
+        color: #92400e;
+        font-size: 0.93rem;
+    }
+
+    .highlight-box i {
+        color: #d97706;
+        font-size: 1.15rem;
+        margin-right: 6px;
+    }
+
+    .process-step {
+        text-align: center;
+        padding: 30px 20px;
+        background: #ffffff;
+        border-radius: var(--radius-lg, 18px);
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+        transition: var(--transition-smooth, all 0.35s ease);
+        height: 100%;
+        border: 1px solid #e2e8f0;
+        border-top: 3px solid #f59e0b;
+    }
+
+    .process-step:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
+        border-color: #cbd5e1;
+    }
+
+    .process-number {
+        width: 62px;
+        height: 62px;
+        background: linear-gradient(135deg, #fde047 0%, #f59e0b 100%);
+        color: #0f172a;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 800;
+        margin: 0 auto 16px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.3);
+        border: 2px solid #ffffff;
+    }
+
+    .process-step h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #0f172a;
+    }
+
+    .process-step p {
+        color: #64748b;
+        line-height: 1.6;
+        font-size: 0.9rem;
+        margin-bottom: 0;
+    }
+
+    /* Hunainath Signature CTA Banner */
+    .hunainath-cta-banner {
+        background: linear-gradient(135deg, #070f26 0%, #0f172a 45%, #1e3a8a 100%);
+        color: #ffffff;
+        padding: 56px 40px;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.14);
+    }
+
+    .hunainath-cta-banner::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(245, 158, 11, 0.08);
+        pointer-events: none;
+    }
+
+    .btn-apply-gold {
+        background: linear-gradient(135deg, #fde047 0%, #fbbf24 50%, #f59e0b 100%);
+        color: #0f172a !important;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 13px 32px;
+        border-radius: 9999px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.28);
+        transition: all 0.3s ease;
+    }
+
+    .btn-apply-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(245, 158, 11, 0.38);
+        color: #0f172a !important;
+    }
+</style>
+
+<!-- Page Header Banner (Unified Hunainath Standard) -->
 <section class="page-header-banner py-5">
     <div class="container py-4 text-center position-relative">
         <span class="badge-header-pill mb-3">
-            <i class="fas fa-graduation-cap"></i> Academic Intake 2082 / 2026 • Nursery to Grade 8
+            <i class="fas fa-graduation-cap"></i> Academic Intake 2082 / 2026 • Early Childhood to Grade 8
         </span>
-        <h1 class="display-5 fw-bold text-white mb-2">Student Admission Application</h1>
-        <p class="text-white-50 mx-auto mb-0" style="max-width: 680px; font-size: 1.05rem;">
-            Enroll your child in Shree Hunainath Educational Academy, Garjamuni. Fill out this official registration form to initiate admission.
+        <h1 class="display-5 fw-bold text-white mb-2">
+            <i class="fas fa-user-graduate me-2 text-warning"></i> Admissions
+        </h1>
+        <p class="text-white-50 mx-auto mb-0" style="max-width: 720px; font-size: 1.05rem;">
+            Join Shree Hunainath Educational Academy and embark on a transformative journey of holistic education, cultural values, and academic excellence in Garjamuni, Kanchanpur.
         </p>
     </div>
 </section>
 
-<section class="py-5 bg-white">
-    <div class="container py-3">
-        <div class="row g-5">
-            <!-- Left: Guidelines & Document Checklist -->
-            <div class="col-lg-4">
-                <div class="p-4 rounded-4 bg-light border mb-4 shadow-sm">
-                    <h3 class="h5 fw-bold text-dark mb-3"><i class="fas fa-list-check text-primary me-2"></i>Admission
-                        Process</h3>
-                    <ol class="small text-muted ps-3 mb-0" style="line-height: 1.8;">
-                        <li class="mb-2"><strong>Online Application:</strong> Complete the student registration form on
-                            this page.</li>
-                        <li class="mb-2"><strong>Reference Generation:</strong> Receive your unique tracking ID (e.g.
-                            <code>HNA-2026-XXXX</code>).
+<!-- Admissions Main Content (AVN Structure + Hunainath Brand Identity) -->
+<section class="admissions-overview-section">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Left Column: Requirements, Dates, Fee Structure -->
+            <div class="col-lg-8">
+                <!-- 1. Admission Requirements -->
+                <div class="info-card">
+                    <h2><i class="fas fa-clipboard-list text-warning"></i> Admission Requirements</h2>
+                    <p class="text-muted">To apply for admission to Shree Hunainath Educational Academy (Nursery to Grade 8), students and guardians must meet the following criteria:</p>
+                    
+                    <ul>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Age Criteria:</strong> Children must meet the age eligibility standards specified by the Ministry of Education & Shuklaphanta Municipality (Montessori/Nursery: 3+ years, Grade 1: 5+ years).</div>
                         </li>
-                        <li class="mb-2"><strong>Review & Verification:</strong> Our admissions committee evaluates the
-                            application within 2 working days.</li>
-                        <li class="mb-2"><strong>Interview / Interaction:</strong> Parent and child visit the school for
-                            orientation and confirmation.</li>
-                    </ol>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Previous Academic Records:</strong> Progress report card, character certificate, or latest marksheet from the previous institution (applicable for Grade 1 through Grade 8).</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Official Birth Certificate:</strong> Copy of the official birth registration certificate issued by the Ward Office / Local Registrar (पञ्जीकाधिकारी कार्यालय).</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Passport-Sized Photographs:</strong> 3 recent color passport-sized photographs of the student and 1 photograph each of parents/guardian.</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Parent / Guardian Identification:</strong> Copy of Nepali Citizenship (नागरिकता), National ID, or valid passport of father/mother/legal guardian.</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle text-warning"></i>
+                            <div><strong>Transfer Certificate & IMEIS:</strong> Transfer Certificate (TC/SLC) and online Integrated Educational Management Information System (IEMIS) student transfer record for Grade 2 and above.</div>
+                        </li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <i class="fas fa-circle-info"></i>
+                        <strong>Important Note:</strong> Admissions are conducted on a first-come, first-served merit basis subject to classroom seat availability and interaction evaluation.
+                    </div>
                 </div>
 
-                <div class="p-4 rounded-4 bg-light border mb-4 shadow-sm">
-                    <h4 class="h6 fw-bold text-dark mb-3"><i class="fas fa-folder-open text-warning me-2"></i>Required
-                        Documents</h4>
-                    <ul class="list-unstyled small text-muted mb-0" style="line-height: 1.8;">
-                        <li><i class="fas fa-check text-success me-2"></i>Birth Certificate copy</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Transfer Certificate (for Grade 2 & above)
+                <!-- 2. Important Dates -->
+                <div class="info-card">
+                    <h2><i class="fas fa-calendar-alt text-warning"></i> Important Dates & Schedule</h2>
+                    <h3>Academic Session 2082 / 2083 B.S. (2026 A.D.)</h3>
+                    <ul>
+                        <li>
+                            <i class="fas fa-calendar-day text-warning"></i>
+                            <div><strong>New Admission Applications Open:</strong> Baisakh 1 (Mid-April)</div>
                         </li>
-                        <li><i class="fas fa-check text-success me-2"></i>Previous School Grade Sheet / Marksheet</li>
-                        <li><i class="fas fa-check text-success me-2"></i>Passport-sized student photo</li>
+                        <li>
+                            <i class="fas fa-calendar-day text-warning"></i>
+                            <div><strong>Application Submission Deadline:</strong> Baisakh 25 (Early May)</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-calendar-day text-warning"></i>
+                            <div><strong>Entrance Evaluation & Interaction:</strong> Baisakh 26 – 28 (Daily 10:00 AM – 2:00 PM)</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-calendar-day text-warning"></i>
+                            <div><strong>Merit List & Admission Confirmation:</strong> Baisakh 29</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-calendar-day text-warning"></i>
+                            <div><strong>Orientation & Regular Classes Commence:</strong> Jestha 1 (Mid-May)</div>
+                        </li>
                     </ul>
                 </div>
 
-                <div class="p-4 rounded-4 border bg-primary text-white shadow-sm">
-                    <h4 class="h6 fw-bold text-white mb-2"><i class="fas fa-magnifying-glass me-2"></i>Already Applied?
-                    </h4>
-                    <p class="small text-white-50 mb-3">Track your application review status and entrance schedule using
-                        your reference ID.</p>
-                    <a href="{% url 'admission_status' %}"
-                        class="btn btn-warning rounded-pill w-100 fw-bold text-dark btn-sm">
+                <!-- 3. Fee Structure & Scholarships -->
+                <div class="info-card">
+                    <h2><i class="fas fa-receipt text-warning"></i> Fee Structure & Scholarships</h2>
+                    <p class="text-muted">Hunainath Educational Academy operates under transparent, affordable fee structures adhering to Shuklaphanta Municipality Education Guidelines. Detailed fee sheets per grade level are provided at the admissions desk.</p>
+                    
+                    <ul>
+                        <li>
+                            <i class="fas fa-money-bill-wave text-warning"></i>
+                            <div><strong>One-time Admission Fee:</strong> Payable solely upon initial enrollment into the academy.</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-money-bill-wave text-warning"></i>
+                            <div><strong>Monthly Tuition Fee:</strong> Modest installments structured with multi-child family considerations.</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-money-bill-wave text-warning"></i>
+                            <div><strong>Co-Curricular & Computer Lab:</strong> Practical IT instruction, smart-board learning, sports, and library access included.</div>
+                        </li>
+                        <li>
+                            <i class="fas fa-money-bill-wave text-warning"></i>
+                            <div><strong>Transportation / School Bus:</strong> Optional safe daily pick-up & drop-off service across Garjamuni, Jhalari, and neighbouring routes.</div>
+                        </li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <i class="fas fa-award"></i>
+                        <strong>Merit & Need-Based Scholarships:</strong> Hunainath offers partial and full tuition scholarships for underprivileged, marginalized community students, martyr families, and academic toppers. Contact our administration office for the scholarship application form.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Contact Admissions, Office Hours, Status Tracker -->
+            <div class="col-lg-4">
+                <!-- Contact Admissions Card -->
+                <div class="info-card">
+                    <h2><i class="fas fa-phone-alt text-warning"></i> Contact Admissions</h2>
+                    
+                    <div class="contact-item-row">
+                        <p class="text-muted mb-1 small"><i class="fas fa-phone text-warning me-2"></i><strong>Phone Helpline:</strong></p>
+                        <p class="fw-bold mb-0 text-dark">
+                            <a href="tel:{{ school.phone|default:'+9779848701283' }}" class="text-decoration-none text-dark">
+                                {{ school.phone|default:"+977 984-8701283" }}
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="contact-item-row">
+                        <p class="text-muted mb-1 small"><i class="fas fa-envelope text-warning me-2"></i><strong>Email Address:</strong></p>
+                        <p class="fw-bold mb-0">
+                            <a href="mailto:{{ school.email|default:'info@hunainath.edu.np' }}" class="text-decoration-none text-primary text-break">
+                                {{ school.email|default:"info@hunainath.edu.np" }}
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="contact-item-row">
+                        <p class="text-muted mb-1 small"><i class="fab fa-whatsapp text-success me-2"></i><strong>WhatsApp Direct:</strong></p>
+                        <p class="fw-bold mb-0">
+                            <a href="https://wa.me/9779848701283" target="_blank" rel="noopener" class="text-decoration-none text-success">
+                                +977 984-8701283
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="contact-item-row">
+                        <p class="text-muted mb-1 small"><i class="fas fa-map-marker-alt text-danger me-2"></i><strong>Academy Campus:</strong></p>
+                        <p class="fw-semibold mb-1 text-dark small">
+                            {{ school.address|default:"W85G+G48, Garjamuni, Sudurpashchim Province 10400, Nepal" }}
+                        </p>
+                        <span class="badge bg-light text-muted border">Plus Code: W85G+G48 Garjamuni</span>
+                    </div>
+
+                    <a href="tel:{{ school.phone|default:'+9779848701283' }}" class="btn btn-warning rounded-pill w-100 fw-bold text-dark py-2 mt-3 shadow-xs">
+                        <i class="fas fa-phone-volume me-1"></i> Call Admissions Office
+                    </a>
+                </div>
+
+                <!-- Office Hours Card -->
+                <div class="info-card">
+                    <h2><i class="fas fa-clock text-warning"></i> Office Hours</h2>
+                    <div class="mb-3">
+                        <strong class="text-dark d-block">Sunday – Thursday:</strong>
+                        <span class="text-muted">9:00 AM – 4:00 PM</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="text-dark d-block">Friday:</strong>
+                        <span class="text-muted">9:00 AM – 2:00 PM</span>
+                    </div>
+                    <div>
+                        <strong class="text-dark d-block">Saturday & Public Holidays:</strong>
+                        <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1">Closed</span>
+                    </div>
+                </div>
+
+                <!-- Track Application Status Card -->
+                <div class="info-card border-0 text-white" style="background: linear-gradient(135deg, #070f26 0%, #0f172a 60%, #1e3a8a 100%); border-top: 3px solid #f59e0b !important;">
+                    <h2 class="text-white"><i class="fas fa-magnifying-glass text-warning"></i> Track Status</h2>
+                    <p class="small text-white-50 mb-3">
+                        Already submitted an admission application? Enter your reference ID (e.g. <code>HNA-2026-XXXX</code>) to check admission review status.
+                    </p>
+                    <a href="{% url 'admission_status' %}" class="btn btn-warning rounded-pill w-100 fw-bold text-dark py-2 shadow-xs">
                         Check Application Status &rarr;
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Right: Application Form with Anti-Spam Honeypot -->
-            <div class="col-lg-8">
-                <div class="form-card-container">
-                    <h2 class="h4 fw-bold text-dark mb-4 border-bottom pb-3">Online Registration Form</h2>
+        <!-- 4-Step Admission Process Flow (Hunainath Styled) -->
+        <div class="row mt-5 g-4">
+            <div class="col-12 text-center mb-2">
+                <span class="section-tag"><i class="fas fa-clipboard-check text-warning"></i> Simple & Transparent</span>
+                <h2 class="section-title">Admission Process</h2>
+                <p class="section-desc">Follow these four seamless steps to complete enrollment at Shree Hunainath Educational Academy.</p>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="process-number">1</div>
+                    <h3>Submit Application</h3>
+                    <p>Obtain and submit the registration form at the school admissions office along with academic credentials.</p>
+                </div>
+            </div>
 
-                    <form method="POST" action="{% url 'admissions' %}" enctype="multipart/form-data"
-                        autocomplete="off">
-                        {% csrf_token %}
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="process-number">2</div>
+                    <h3>Entrance Test / Evaluation</h3>
+                    <p>Age-appropriate friendly assessment for Montessori or foundational test in English, Math & Nepali for Grades 1–8.</p>
+                </div>
+            </div>
 
-                        <!-- Anti-Bot Honeypot Field (Invisible to real humans, bots fill this and get rejected) -->
-                        <div class="website-hp-field">
-                            <label for="website_url_hp">Leave this field blank</label>
-                            <input type="text" name="website_url_hp" id="website_url_hp" tabindex="-1"
-                                autocomplete="off">
-                        </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="process-number">3</div>
+                    <h3>Parent & Student Interview</h3>
+                    <p>A welcoming interaction session with the Principal and academic coordinators to align learning objectives.</p>
+                </div>
+            </div>
 
-                        <!-- Section 1: Student Information -->
-                        <h5 class="fw-bold text-primary mb-3"><i class="fas fa-child me-2"></i> Student Information</h5>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-8">
-                                <label class="form-label-custom">Student Full Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" name="student_name" class="form-control-custom no-autofill"
-                                    placeholder="e.g. Ramesh Joshi" required autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label-custom">Gender <span class="text-danger">*</span></label>
-                                <select name="gender" class="form-select-custom" required>
-                                    <option value="MALE">Male</option>
-                                    <option value="FEMALE">Female</option>
-                                    <option value="OTHER">Other</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom">Date of Birth <span
-                                        class="text-danger">*</span></label>
-                                <input type="date" name="date_of_birth" class="form-control-custom" required
-                                    autocomplete="off">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom">Grade / Class Applying For <span
-                                        class="text-danger">*</span></label>
-                                <select name="grade_applying_for" id="grade_applying_for" class="form-select-custom"
-                                    required>
-                                    <option value="" disabled selected>Select class level...</option>
-                                    <option value="Playgroup / Nursery">Playgroup / Nursery</option>
-                                    <option value="LKG / UKG">LKG / UKG</option>
-                                    <option value="Grade 1">Grade 1</option>
-                                    <option value="Grade 2">Grade 2</option>
-                                    <option value="Grade 3">Grade 3</option>
-                                    <option value="Grade 4">Grade 4</option>
-                                    <option value="Grade 5">Grade 5</option>
-                                    <option value="Grade 6">Grade 6</option>
-                                    <option value="Grade 7">Grade 7</option>
-                                    <option value="Grade 8">Grade 8</option>
-                                </select>
-                            </div>
-                            <div class="col-md-8">
-                                <label class="form-label-custom">Previous School Attended (If applicable)</label>
-                                <input type="text" name="previous_school" class="form-control-custom no-autofill"
-                                    placeholder="Name of previous school" autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label-custom">Previous GPA / Percentage</label>
-                                <input type="text" name="previous_gpa" class="form-control-custom no-autofill"
-                                    placeholder="e.g. 3.65 GPA" autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                        </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="process-step">
+                    <div class="process-number">4</div>
+                    <h3>Enrollment & Welcome</h3>
+                    <p>Complete documentation, receive your official student admission package, uniform guidelines, and class schedule.</p>
+                </div>
+            </div>
+        </div>
 
-                        <!-- Section 2: Parent / Guardian Details -->
-                        <h5 class="fw-bold text-primary mb-3 pt-3 border-top"><i class="fas fa-user-tie me-2"></i>Parent / Guardian Information</h5>
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label-custom">Parent Full Name <span
-                                        class="text-danger">*</span></label>
-                                <input type="text" name="parent_name" class="form-control-custom no-autofill"
-                                    placeholder="Father or Mother name" required autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom"> Contact Number <span
-                                        class="text-danger">*</span></label>
-                                <input type="tel" name="parent_phone" class="form-control-custom no-autofill"
-                                    placeholder="e.g. +977-9800000000" required autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom">Email Address (Optional)</label>
-                                <input type="email" name="parent_email" class="form-control-custom no-autofill"
-                                    placeholder="parent@example.com" autocomplete="off" spellcheck="false"
-                                    data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label-custom">Occupation / Profession</label>
-                                <input type="text" name="parent_occupation" class="form-control-custom no-autofill"
-                                    placeholder="e.g. Business, Agriculture, Teaching" autocomplete="off"
-                                    spellcheck="false" data-lpignore="true" data-form-type="other" readonly
-                                    onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label-custom">Residential Address <span
-                                        class="text-danger">*</span></label>
-                                <textarea name="address" class="form-control-custom no-autofill" rows="2"
-                                    placeholder="Municipality, Ward No., Tole/Village (e.g. Shuklaphanta-5, Garjamani, Kanchanpur)"
-                                    required autocomplete="off" spellcheck="false" data-lpignore="true"
-                                    data-form-type="other" readonly onfocus="this.removeAttribute('readonly');"
-                                    onblur="this.setAttribute('readonly', 'readonly');"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Section 3: Additional Notes & Physical Verification Notice -->
-                        <div class="p-4 rounded-4 border mb-4" style="background: #f8fafc; border-left: 4px solid #1E3A8A !important;">
-                            <h6 class="fw-bold text-dark mb-2"><i class="fas fa-clipboard-check text-primary me-2"></i>Document Verification at School Office</h6>
-                            <p class="small text-muted mb-3">
-                                No online document uploads are required at this stage! Upon submitting this application, please visit our school administration office during standard opening hours (9:00 AM – 4:00 PM) for student verification and interview.
-                            </p>
-                            <div class="col-12">
-                                <label class="form-label-custom">Additional Remarks / Transportation Request (Optional)</label>
-                                <textarea name="additional_notes" class="form-control-custom" rows="2"
-                                    placeholder="Mention if you require school bus pickup, hostel boarding inquiry, or special learning assistance."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Declaration & Submit Button -->
-                        <div class="p-3 bg-light rounded-3 mb-4 border">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="declarationCheck" required>
-                                <label class="form-check-label small text-muted" for="declarationCheck">
-                                    I hereby certify that all information submitted in this application is accurate and
-                                    genuine to the best of my knowledge.
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit"
-                                class="btn btn-primary btn-lg rounded-pill px-5 fw-bold shadow-sm btn-ripple">
-                                Submit Application <i class="fas fa-paper-plane ms-2"></i>
-                            </button>
-                        </div>
-                    </form>
+        <!-- Call to Action Banner (Hunainath Royal Navy + Solar Amber Design) -->
+        <div class="my-5">
+            <div class="hunainath-cta-banner">
+                <div class="row align-items-center position-relative" style="z-index: 2;">
+                    <div class="col-lg-8 mb-4 mb-lg-0">
+                        <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-2">🎉 Admissions Open • Academic Intake 2082 / 2026</span>
+                        <h2 class="text-white fw-bold display-6 mb-2">Ready to Join Hunainath Educational Academy?</h2>
+                        <p class="text-white-50 mb-0" style="max-width: 650px; font-size: 1.05rem;">
+                            Empower your child with strong character, modern digital literacy, and quality foundational learning in Garjamuni, Kanchanpur.
+                        </p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="tel:{{ school.phone|default:'+9779848701283' }}" class="btn-apply-gold">
+                            <i class="fas fa-phone-volume me-1"></i> Contact Admissions Desk
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector('form[action="{% url 'admissions' %}"]');
-        if (form) {
-            form.addEventListener('submit', function () {
-                form.querySelectorAll('.no-autofill').forEach(function (el) {
-                    el.removeAttribute('readonly');
-                });
-            });
-        }
-    });
-</script>
 {% endblock %}

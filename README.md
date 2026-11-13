@@ -169,6 +169,8 @@ When migrating to production (e.g. AWS, Render, DigitalOcean, or Heroku):
    ```bash
    gunicorn hunainath_academy.wsgi:application --bind 0.0.0.0:8000 --workers 3
    ```
-#   H u n a i n a t h - E d u c a t i n a l - A c a d e m y  
- #   H u n a i n a t h - E d u c a t i n a l - A c a d e m y  
+#   H u n a i n a t h - E d u c a t i n a l - A c a d e m y 
+ 
+ #   H u n a i n a t h - E d u c a t i n a l - A c a d e m y 
+ 
  

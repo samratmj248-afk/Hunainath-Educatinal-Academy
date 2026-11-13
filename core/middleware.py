@@ -15,6 +15,9 @@ class SecurityHeadersMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
+        if request.path.startswith("/admin/"):
+            return response
+
         # Content Security Policy (permits CDNs used for premium styling & icons)
         csp_directives = [
             "default-src 'self' https: data: blob:",
@@ -23,14 +26,20 @@ class SecurityHeadersMiddleware:
             "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net",
             "img-src 'self' data: blob: https: https://images.unsplash.com",
             "connect-src 'self' https: wss: ws:",
+            "frame-src 'self' https://maps.google.com https://www.google.com",
             "manifest-src 'self'",
             "worker-src 'self' blob:",
             "frame-ancestors 'self'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "object-src 'none'",
         ]
         response["Content-Security-Policy"] = "; ".join(csp_directives)
 
-        # Permissions Policy
+        # Permissions Policy & Isolation Headers
         response["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(), payment=()"
+        response["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups"
+        response["Referrer-Policy"] = "strict-origin-when-cross-origin"
 
         # Extra safety headers
         response["X-Content-Type-Options"] = "nosniff"

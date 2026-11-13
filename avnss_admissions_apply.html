@@ -1,0 +1,3099 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Submit your admission application to AVN - Adarsh Vidya Niketan Higher Secondary School, Mahendranagar, Nepal. Start your journey to excellence in education.">
+    <meta name="keywords"
+        content="AVN, Adarsh Vidya Niketan, school, education, Mahendranagar, Nepal, academics, admissions">
+    <meta name="theme-color" content="#0052cc">
+    <meta name="author" content="AVN - Adarsh Vidya Niketan">
+
+    <!-- Favicon - Multiple sizes for all devices -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+    <link rel="mask-icon" href="/static/favicon-32x32.png" color="#0052cc">
+    <meta name="msapplication-TileColor" content="#0052cc">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://avnss.edu.np/admissions/apply/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="AVN - Adarsh Vidya Niketan">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title"
+        content="Apply Now - AVN - Adarsh Vidya Niketan">
+    <meta property="og:description"
+        content="Submit your admission application to AVN - Adarsh Vidya Niketan, Mahendranagar, Nepal.">
+    <meta property="og:image" content="/static/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="AVN - Adarsh Vidya Niketan Higher Secondary School">
+    <meta property="og:url" content="https://avnss.edu.np/admissions/apply/">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title"
+        content="Apply Now - AVN - Adarsh Vidya Niketan">
+    <meta name="twitter:description"
+        content="Submit your admission application to AVN - Adarsh Vidya Niketan, Mahendranagar, Nepal.">
+    <meta name="twitter:image" content="/static/og-image.png">
+
+    <title>Apply Now - AVN - Adarsh Vidya Niketan | Mahendranagar, Nepal</title>
+
+
+
+    <script>
+        // ==================== PWA INITIALIZATION ====================
+        let deferredPrompt;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(navigator.userAgent);
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            if (document.readyState === 'complete') {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Fail:', err));
+            } else {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Fail:', err));
+                });
+            }
+        }
+
+        // Helper: Strict Visibility
+        async function updateInstallButtonVisibility() {
+            const sidebarBtn = document.getElementById('pwa-sidebar-item');
+            if (!sidebarBtn) return;
+
+            // Check if running in standalone mode (installed PWA opened directly)
+            const isStandalone = window.navigator.standalone === true ||
+                window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isStandalone) {
+                sidebarBtn.style.display = 'none';
+                return;
+            }
+
+            // Check if app was previously installed (localStorage flag)
+            if (localStorage.getItem('pwa-installed') === 'true') {
+                sidebarBtn.style.display = 'none';
+                return;
+            }
+
+            // Try getInstalledRelatedApps API (Chrome 80+)
+            if ('getInstalledRelatedApps' in navigator) {
+                try {
+                    const relatedApps = await navigator.getInstalledRelatedApps();
+                    if (relatedApps.length > 0) {
+                        localStorage.setItem('pwa-installed', 'true');
+                        sidebarBtn.style.display = 'none';
+                        return;
+                    }
+                } catch (e) {
+                    console.log('getInstalledRelatedApps not available');
+                }
+            }
+
+            // iOS -> Always Show (iOS doesn't have beforeinstallprompt)
+            if (isIOS) {
+                sidebarBtn.style.display = 'block';
+                return;
+            }
+
+            // Android/Desktop -> ONLY Show if prompt is captured
+            if (deferredPrompt) {
+                sidebarBtn.style.display = 'block';
+            } else {
+                sidebarBtn.style.display = 'none';
+            }
+        }
+
+        // Capture Prompt - RUNS IMMEDIATELY
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('✅ PWA: Native Prompt Ready');
+            updateInstallButtonVisibility();
+        });
+
+        // Initial Check
+        window.addEventListener('DOMContentLoaded', updateInstallButtonVisibility);
+        window.addEventListener('load', updateInstallButtonVisibility);
+
+        // Global Install Handler
+        window.handleSidebarInstall = async function () {
+            console.log('🔘 PWA Clicked');
+
+            if (deferredPrompt) {
+                // Native Prompt
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('✅ PWA installed!');
+                    localStorage.setItem('pwa-installed', 'true');
+                    deferredPrompt = null;
+                    updateInstallButtonVisibility();
+                }
+            } else if (isIOS) {
+                showPlatformModal('iosInstallModal');
+            } else {
+                // Should not be reachable in Strict Mode, but just in case
+                console.log('No prompt ready');
+            }
+        };
+
+        function showPlatformModal(modalId) {
+            if (typeof bootstrap !== 'undefined') {
+                const modalEl = document.getElementById(modalId);
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+                alert('Install via your browser menu.');
+            }
+        }
+    </script>
+
+    <!-- Performance & SEO -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "AVN - Adarsh Vidya Niketan",
+      "url": "https://avnss.edu.np",
+      "logo": "https://avnss.edu.np/static/android-chrome-192x192.png",
+      "description": "Excellence in Education - Mahendranagar, Nepal",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Mahendranagar-4",
+        "addressLocality": "Mahendranagar",
+        "addressRegion": "Sudurpashchim",
+        "postalCode": "10400",
+        "addressCountry": "NP"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+977-99-402120",
+        "contactType": "customer service"
+      }
+    }
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+
+    <style>
+        :root {
+            --primary: #0052cc;
+            --primary-dark: #0041a3;
+            --primary-light: #3377dd;
+            --secondary: #ff9800;
+            --dark: #1a1a2e;
+            --light: #f5f5f5;
+            --border: #e9ecef;
+            --gradient-primary: linear-gradient(135deg, #0052cc 0%, #0041a3 50%, #002a6b 100%);
+            --gradient-primary-hover: linear-gradient(135deg, #0041a3 0%, #002a6b 50%, #001a4d 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: #fafbfc;
+            overflow-x: hidden;
+        }
+
+        /* ==================== HEADER & NAVBAR ==================== */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 26px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        /* Logo Container with Cool Animation */
+        .logo-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+        }
+
+        .logo-container img,
+        .logo-container i {
+            position: relative;
+            z-index: 2;
+            height: 45px;
+            width: auto;
+        }
+
+        .logo-container i {
+            font-size: 32px;
+            color: var(--primary);
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        /* Animated Background Ring */
+        .logo-bg-ring {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 82, 204, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
+            animation: pulse-ring 2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .logo-bg-ring::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--primary-light), var(--primary));
+            animation: rotate-ring 3s linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .logo-bg-ring::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border-radius: 50%;
+            background: white;
+            z-index: 0;
+        }
+
+        /* Floating Particles around Logo */
+        .logo-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .logo-particle:nth-child(1) {
+            animation: orbit-particle 3s linear infinite;
+            background: var(--primary);
+        }
+
+        .logo-particle:nth-child(2) {
+            animation: orbit-particle 3s linear infinite reverse;
+            animation-delay: -1.5s;
+            background: var(--secondary);
+        }
+
+        .logo-particle:nth-child(3) {
+            animation: orbit-particle-2 4s linear infinite;
+            background: var(--primary-light);
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes rotate-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes orbit-particle {
+            0% {
+                transform: rotate(0deg) translateX(35px) rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg) translateX(35px) rotate(-360deg);
+            }
+        }
+
+        @keyframes orbit-particle-2 {
+            0% {
+                transform: rotate(45deg) translateX(40px) rotate(-45deg);
+            }
+
+            100% {
+                transform: rotate(405deg) translateX(40px) rotate(-405deg);
+            }
+        }
+
+        /* Glow effect on hover */
+        .navbar-brand:hover .logo-bg-ring {
+            box-shadow: 0 0 30px rgba(0, 82, 204, 0.4), 0 0 60px rgba(255, 152, 0, 0.2);
+        }
+
+        .navbar-brand:hover .logo-bg-ring::before {
+            animation-duration: 1.5s;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+            animation: float 3s ease-in-out infinite;
+            color: var(--primary);
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-8px) rotate(-5deg);
+            }
+
+            75% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+
+        .nav-link {
+            color: var(--dark) !important;
+            font-weight: 500;
+            font-size: 15px;
+            margin: 0 8px;
+            padding: 8px 16px !important;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary) !important;
+            background: rgba(0, 82, 204, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .nav-link:hover::before {
+            width: 80%;
+        }
+
+        .nav-link.active {
+            color: var(--primary) !important;
+            background: rgba(0, 82, 204, 0.08);
+        }
+
+        /* Improved CTA Button in Navbar */
+        .btn-cta {
+            background: var(--gradient-primary);
+            color: white !important;
+            padding: 10px 28px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.3);
+        }
+
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-cta:hover {
+            background: var(--gradient-primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 82, 204, 0.5);
+        }
+
+        .btn-cta:hover::before {
+            left: 100%;
+        }
+
+        .btn-cta:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.4);
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            background: var(--gradient-primary);
+            color: #ffffff;
+            padding: 4rem 0 1rem;
+            margin-top: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        footer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        footer .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-section h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 18px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section ul li:hover {
+            transform: translateX(5px);
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover {
+            color: white;
+            transform: translateX(3px);
+        }
+
+        .contact-info i {
+            color: var(--secondary);
+            width: 24px;
+            font-size: 16px;
+            margin-top: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover i {
+            transform: scale(1.2);
+        }
+
+        .contact-info a {
+            color: inherit;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            color: white !important;
+            font-size: 18px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            background: var(--secondary);
+            color: white !important;
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.5);
+            border-color: var(--secondary);
+        }
+
+        .social-link i {
+            color: white !important;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .footer-bottom a {
+            color: white;
+            text-decoration: none;
+            margin: 0 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+
+        .powered-by {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+
+        .powered-by a {
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .powered-by a:hover {
+            color: white;
+            text-shadow: 0 0 15px rgba(255, 152, 0, 0.8);
+            transform: scale(1.05);
+        }
+
+        .powered-by i {
+            font-size: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        /* ==================== FOOTER BACKGROUND ANIMATIONS ==================== */
+        .footer-bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-logo {
+            position: absolute;
+            opacity: 0.03;
+            animation: floatLogo 25s ease-in-out infinite;
+        }
+
+        .floating-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .logo-2 {
+            width: 250px;
+            height: 250px;
+            top: 50%;
+            right: 10%;
+            animation-delay: 8s;
+        }
+
+        .logo-3 {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            left: 40%;
+            animation-delay: 16s;
+        }
+
+        @keyframes floatLogo {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -30px) rotate(5deg) scale(1.05);
+            }
+
+            50% {
+                transform: translate(-20px, 20px) rotate(-5deg) scale(0.95);
+            }
+
+            75% {
+                transform: translate(20px, 30px) rotate(3deg) scale(1.02);
+            }
+        }
+
+        .geometric-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border-radius: 50%;
+            animation: geometricFloat 20s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            left: -80px;
+            animation-delay: 7s;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        }
+
+        .shape-3 {
+            width: 250px;
+            height: 250px;
+            top: 40%;
+            left: 30%;
+            animation-delay: 14s;
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        @keyframes geometricFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(50px, -50px) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(-30px, 30px) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(40px, 50px) rotate(270deg);
+            }
+        }
+
+        /* ==================== EDUCATIONAL FLOATING ELEMENTS ==================== */
+        .edu-symbol,
+        .number-float,
+        .icon-float {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.06);
+            font-weight: 700;
+            pointer-events: none;
+            animation: eduFloat 15s ease-in-out infinite;
+        }
+
+        .edu-symbol {
+            font-size: 60px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .number-float {
+            font-size: 80px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .icon-float {
+            font-size: 50px;
+        }
+
+        /* Math Symbols Positions */
+        .edu-1 {
+            top: 15%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .edu-2 {
+            top: 25%;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .edu-3 {
+            top: 60%;
+            left: 8%;
+            animation-delay: 4s;
+        }
+
+        .edu-4 {
+            top: 70%;
+            right: 15%;
+            animation-delay: 6s;
+        }
+
+        .edu-5 {
+            top: 40%;
+            left: 25%;
+            animation-delay: 8s;
+        }
+
+        .edu-6 {
+            top: 50%;
+            right: 35%;
+            animation-delay: 10s;
+        }
+
+        .edu-7 {
+            top: 20%;
+            left: 45%;
+            animation-delay: 3s;
+        }
+
+        .edu-8 {
+            top: 75%;
+            left: 50%;
+            animation-delay: 5s;
+        }
+
+        .edu-9 {
+            top: 35%;
+            right: 10%;
+            animation-delay: 7s;
+        }
+
+        .edu-10 {
+            top: 80%;
+            right: 40%;
+            animation-delay: 9s;
+        }
+
+        /* Numbers Positions */
+        .num-1 {
+            top: 18%;
+            right: 8%;
+            animation-delay: 1s;
+        }
+
+        .num-2 {
+            top: 55%;
+            left: 35%;
+            animation-delay: 3s;
+        }
+
+        .num-3 {
+            top: 45%;
+            right: 25%;
+            animation-delay: 5s;
+        }
+
+        .num-4 {
+            top: 25%;
+            left: 55%;
+            animation-delay: 7s;
+        }
+
+        .num-5 {
+            top: 65%;
+            right: 50%;
+            animation-delay: 9s;
+        }
+
+        /* Icons Positions */
+        .icon-1 {
+            top: 30%;
+            left: 70%;
+            animation-delay: 2s;
+        }
+
+        .icon-2 {
+            top: 50%;
+            left: 12%;
+            animation-delay: 4s;
+        }
+
+        .icon-3 {
+            top: 15%;
+            right: 45%;
+            animation-delay: 6s;
+        }
+
+        .icon-4 {
+            top: 70%;
+            left: 30%;
+            animation-delay: 8s;
+        }
+
+        .icon-5 {
+            top: 40%;
+            right: 5%;
+            animation-delay: 10s;
+        }
+
+        .icon-6 {
+            top: 85%;
+            left: 60%;
+            animation-delay: 12s;
+        }
+
+        @keyframes eduFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.06;
+            }
+
+            25% {
+                transform: translate(20px, -40px) rotate(15deg);
+                opacity: 0.08;
+            }
+
+            50% {
+                transform: translate(-15px, 20px) rotate(-10deg);
+                opacity: 0.04;
+            }
+
+            75% {
+                transform: translate(25px, 35px) rotate(20deg);
+                opacity: 0.07;
+            }
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .edu-symbol {
+                font-size: 40px;
+            }
+
+            .number-float {
+                font-size: 50px;
+            }
+
+            .icon-float {
+                font-size: 35px;
+            }
+
+            /* Hide some on mobile for cleaner look */
+            .edu-4,
+            .edu-5,
+            .edu-9,
+            .edu-10,
+            .num-3,
+            .num-4,
+            .num-5,
+            .icon-4,
+            .icon-5,
+            .icon-6 {
+                display: none;
+            }
+        }
+
+        /* ==================== SOCIAL ICON FIX ==================== */
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            color: white !important;
+            font-size: 18px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link i {
+            color: white !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .social-link:hover {
+            background: var(--secondary);
+            color: white !important;
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.5);
+            border-color: var(--secondary);
+        }
+
+        /* ==================== WHATSAPP BUTTON ==================== */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            text-decoration: none;
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.15) rotate(360deg);
+            box-shadow: 0 8px 35px rgba(37, 211, 102, 0.6);
+            animation: none;
+        }
+
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 75px;
+            background: white;
+            color: var(--dark);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .whatsapp-btn:hover .whatsapp-tooltip {
+            opacity: 1;
+            right: 80px;
+        }
+
+        /* ==================== SCROLL TO TOP ==================== */
+        #scrollBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0, 82, 204, 0.4);
+            transition: all 0.3s ease;
+            z-index: 998;
+            font-size: 20px;
+        }
+
+        #scrollBtn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 82, 204, 0.6);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* ==================== UTILITIES ==================== */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .btn-animated {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-animated::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-animated:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 22px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .whatsapp-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 28px;
+                bottom: 90px;
+                right: 20px;
+            }
+
+            #scrollBtn {
+                width: 45px;
+                height: 45px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        /* ==================== GALLERY SLIDER ==================== */
+        .gallery-slider-section {
+            background: white;
+            padding: 60px 0;
+            overflow: hidden;
+            position: relative;
+            margin-top: -80px;
+            z-index: 10;
+        }
+
+        .gallery-slider-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-slider {
+            display: flex;
+            gap: 20px;
+            animation: slideGallery 40s linear infinite;
+            will-change: transform;
+        }
+
+        .gallery-slider:hover {
+            animation-play-state: paused;
+        }
+
+        .gallery-slide {
+            flex-shrink: 0;
+            width: 300px;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-slide:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-slide:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-slide:hover .gallery-caption {
+            transform: translateY(0);
+        }
+
+        @keyframes slideGallery {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-slide {
+                width: 250px;
+                height: 180px;
+            }
+
+            .gallery-slider {
+                animation-duration: 30s;
+            }
+        }
+
+        /* ==================== MOBILE MENU SIDEBAR (OFF-CANVAS) ==================== */
+        .mobile-sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .mobile-sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: white;
+            z-index: 1051;
+            box-shadow: 10px 0 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        .mobile-sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 2.5rem 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-header .navbar-brand,
+        .sidebar-header .navbar-brand *,
+        .sidebar-header .brand-name-mobile {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+            font-size: 20px;
+        }
+
+        .sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .sidebar-body {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.4s ease;
+        }
+
+        .mobile-sidebar.active .sidebar-nav li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a i {
+            width: 25px;
+            color: var(--primary);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(0, 82, 204, 0.05);
+            color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .sidebar-nav a:hover i {
+            transform: scale(1.2);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .sidebar-nav a.active i {
+            color: white;
+        }
+
+        .sidebar-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Hide Bootstrap collapse on mobile */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                display: none !important;
+            }
+        }
+
+        /* Sidebar Dropdown Styles */
+        .sidebar-dropdown {
+            position: relative;
+        }
+
+        .sidebar-dropdown-toggle {
+            display: flex !important;
+            justify-content: space-between;
+        }
+
+        .sidebar-dropdown-toggle .fa-chevron-down {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
+        .sidebar-dropdown.open .sidebar-dropdown-toggle .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-dropdown-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 82, 204, 0.03);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .sidebar-dropdown.open .sidebar-dropdown-menu {
+            max-height: 200px;
+        }
+
+        .sidebar-dropdown-menu li a {
+            padding: 12px 20px 12px 55px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+
+        /* Desktop dropdown styles */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 82, 204, 0.08);
+            color: var(--primary);
+        }
+
+        .dropdown-item i {
+            color: var(--primary);
+        }
+
+        /* Contact Info Alignment */
+        .contact-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .contact-info i {
+            color: var(--secondary);
+            font-size: 18px;
+            margin-top: 5px;
+            width: 25px;
+            flex-shrink: 0;
+        }
+
+        .contact-info span {
+            flex: 1;
+        }
+
+        .contact-info a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: white;
+        }
+
+        /* Desktop Hover Dropdown */
+        @media (min-width: 992px) {
+            .nav-item.dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+                animation: fadeInDB 0.3s ease;
+            }
+        }
+
+        @keyframes fadeInDB {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    
+    
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header id="main-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <span class="logo-container">
+                        <span class="logo-bg-ring"></span>
+                        <span class="logo-particle"></span>
+                        <span class="logo-particle"></span>
+                        <span class="logo-particle"></span>
+                        
+                        <img src="/media/branding/images.jpg" alt="AVN" width="45" height="45">
+                        
+                    </span>
+                    AVN
+                </a>
+                <button class="navbar-toggler custom-nav-toggler" type="button" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link " href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link "
+                                href="/about/">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link "
+                                href="/courses/">Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link "
+                                href="/staff/">Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/blog/">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                                href="/admissions/">Admissions</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle "
+                                href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Academics</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/academics/routines/"><i
+                                            class="fas fa-calendar-alt me-2"></i>Exam Routines</a></li>
+                                <li><a class="dropdown-item" href="/academics/results/"><i
+                                            class="fas fa-chart-bar me-2"></i>Exam Results</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link "
+                                href="/contact/">Contact</a>
+                        </li>
+                    </ul>
+                    <a href="/admissions/apply/" class="btn btn-cta ms-lg-3 mt-2 mt-lg-0">
+                        Apply Now <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                    <!-- Notification Bell (Hidden on Desktop, Visible on Mobile/Tablet if moved elsewhere, currently sidebar handles mobile) -->
+                    <!-- Wait, user said remove from desktop navbar NOT for smaller screens. 
+                         Usually that means d-lg-none if it was visible there. 
+                         But wait, the sidebar handles mobile. 
+                         If I add d-lg-none, it will disappear on desktop. 
+                         On mobile, this navbar collapses. 
+                         Let's just add d-lg-none as requested. -->
+                    <button id="notificationBell" class="btn btn-notification ms-2 mt-2 mt-lg-0 d-lg-none"
+                        onclick="toggleNotifications()" title="Enable Notifications"
+                        style="background: transparent; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; width: 44px; height: 44px; padding: 0; display: flex; align-items: center; justify-content: center; transition: all 0.3s; overflow: hidden;">
+                        
+                        <img src="/media/branding/images.jpg" alt="Logo"
+                            style="width: 24px; height: 24px; object-fit: contain;">
+                        
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MOBILE SIDEBAR -->
+    <div class="mobile-sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <a class="navbar-brand" href="/">
+                <span class="logo-container">
+                    
+                    <img src="/media/branding/images.jpg" alt="AVN" width="40" height="40">
+                    
+                </span>
+                AVN
+            </a>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-body">
+            <ul class="sidebar-nav">
+                <li style="transition-delay: 0.1s;">
+                    <a href="/" class="">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li style="transition-delay: 0.2s;">
+                    <a href="/about/" class="">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </li>
+                <li style="transition-delay: 0.3s;">
+                    <a href="/courses/" class="">
+                        <i class="fas fa-book-open"></i> Courses
+                    </a>
+                </li>
+                <li style="transition-delay: 0.4s;">
+                    <a href="/blog/" class="">
+                        <i class="fas fa-blog"></i> Blog
+                    </a>
+                </li>
+                <li style="transition-delay: 0.5s;">
+                    <a href="/admissions/" class="active">
+                        <i class="fas fa-user-graduate"></i> Admissions
+                    </a>
+                </li>
+                <li style="transition-delay: 0.55s;" class="sidebar-dropdown">
+                    <a href="#" class="sidebar-dropdown-toggle "
+                        onclick="event.preventDefault(); this.parentElement.classList.toggle('open');">
+                        <i class="fas fa-graduation-cap"></i> Academics <i class="fas fa-chevron-down ms-auto"></i>
+                    </a>
+                    <ul class="sidebar-dropdown-menu">
+                        <li><a href="/academics/routines/"><i class="fas fa-calendar-alt"></i> Exam Routines</a></li>
+                        <li><a href="/academics/results/"><i class="fas fa-chart-bar"></i> Exam Results</a></li>
+                    </ul>
+                </li>
+                <li style="transition-delay: 0.58s;">
+                    <a href="/careers/" class="">
+                        <i class="fas fa-briefcase"></i> Careers
+                    </a>
+                </li>
+                <li style="transition-delay: 0.6s;">
+                    <a href="/contact/" class="">
+                        <i class="fas fa-phone-alt"></i> Contact
+                    </a>
+                </li>
+                <!-- Install App Link (Visible on mobile if not installed) -->
+                <li id="pwa-sidebar-item" style="transition-delay: 0.7s; display: none;">
+                    <a href="#" onclick="event.preventDefault(); handleSidebarInstall();"
+                        style="background: rgba(0, 82, 204, 0.1); color: var(--primary);">
+                        <i class="fas fa-download"></i> Install App
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <!-- Notification Bell for Mobile -->
+            <button id="notificationBellMobile" onclick="toggleNotifications()" class="btn w-100 mb-2"
+                style="background: rgba(255, 152, 0, 0.1); border: 2px solid rgba(255, 152, 0, 0.5); color: #ff9800; border-radius: 50px; padding: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-bell me-2"></i>
+                <span id="notificationBellText">Enable Notifications</span>
+            </button>
+            <a href="/admissions/apply/" class="btn btn-cta w-100">
+                Apply Now <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- iOS Install Instructions Modal -->
+    <div class="modal fade" id="iosInstallModal" tabindex="-1" aria-labelledby="iosInstallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title" id="iosInstallModalLabel">
+                        <i class="fas fa-download me-2"></i> Install AVN App
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <p class="mb-4">To install this app on your iPhone/iPad:</p>
+                    <div class="d-flex flex-column gap-3 text-start px-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">1</span>
+                            <span>Tap the <strong>Share</strong> button <i class="fas fa-share-square text-primary"></i>
+                                at the bottom of Safari</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">2</span>
+                            <span>Scroll down and tap <strong>"Add to Home Screen"</strong> <i
+                                    class="fas fa-plus-square text-primary"></i></span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">3</span>
+                            <span>Tap <strong>"Add"</strong> in the top right corner</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Android Install Instructions Modal -->
+    <div class="modal fade" id="androidInstallModal" tabindex="-1" aria-labelledby="androidInstallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title" id="androidInstallModalLabel">
+                        <i class="fas fa-download me-2"></i> Install AVN App
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <p class="mb-4">To install this app on Android:</p>
+                    <div class="d-flex flex-column gap-3 text-start px-3">
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">1</span>
+                            <span>Tap the <strong>Menu</strong> icon <i class="fas fa-ellipsis-v text-primary"></i> (3
+                                dots) in the top-right corner</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">2</span>
+                            <span>Select <strong>"Install App"</strong> or <strong>"Add to Home screen"</strong></span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary rounded-circle me-3"
+                                style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">3</span>
+                            <span>Confirm the installation in the pop-up</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        
+<style>
+    .page-header {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 80px 0 60px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    }
+
+    .page-header .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .page-header p {
+        font-size: 18px;
+        opacity: 0.95;
+    }
+
+    .admission-form-section {
+        padding: 60px 0 80px;
+        background: #f8f9fa;
+    }
+
+    .form-container {
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+        margin-top: -40px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .form-section-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid var(--primary);
+        display: inline-block;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-group label .required {
+        color: #e74c3c;
+        margin-left: 3px;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.2rem rgba(0, 82, 204, 0.1);
+        outline: none;
+    }
+
+    .form-control:hover {
+        border-color: var(--primary-light);
+    }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .submit-btn {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 15px 50px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 8px 25px rgba(0, 82, 204, 0.3);
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 82, 204, 0.5);
+    }
+
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .info-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-left: 5px solid var(--primary);
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+
+    .info-card h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+
+    .info-card ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .info-card ul li {
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .alert {
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+        border: none;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 32px;
+        }
+
+        .form-container {
+            padding: 30px 20px;
+        }
+    }
+</style>
+
+<section class="page-header" data-aos="fade-down">
+    <div class="container">
+        <h1><i class="fas fa-user-graduate"></i> Apply Now</h1>
+        <p>Begin your journey to excellence at AVN - Adarsh Vidya Niketan</p>
+    </div>
+</section>
+
+<section class="admission-form-section">
+    <div class="container">
+        <div class="form-container">
+            
+
+            <div class="info-card" data-aos="fade-up">
+                <h3><i class="fas fa-info-circle"></i> Before You Apply</h3>
+                <ul>
+                    <li><i class="fas fa-check text-success"></i> Fill out all required fields marked with <span class="text-danger">*</span></li>
+                    <li><i class="fas fa-check text-success"></i> Provide accurate information for verification</li>
+                    <li><i class="fas fa-check text-success"></i> We'll contact you within 2-3 business days</li>
+                    <li><i class="fas fa-check text-success"></i> Keep your phone and email accessible</li>
+                </ul>
+            </div>
+
+            <form id="admissionForm" method="POST" action="/admissions/submit/" data-aos="fade-up">
+                <input type="hidden" name="csrfmiddlewaretoken" value="Jma4rWTdn4M4lIXZbaJ8hiQ0Ue0uyk93pu2f0szaJB64FdF3D844wtyxV1EXOWQE">
+
+                <h3 class="form-section-title">Student Information</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="first_name">First Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="last_name">Last Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="date_of_birth">Date of Birth <span class="required">*</span></label>
+                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="applying_for_grade">Applying for Grade <span class="required">*</span></label>
+                            <select class="form-control" id="applying_for_grade" name="applying_for_grade" required>
+                                <option value="">Select Grade</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="LKG">LKG</option>
+                                <option value="UKG">UKG</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="5">Grade 5</option>
+                                <option value="6">Grade 6</option>
+                                <option value="7">Grade 7</option>
+                                <option value="8">Grade 8</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="current_school">Current School</label>
+                            <input type="text" class="form-control" id="current_school" name="current_school" placeholder="If applicable">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="current_grade">Current Grade/Class</label>
+                            <input type="text" class="form-control" id="current_grade" name="current_grade" placeholder="If applicable">
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="form-section-title mt-4">Parent/Guardian Information</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent_name">Parent/Guardian Name</label>
+                            <input type="text" class="form-control" id="parent_name" name="parent_name">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent_phone">Parent/Guardian Phone</label>
+                            <input type="tel" class="form-control" id="parent_phone" name="parent_phone">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent_email">Parent/Guardian Email</label>
+                            <input type="email" class="form-control" id="parent_email" name="parent_email">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent_occupation">Parent/Guardian Occupation</label>
+                            <input type="text" class="form-control" id="parent_occupation" name="parent_occupation">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Additional Information/Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" placeholder="Any additional information you'd like to share..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn btn-animated" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Application
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+    </main>
+    <!-- GALLERY SLIDER SECTION -->
+    
+    <!-- FOOTER -->
+
+    <footer>
+        <!-- Animated Background Elements -->
+        <div class="footer-bg-pattern">
+            
+            <div class="floating-logo logo-1">
+                <img src="/media/branding/images.jpg" alt="">
+            </div>
+            <div class="floating-logo logo-2">
+                <img src="/media/branding/images.jpg" alt="">
+            </div>
+            <div class="floating-logo logo-3">
+                <img src="/media/branding/images.jpg" alt="">
+            </div>
+            
+            <div class="geometric-shape shape-1"></div>
+            <div class="geometric-shape shape-2"></div>
+            <div class="geometric-shape shape-3"></div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="footer-section">
+                        
+                        <img src="/media/branding/images.jpg" alt="AVN" width="120" height="120"
+                            style="max-width: 120px; height: auto; margin-bottom: 20px; display: block;">
+                        
+                        <h4>About AVN</h4>
+                        <p style="color: rgba(255, 255, 255, 0.85); line-height: 1.8;">
+                            Adarsh Vidya Niketan Higher Secondary School is committed to providing quality education that nurtures intellectual curiosity, moral integrity, and social responsibility. We strive to create a supportive learning environment where every student can discover their potential, develop critical thinking skills, and grow into confident, compassionate individuals prepared to contribute meaningfully to society.
+                        </p>
+                        <!-- Social Links -->
+                        <div class="mt-4">
+                            <!-- Primary Campus Socials -->
+                            <div class="mb-3">
+                                <small class="text-white-50 d-block mb-2">Primary Campus (Grades 1-10) Socials</small>
+                                <div class="social-links">
+                                    
+                                    <a href="https://www.facebook.com/AVNSSM/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    
+                                    
+                                    <a href="https://x.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    
+                                    
+                                    <a href="https://instagram.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    
+                                    
+                                    <a href="https://youtube.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Secondary Campus Socials -->
+                            
+                            <div>
+                                <small class="text-white-50 d-block mb-2">Senior Campus (Grades 11-12) Socials</small>
+                                <div class="social-links">
+                                    
+                                    <a href="https://fb.com" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="background: rgba(255, 152, 0, 0.25);">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links Section -->
+                <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/admissions/">Admissions</a></li>
+                            <li><a href="/gallery/">Gallery</a></li>
+                            <li><a href="/faq/">FAQ</a></li>
+                            <li><a href="/careers/">Careers</a></li>
+                            <li><a href="/blog/">Blog</a></li>
+                            <li><a href="/contact/">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Academics Section -->
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="footer-section">
+                        <h4>Academics</h4>
+                        <ul>
+                            <li><a href="/courses/">All Courses</a></li>
+                            <li><a href="/academics/routines/">Exam Routines</a></li>
+                            <li><a href="/academics/results/">Exam Results</a></li>
+                            <li><a href="/staff/">Faculty & Staff</a></li>
+                            <li><a href="/events/">Events</a></li>
+                            <li><a href="/faq/">Frequently Asked Questions</a></li>
+                            <li
+                                style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                                <small style="color: rgba(255, 255, 255, 0.7);">Course Levels:</small>
+                            </li>
+                            <li style="margin-top: 5px;">
+                                <small>
+                                    <a href="/courses/?level=primary" style="color: rgba(255, 255, 255, 0.85);">•
+                                        Primary</a> |
+                                    <a href="/courses/?level=secondary"
+                                        style="color: rgba(255, 255, 255, 0.85);">Secondary</a> |
+                                    <a href="/courses/?level=higher_secondary"
+                                        style="color: rgba(255, 255, 255, 0.85);">Higher Sec</a>
+                                </small>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info Section -->
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="footer-section">
+                        <h4>Contact Info</h4>
+                        
+                        <!-- Primary Location -->
+                        <div class="mb-3">
+                            <small class="text-white-50 d-block mb-1">Primary Campus (Grades 1-10)</small>
+                            <div class="contact-info mb-1">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Mahendranagar, Bhagatpur</span>
+                            </div>
+                            
+                            <div class="contact-info">
+                                <i class="fas fa-phone"></i>
+                                <span><a href="tel:099-522155">099-522155</a></span>
+                            </div>
+                            
+                        </div>
+
+                        <!-- Secondary Location -->
+                        
+                        <div class="mb-3 pt-2" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                            <small class="text-white-50 d-block mb-1">Senior Campus (Grades 11-12)</small>
+                            
+                            <div class="contact-info mb-1">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bheemdatta, Kanchanpur</span>
+                            </div>
+                            
+                            
+                            <div class="contact-info">
+                                <i class="fas fa-phone"></i>
+                                <span><a href="tel:099-523841">099-523841</a></span>
+                            </div>
+                            
+                        </div>
+                        
+
+                        
+                        <div class="contact-info pt-2" style="border-top: 1px solid rgba(255,255,255,0.1);">
+                            <i class="fab fa-whatsapp"></i>
+                            <span><a href="https://wa.me/977 984-9288216?text=Hello%20AVN" target="_blank">+977 984-9288216</a></span>
+                        </div>
+                        
+
+                        <!-- Newsletter Signup -->
+                        <div class="mt-4 pt-3" style="border-top: 1px solid rgba(255,255,255,0.15);">
+                            <h5 class="text-white mb-3" style="font-size: 0.95rem;"><i
+                                    class="fas fa-envelope-open-text me-2"></i>Newsletter</h5>
+                            <form method="POST" action="/newsletter/subscribe/" class="newsletter-form">
+                                <input type="hidden" name="csrfmiddlewaretoken" value="Jma4rWTdn4M4lIXZbaJ8hiQ0Ue0uyk93pu2f0szaJB64FdF3D844wtyxV1EXOWQE">
+                                <div class="input-group">
+                                    <input type="email" name="email" class="form-control form-control-sm"
+                                        placeholder="Your email" required
+                                        style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;">
+                                    <button type="submit" class="btn btn-sm"
+                                        style="background: var(--secondary); color: #fff; border: none;">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2026 <strong>AVN - Adarsh Vidya Niketan Higher Secondary School</strong>. All rights
+                    reserved.
+                    <br>
+                    <a href="/privacy-policy/">Privacy Policy</a> |
+                    <a href="/terms-of-service/">Terms of Service</a> |
+                    <a href="/careers/">Careers</a> |
+                    <a href="/gallery/">Gallery</a> |
+                    <a href="/faq/">FAQ</a>
+                </p>
+                <div class="powered-by">
+                    <i class="fas fa-code"></i> Developed with <i class="fas fa-heart" style="color: #e74c3c;"></i> by
+                    <a href="https://masterjunction.com.np" target="_blank" rel="noopener">
+                        <i class="fas fa-bolt"></i> Master Junction
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Educational Floating Elements -->
+        <div class="edu-symbol edu-1">π</div>
+        <div class="edu-symbol edu-2">∑</div>
+        <div class="edu-symbol edu-3">√</div>
+        <div class="edu-symbol edu-4">∫</div>
+        <div class="edu-symbol edu-5">∞</div>
+        <div class="edu-symbol edu-6">α</div>
+        <div class="edu-symbol edu-7">β</div>
+        <div class="edu-symbol edu-8">θ</div>
+        <div class="edu-symbol edu-9">≈</div>
+        <div class="edu-symbol edu-10">≠</div>
+
+        <div class="number-float num-1">1</div>
+        <div class="number-float num-2">2</div>
+        <div class="number-float num-3">3</div>
+        <div class="number-float num-4">9</div>
+        <div class="number-float num-5">5</div>
+
+        <div class="icon-float icon-1"><i class="fas fa-chart-line"></i></div>
+        <div class="icon-float icon-2"><i class="fas fa-flask"></i></div>
+        <div class="icon-float icon-3"><i class="fas fa-book"></i></div>
+        <div class="icon-float icon-4"><i class="fas fa-atom"></i></div>
+        <div class="icon-float icon-5"><i class="fas fa-calculator"></i></div>
+        <div class="icon-float icon-6"><i class="fas fa-graduation-cap"></i></div>
+    </footer>
+
+    <!-- WHATSAPP BUTTON -->
+    
+    <a href="https://wa.me/977 984-9288216?text=Hello%20AVN%20-%20Adarsh%20Vidya%20Niketan"
+        target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+        <span class="whatsapp-tooltip">Chat on WhatsApp</span>
+    </a>
+    
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <button id="scrollBtn" onclick="scrollToTop()" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // ==================== AOS INITIALIZATION ====================
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true,
+                    offset: 50
+                });
+            } else {
+                window.addEventListener('load', function () {
+                    if (typeof AOS !== 'undefined') {
+                        AOS.init({
+                            duration: 800,
+                            easing: 'ease-in-out',
+                            once: true,
+                            offset: 50
+                        });
+                    }
+                });
+            }
+
+            // ==================== HEADER SCROLL EFFECT ====================
+            const header = document.getElementById('main-header');
+            if (header) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+            }
+
+            // ==================== SCROLL TO TOP BUTTON ====================
+            const scrollBtn = document.getElementById('scrollBtn');
+            if (scrollBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        scrollBtn.style.display = 'flex';
+                    } else {
+                        scrollBtn.style.display = 'none';
+                    }
+                });
+            }
+
+            // ==================== ACTIVE LINK HIGHLIGHTING ====================
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const sections = document.querySelectorAll('section[id]');
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current) && current !== '') {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            // ==================== MOBILE SIDEBAR LOGIC ====================
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const openBtn = document.querySelector('.custom-nav-toggler');
+            const closeBtn = document.getElementById('sidebarClose');
+
+            function toggleSidebar() {
+                if (sidebar) sidebar.classList.toggle('active');
+                if (overlay) overlay.classList.toggle('active');
+                if (sidebar && sidebar.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (openBtn) openBtn.addEventListener('click', toggleSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+            if (overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // Close sidebar on link click (except dropdown toggles)
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if (this.classList.contains('sidebar-dropdown-toggle')) {
+                        return;
+                    }
+                    toggleSidebar();
+                });
+            });
+
+            // ==================== BUTTON RIPPLE EFFECT ====================
+            document.querySelectorAll('.btn-animated').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const ripple = document.createElement('span');
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        background: rgba(255, 255, 255, 0.6);
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        animation: ripple-animation 0.6s ease-out;
+                        pointer-events: none;
+                        left: ${x}px;
+                        top: ${y}px;
+                    `;
+
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+
+            // ==================== LAZY LOADING ====================
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.removeAttribute('data-src');
+                            }
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+                document.querySelectorAll('img[data-src]').forEach(img => imageObserver.observe(img));
+            }
+
+            // ==================== SMOOTH SCROLL ====================
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+    <!-- Push Notifications -->
+    <script>
+        // ==================== PUSH NOTIFICATIONS ====================
+        let pushSubscription = null;
+
+        // Register Service Worker for Push Notifications
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('[SW] Registered'))
+                    .catch(err => console.error('[SW] Registration failed:', err));
+            });
+        }
+
+        // Check and update notification bell state on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNotificationBellState();
+
+            // Clear PWA notification badge (the number on the home screen icon)
+            if ('setAppBadge' in navigator) {
+                navigator.clearAppBadge().catch(error => {
+                    console.error('Error clearing badge:', error);
+                });
+            }
+        });
+
+        async function updateNotificationBellState() {
+            const bell = document.getElementById('notificationBell');
+            const mobileBell = document.getElementById('notificationBellMobile');
+            const mobileText = document.getElementById('notificationBellText');
+
+            // Check if notifications are supported
+            if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+                // Do not hide the bell immediately, let it handle click with alert if needed
+                // Only hide if specific flags are set, otherwise keep it visible for better UX
+                return;
+            }
+
+            // Get current permission state
+            const permission = Notification.permission;
+
+            if (permission === 'granted') {
+                // Check if we have an active subscription
+                const registration = await navigator.serviceWorker.ready;
+                pushSubscription = await registration.pushManager.getSubscription();
+
+                if (pushSubscription) {
+                    // Subscribed - show active state
+                    if (bell) {
+                        bell.style.background = 'rgba(255, 152, 0, 0.2)';
+                        bell.style.borderColor = '#ff9800';
+                        const bellIcon = bell.querySelector('i');
+                        if (bellIcon) bellIcon.style.color = '#ff9800';
+                        bell.title = 'Notifications Enabled (Click to disable)';
+                    }
+                    if (mobileBell) {
+                        mobileBell.style.background = 'rgba(76, 175, 80, 0.2)';
+                        mobileBell.style.borderColor = '#4caf50';
+                        mobileBell.style.color = '#4caf50';
+                        mobileBell.style.opacity = '1';
+                        mobileBell.disabled = false;
+                    }
+                    if (mobileText) mobileText.textContent = 'Notifications Enabled ✓';
+                } else {
+                    // Not subscribed - reset/default
+                    resetNotificationUI();
+                }
+            } else if (permission === 'denied') {
+                if (bell) {
+                    bell.style.opacity = '0.5';
+                    bell.title = 'Notifications Blocked';
+                }
+                if (mobileBell) {
+                    mobileBell.style.opacity = '0.5';
+                    mobileBell.style.background = 'rgba(0,0,0,0.1)';
+                    mobileBell.style.borderColor = '#999';
+                }
+                if (mobileText) mobileText.textContent = 'Notifications Blocked';
+            } else {
+                // Default or unknown state
+                resetNotificationUI();
+            }
+        }
+
+        function resetNotificationUI() {
+            const bell = document.getElementById('notificationBell');
+            const mobileBell = document.getElementById('notificationBellMobile');
+            const mobileText = document.getElementById('notificationBellText');
+
+            if (bell) {
+                bell.style.background = 'transparent';
+                bell.style.borderColor = 'rgba(255,255,255,0.3)';
+                const bellIcon = bell.querySelector('i');
+                if (bellIcon) bellIcon.style.color = 'white';
+                bell.title = 'Enable Notifications';
+                bell.style.opacity = '1';
+            }
+            if (mobileBell) {
+                mobileBell.style.background = 'rgba(255, 152, 0, 0.1)';
+                mobileBell.style.borderColor = 'rgba(255, 152, 0, 0.5)';
+                mobileBell.style.color = '#ff9800';
+                mobileBell.style.opacity = '1';
+                mobileBell.disabled = false;
+            }
+            if (mobileText) mobileText.textContent = 'Enable Notifications';
+        }
+
+        async function toggleNotifications() {
+            const bell = document.getElementById('notificationBell');
+            const mobileBell = document.getElementById('notificationBellMobile');
+            const mobileText = document.getElementById('notificationBellText');
+
+            // Check browser support
+            if (!('Notification' in window)) {
+                alert('Your browser does not support notifications');
+                return;
+            }
+
+            if (!('serviceWorker' in navigator)) {
+                alert('Service Worker not supported');
+                return;
+            }
+
+            // Show loading state
+            if (bell) {
+                bell.style.opacity = '0.7';
+                bell.style.cursor = 'wait';
+            }
+            if (mobileBell) {
+                mobileBell.style.opacity = '0.7';
+                mobileBell.disabled = true;
+            }
+            if (mobileText) {
+                const originalText = mobileText.textContent;
+                mobileText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            }
+
+            try {
+                // If already subscribed, unsubscribe
+                if (pushSubscription) {
+                    await unsubscribePush();
+                } else {
+                    // Request permission
+                    const permission = await Notification.requestPermission();
+
+                    if (permission !== 'granted') {
+                        if (permission === 'denied') {
+                            alert('Notifications blocked. Please enable in browser settings.');
+                        }
+                        return;
+                    }
+
+                    // Subscribe to push
+                    await subscribePush();
+                }
+
+            } catch (error) {
+                console.error('Notification error:', error);
+                alert('Notification support requires HTTPS and correct site configuration. Error: ' + error.message);
+            } finally {
+                // Restore UI state
+                if (bell) {
+                    bell.style.opacity = '1';
+                    bell.style.cursor = 'pointer';
+                }
+                if (mobileBell) {
+                    mobileBell.disabled = false;
+                    mobileBell.style.opacity = '1';
+                }
+                
+                // Wait a tiny bit for browser permission state to sync
+                setTimeout(async () => {
+                    await updateNotificationBellState();
+                    
+                    // Final safety restore if text is still "Processing..."
+                    if (mobileText && mobileText.textContent.includes('Processing')) {
+                        resetNotificationUI();
+                    }
+                }, 300);
+            }
+        }
+
+        async function subscribePush() {
+            try {
+                // Get VAPID public key from server
+                const response = await fetch('/api/push/vapid-key/');
+                if (!response.ok) throw new Error('Failed to fetch VAPID key');
+                
+                const data = await response.json();
+
+                if (!data.publicKey) {
+                    throw new Error('VAPID public key not configured on server.');
+                }
+
+                // Convert VAPID key to Uint8Array
+                const applicationServerKey = urlBase64ToUint8Array(data.publicKey);
+                if (!applicationServerKey || applicationServerKey.length === 0) {
+                    throw new Error('Invalid VAPID public key format.');
+                }
+
+                // Get service worker registration
+                const registration = await navigator.serviceWorker.ready;
+                if (!registration) throw new Error('Service Worker not ready.');
+
+                // Subscribe to push manager
+                pushSubscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: applicationServerKey
+                });
+
+                // Send subscription to server
+                const saveResponse = await fetch('/api/push/subscribe/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(pushSubscription.toJSON())
+                });
+
+                if (!saveResponse.ok) throw new Error('Failed to save subscription on server.');
+                
+                const saveData = await saveResponse.json();
+
+                if (saveData.status === 'success') {
+                    console.log('Push subscription successful');
+                    await updateNotificationBellState();
+
+                    // Show success toast/message
+                    showNotificationToast('🔔 Notifications enabled! You will be notified of new updates.');
+                } else {
+                    throw new Error(saveData.message || 'Server rejected subscription.');
+                }
+
+            } catch (error) {
+                console.error('Push subscription error:', error);
+                throw error;
+            }
+        }
+
+        async function unsubscribePush() {
+            try {
+                if (!pushSubscription) return;
+
+                // Unsubscribe from push manager
+                await pushSubscription.unsubscribe();
+
+                // Notify server
+                await fetch('/api/push/unsubscribe/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ endpoint: pushSubscription.endpoint })
+                });
+
+                pushSubscription = null;
+
+                // Reset bell state
+                const bell = document.getElementById('notificationBell');
+                bell.style.background = 'transparent';
+                bell.style.borderColor = 'rgba(255,255,255,0.3)';
+                bell.querySelector('i').style.color = 'white';
+                bell.title = 'Enable Notifications';
+
+                showNotificationToast('🔕 Notifications disabled');
+
+            } catch (error) {
+                console.error('Unsubscribe error:', error);
+            }
+        }
+
+        // Helper: Convert base64 to Uint8Array for VAPID key
+        function urlBase64ToUint8Array(base64String) {
+            if (!base64String) return new Uint8Array(0);
+            
+            try {
+                const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                const base64 = (base64String + padding)
+                    .replace(/-/g, '+')
+                    .replace(/_/g, '/');
+
+                const rawData = window.atob(base64);
+                const outputArray = new Uint8Array(rawData.length);
+
+                for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                }
+                return outputArray;
+            } catch (e) {
+                console.error('Base64 decode error:', e);
+                return new Uint8Array(0);
+            }
+        }
+
+        // Helper: Show toast notification
+        function showNotificationToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.3s;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => toast.style.opacity = '1', 10);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+    
+<script>
+    document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        
+        try {
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success';
+                alertDiv.innerHTML = '<i class="fas fa-check-circle"></i> ' + data.message;
+                this.insertBefore(alertDiv, this.firstChild);
+                
+                // Reset form
+                this.reset();
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Remove alert after 5 seconds
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 5000);
+            } else {
+                throw new Error(data.message || 'An error occurred');
+            }
+        } catch (error) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger';
+            alertDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + error.message;
+            this.insertBefore(alertDiv, this.firstChild);
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    });
+</script>
+
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"d42ae38a33dd49f79961f45a9ad9fa38","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>

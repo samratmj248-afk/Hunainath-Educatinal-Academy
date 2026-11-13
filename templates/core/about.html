@@ -86,100 +86,60 @@
             </div>
         </div>
 
-        <!-- Mission & Vision Cards (Refined Side-by-Side Symmetrical Grid) -->
-        <div class="row g-4 my-2">
+        <!-- Mission & Vision Cards (Rich 3D Glassmorphic Cards with Smooth Floating Hover Effects) -->
+        <div class="row g-4 my-3">
+            <!-- Mission Card -->
             <div class="col-md-6">
-                <div class="p-4 p-lg-5 rounded-4 h-100 bg-white border border-2 border-warning shadow-sm d-flex flex-column"
-                    style="border-top: 5px solid #F59E0B !important;">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center shadow-xs flex-shrink-0" style="width: 52px; height: 52px; font-size: 1.35rem;">
+                <div class="mission-vision-card mission-card-glow h-100 p-4 p-lg-5 rounded-4 d-flex flex-column position-relative overflow-hidden">
+                    <div class="card-glass-glow-mesh glow-amber"></div>
+                    <div class="d-flex align-items-center gap-3 mb-4 position-relative" style="z-index: 2;">
+                        <div class="mission-icon-box bg-gradient-amber shadow-sm flex-shrink-0">
                             <i class="fas fa-bullseye"></i>
                         </div>
                         <div>
-                            <span class="badge bg-warning bg-opacity-20 text-dark extra-small fw-bold px-2 py-1 rounded">Our Purpose</span>
-                            <h3 class="h4 fw-bold mb-0 text-dark">Our Mission</h3>
+                            <span class="badge bg-warning bg-opacity-25 text-warning-emphasis fw-bold px-3 py-1 rounded-pill extra-small text-uppercase tracking-wider">
+                                <i class="fas fa-compass me-1"></i> Our Core Purpose
+                            </span>
+                            <h3 class="h3 fw-bold mb-0 text-dark font-heading mt-1">Our Mission</h3>
                         </div>
                     </div>
-                    <p class="text-secondary flex-grow-1 mb-0" style="line-height: 1.85; font-size: 0.98rem;">
+                    <p class="text-secondary flex-grow-1 mb-0 position-relative" style="line-height: 1.85; font-size: 1.02rem; z-index: 2;">
                         {{ school.mission|default:"To provide inclusive, high-caliber foundational education that stimulates critical thinking, emotional intelligence, strong moral values, and global readiness for every child in our community." }}
                     </p>
+                    <div class="d-flex align-items-center gap-2 mt-4 pt-3 border-top border-warning border-opacity-25 text-warning-emphasis fw-semibold small position-relative" style="z-index: 2;">
+                        <i class="fas fa-check-double text-warning"></i>
+                        <span>Rooted in Character • Joyful Foundational Growth</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Vision Card -->
             <div class="col-md-6">
-                <div class="p-4 p-lg-5 rounded-4 h-100 bg-white border border-2 border-primary shadow-sm d-flex flex-column"
-                    style="border-top: 5px solid #1D4ED8 !important;">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-xs flex-shrink-0" style="width: 52px; height: 52px; font-size: 1.35rem;">
+                <div class="mission-vision-card vision-card-glow h-100 p-4 p-lg-5 rounded-4 d-flex flex-column position-relative overflow-hidden">
+                    <div class="card-glass-glow-mesh glow-blue"></div>
+                    <div class="d-flex align-items-center gap-3 mb-4 position-relative" style="z-index: 2;">
+                        <div class="mission-icon-box shadow-sm flex-shrink-0" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: #ffffff;">
                             <i class="fas fa-eye"></i>
                         </div>
                         <div>
-                            <span class="badge bg-primary bg-opacity-15 text-primary extra-small fw-bold px-2 py-1 rounded">Our Future</span>
-                            <h3 class="h4 fw-bold mb-0 text-dark">Our Vision</h3>
+                            <span class="badge fw-bold px-3 py-1 rounded-pill extra-small text-uppercase tracking-wider" style="background-color: rgba(220, 38, 38, 0.15); color: #B91C1C;">
+                                <i class="fas fa-compass me-1"></i> Future Aspiration
+                            </span>
+                            <h3 class="h3 fw-bold mb-0 text-dark font-heading mt-1">Our Vision</h3>
                         </div>
                     </div>
-                    <p class="text-secondary flex-grow-1 mb-0" style="line-height: 1.85; font-size: 0.98rem;">
+                    <p class="text-secondary flex-grow-1 mb-0 position-relative" style="line-height: 1.85; font-size: 1.02rem; z-index: 2;">
                         {{ school.vision|default:"To be recognized as Sudurpashchim province's benchmark foundational academy where curious young learners grow into disciplined, responsible, compassionate, and visionary future leaders." }}
                     </p>
+                    <div class="d-flex align-items-center gap-2 mt-4 pt-3 border-top fw-semibold small position-relative" style="border-color: rgba(220, 38, 38, 0.25) !important; color: #DC2626; z-index: 2;">
+                        <i class="fas fa-check-double text-danger"></i>
+                        <span>Shaping 21st-Century Progressive Leaders</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        {% if enrollment_records %}
-        <!-- Verified Enrollment Growth Record (Academic Year Comparison) -->
-        <div class="mt-5 pt-3">
-            <div class="card border border-2 border-warning rounded-4 shadow-sm overflow-hidden bg-white">
-                <div class="card-header bg-gradient-navy text-white p-3 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2"
-                    style="background: linear-gradient(135deg, #070F26 0%, #1E3A8A 100%);">
-                    <div>
-                        <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-1">Academic Progress</span>
-                        <h4 class="h5 fw-bold text-white mb-0 font-heading">Institutional Student Enrollment Statistics</h4>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-25 px-3 py-2 small">
-                            <i class="fas fa-users text-warning me-1"></i> Current Total: <strong>{{ total_2081_82|default:school.stats_students }}</strong> Students
-                        </span>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0 text-center">
-                            <thead style="background: #F8FAFC; color: #0F172A; font-weight: 700; font-size: 0.9rem;">
-                                <tr>
-                                    <th class="py-3 px-3 text-start">Class / Level</th>
-                                    <th class="py-3 px-3">2080-81 B.S. Enrolled</th>
-                                    <th class="py-3 px-3">2081-82 B.S. Enrolled</th>
-                                    <th class="py-3 px-3">Growth Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for rec in enrollment_records %}
-                                <tr>
-                                    <td class="py-3 px-3 text-start fw-bold text-dark">{{ rec.grade_name }}</td>
-                                    <td class="py-3 px-3 text-muted">{{ rec.count_2080_81 }}</td>
-                                    <td class="py-3 px-3 fw-bold text-primary">{{ rec.count_2081_82 }}</td>
-                                    <td class="py-3 px-3">
-                                        <span class="badge bg-success bg-opacity-15 text-success rounded-pill px-3 py-1 fw-bold">Active</span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                            <tfoot style="background: #FFFBEB; font-weight: 800; font-size: 0.95rem; color: #B45309;">
-                                <tr>
-                                    <td class="py-3 px-3 text-start">Total School Strength</td>
-                                    <td class="py-3 px-3">{{ total_2080_81 }}</td>
-                                    <td class="py-3 px-3 text-dark">{{ total_2081_82 }}</td>
-                                    <td class="py-3 px-3 text-success">
-                                        <i class="fas fa-arrow-trend-up me-1"></i> Continuous Growth
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+
     </div>
 </section>
 
@@ -256,9 +216,9 @@
             </div>
         </div>
 
-        <!-- Inspiring Story & Timeline Banner -->
-        <div class="card border-0 shadow-lg rounded-4 overflow-hidden"
-            style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #172554 100%); color: white;">
+        <!-- Inspiring Story & Timeline Banner (Solid, Non-Shaking Banner) -->
+        <div class="static-banner-wrapper border-0 shadow-lg rounded-4 overflow-hidden"
+            style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #172554 100%); color: white; transform: none !important; transition: none !important;">
             <div class="card-body p-4 p-md-5">
                 <div class="row align-items-center g-4">
                     <div class="col-lg-7">

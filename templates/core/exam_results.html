@@ -1,5 +1,198 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<style>
+    /* ------------------------------------------------------------------
+   EXACT 1-PAGE A4 STUDENT MARKSHEET PRINT ENGINE
+   ------------------------------------------------------------------ */
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 8mm 10mm !important;
+        }
+
+        /* Hide entire website structure (header, navbar, footer, search form, banner, floating actions) */
+        html,
+        body {
+            background: #ffffff !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            min-height: auto !important;
+            color: #0f172a !important;
+            font-size: 11pt !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        /* Completely collapse header, banner, forms, footer, floating buttons */
+        header,
+        footer,
+        nav,
+        .page-header-banner,
+        .pwa-install-banner,
+        .floating-actions-container,
+        .exam-search-box,
+        .btn,
+        .breadcrumb,
+        .no-print {
+            display: none !important;
+        }
+
+        /* Reveal only the marksheet */
+        #printableMarksheet,
+        #printableMarksheet * {
+            visibility: visible !important;
+        }
+
+        #printableMarksheet {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            border: 1.5px solid #0f172a !important;
+            border-radius: 8px !important;
+            box-shadow: none !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-after: avoid !important;
+            page-break-before: avoid !important;
+            overflow: visible !important;
+        }
+
+        /* Print header styling */
+        #printableMarksheet .marksheet-header {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            padding: 14px 18px !important;
+            border-bottom: 3px solid #f59e0b !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #printableMarksheet .marksheet-header h3 {
+            color: #ffffff !important;
+            font-size: 16pt !important;
+            margin-bottom: 2px !important;
+        }
+
+        #printableMarksheet .marksheet-header p {
+            color: #cbd5e1 !important;
+            font-size: 8.5pt !important;
+            margin-bottom: 4px !important;
+        }
+
+        #printableMarksheet .marksheet-badge {
+            background: #f59e0b !important;
+            color: #000000 !important;
+            font-weight: 700 !important;
+            padding: 3px 10px !important;
+            font-size: 8pt !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #printableMarksheet .card-body {
+            padding: 16px 20px !important;
+        }
+
+        /* Student Demographics table/box */
+        #printableMarksheet .demographics-box {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 10px 14px !important;
+            margin-bottom: 12px !important;
+            border-radius: 6px !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #printableMarksheet .demographics-box .row {
+            --bs-gutter-y: 6px !important;
+        }
+
+        /* Subject table compact fit */
+        #printableMarksheet .table {
+            font-size: 9.5pt !important;
+            margin-bottom: 12px !important;
+            border-collapse: collapse !important;
+        }
+
+        #printableMarksheet .table thead th {
+            background: #0f172a !important;
+            color: #ffffff !important;
+            padding: 5px 8px !important;
+            border: 1px solid #334155 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #printableMarksheet .table tbody td,
+        #printableMarksheet .table tfoot td {
+            padding: 4px 8px !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+
+        #printableMarksheet .table tbody tr:nth-of-type(odd) {
+            background-color: #f8fafc !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Result summary box */
+        #printableMarksheet .summary-box {
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 8px 12px !important;
+            margin-bottom: 12px !important;
+            border-radius: 6px !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        #printableMarksheet .display-6 {
+            font-size: 1.5rem !important;
+        }
+
+        /* Faculty remarks box */
+        #printableMarksheet .remarks-box {
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+            padding: 8px 12px !important;
+            margin-bottom: 12px !important;
+            font-size: 9pt !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* Action bar: hide print button while preserving official digital seal */
+        #printableMarksheet .action-bar .btn,
+        #printableMarksheet .no-print {
+            display: none !important;
+        }
+
+        #printableMarksheet .action-bar {
+            border-top: 1px solid #cbd5e1 !important;
+            padding-top: 8px !important;
+            margin-top: 6px !important;
+        }
+
+        #printableMarksheet .official-seal-text {
+            font-size: 8.5pt !important;
+            color: #475569 !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Exam Results Hero Banner -->
 <section class="page-header-banner py-5">
@@ -35,7 +228,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <!-- Search Box Card -->
-                <div class="p-4 p-md-5 rounded-4 border shadow-sm mb-5 bg-light position-relative overflow-hidden"
+                <div class="p-4 p-md-5 rounded-4 border shadow-sm mb-5 bg-light position-relative overflow-hidden exam-search-box"
                     style="border-top: 4px solid #1E3A8A !important;">
                     <div class="text-center mb-4">
                         <span class="badge bg-primary text-white fw-bold px-3 py-1 mb-2">Instant Verification</span>
@@ -51,9 +244,10 @@
                                 <span class="input-group-text bg-white border-end-0"><i
                                         class="fas fa-id-card text-primary"></i></span>
                                 <input type="text" name="symbol_no" value="{{ symbol_no }}" placeholder="e.g. HNA-801"
-                                    class="form-control-custom border-start-0 text-uppercase fw-bold">
+                                    class="form-control-custom border-start-0 text-uppercase fw-bold" required>
                             </div>
-                            <span class="extra-small text-muted">Sample: <strong>HNA-801</strong> or <strong>HNA-802</strong></span>
+                            <span class="extra-small text-muted">Required: e.g. <strong>HNA-801</strong> or
+                                <strong>HNA-802</strong></span>
                         </div>
 
                         <div class="col-md-4">
@@ -61,8 +255,8 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i
                                         class="fas fa-user text-primary"></i></span>
-                                <input type="text" name="student_name" value="{{ student_name }}" placeholder="e.g. Aarav Joshi"
-                                    class="form-control-custom border-start-0">
+                                <input type="text" name="student_name" value="{{ student_name }}"
+                                    placeholder="e.g. Aarav Joshi" class="form-control-custom border-start-0">
                             </div>
                             <span class="extra-small text-muted">Optional: Search by name</span>
                         </div>
@@ -72,7 +266,8 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0"><i
                                         class="fas fa-graduation-cap text-primary"></i></span>
-                                <select name="grade" class="form-select border-start-0" style="border-radius: 0 10px 10px 0; border-color: #cbd5e1; height: 48px;">
+                                <select name="grade" class="form-select border-start-0"
+                                    style="border-radius: 0 10px 10px 0; border-color: #cbd5e1; height: 48px;">
                                     <option value="">All Classes</option>
                                     {% for cls in available_classes %}
                                     <option value="{{ cls }}" {% if grade == cls %}selected{% endif %}>{{ cls }}</option>
@@ -93,7 +288,8 @@
 
                 <!-- Error Alert if Not Found -->
                 {% if searched and error_message %}
-                <div class="alert alert-warning rounded-4 p-4 shadow-sm border-0 d-flex align-items-start gap-3 mb-5">
+                <div
+                    class="alert alert-warning rounded-4 p-4 shadow-sm border-0 d-flex align-items-start gap-3 mb-5 no-print">
                     <i class="fas fa-triangle-exclamation text-warning fs-3 flex-shrink-0 mt-1"></i>
                     <div>
                         <h5 class="h6 fw-bold mb-1">Record Not Found</h5>
@@ -110,7 +306,7 @@
                 {% if result %}
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5" id="printableMarksheet">
                     <!-- Institutional Header -->
-                    <div class="p-4 text-white text-center position-relative"
+                    <div class="p-4 text-white text-center position-relative marksheet-header"
                         style="background: linear-gradient(135deg, #070F26 0%, #0F172A 60%, #1E3A8A 100%); border-bottom: 4px solid #F59E0B;">
                         <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
                             <img src="/static/images/logo.png" alt="Hunainath Emblem" style="height: 44px; width: 44px;"
@@ -120,14 +316,14 @@
                         <p class="extra-small text-white-50 mb-1">Shuklaphanta-5, Garjamuni, Kanchanpur • Approved by
                             Ministry of Education</p>
                         <div
-                            class="d-inline-block bg-warning text-dark fw-bold px-3 py-1 rounded-pill extra-small mt-1">
+                            class="d-inline-block bg-warning text-dark fw-bold px-3 py-1 rounded-pill extra-small mt-1 marksheet-badge">
                             OFFICIAL GRADE SHEET & PROGRESS REPORT • {{ result.academic_year }}
                         </div>
                     </div>
 
                     <div class="card-body p-4 p-md-5">
                         <!-- Student Demographics -->
-                        <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div class="p-3 bg-light rounded-3 border mb-4 demographics-box">
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <div class="extra-small text-muted">Student Name:</div>
@@ -157,7 +353,7 @@
                         </div>
 
                         <!-- Subject Grade Table -->
-                        <div class="table-responsive mb-4">
+                        <div class="table-responsive mb-4 marksheet-table-wrap">
                             <table class="table table-bordered table-striped align-middle mb-0">
                                 <thead class="table-dark" style="background: #0F172A;">
                                     <tr>
@@ -195,7 +391,7 @@
                         </div>
 
                         <!-- Result Summary Box -->
-                        <div class="row g-3 align-items-center p-3 rounded-3 mb-4"
+                        <div class="row g-3 align-items-center p-3 rounded-3 mb-4 summary-box"
                             style="background: #F8FAFC; border: 1.5px solid #E2E8F0;">
                             <div class="col-md-4 text-center border-end">
                                 <div class="extra-small text-muted text-uppercase fw-bold">Overall Grade</div>
@@ -210,20 +406,21 @@
                             </div>
                             <div class="col-md-4 text-center">
                                 <div class="extra-small text-muted text-uppercase fw-bold">Class Standing</div>
-                                <div class="fs-5 fw-bold text-dark mt-1">{% if result.rank %}Rank {{ result.rank }}{%
-                                    else %}Passed{% endif %}</div>
+                                <div class="fs-5 fw-bold text-dark mt-1">{% if result.rank %}Rank {{ result.rank }}{% else %}Passed{% endif %}</div>
                             </div>
                         </div>
 
                         <!-- Remarks & Authentication Footer -->
-                        <div class="p-3 bg-light rounded-3 border mb-4">
+                        <div class="p-3 bg-light rounded-3 border mb-4 remarks-box">
                             <span class="extra-small text-muted d-block mb-1">Faculty Remarks:</span>
                             <p class="small text-dark fst-italic mb-0">"{{ result.remarks }}"</p>
                         </div>
 
                         <!-- Print / Download Button -->
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3 border-top">
-                            <span class="extra-small text-muted"><i class="fas fa-lock text-success me-1"></i> Digitally
+                        <div
+                            class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-3 border-top action-bar">
+                            <span class="extra-small text-muted official-seal-text"><i
+                                    class="fas fa-lock text-success me-1"></i> Digitally
                                 verified by Hunainath Academy Examination Department</span>
                             <button onclick="window.print()"
                                 class="btn btn-outline-dark rounded-pill px-4 fw-bold btn-sm">

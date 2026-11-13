@@ -3,7 +3,7 @@
 // Offline Cache Management, Resilient Fallback & Web Push Notifications
 // ==============================================================================
 
-const CACHE_NAME = 'hunainath-pwa-v1.0.3';
+const CACHE_NAME = 'hunainath-pwa-v1.0.4';
 const STATIC_ASSETS = [
     '/',
     '/offline/',

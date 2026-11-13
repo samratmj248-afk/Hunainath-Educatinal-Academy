@@ -13,6 +13,5 @@ echo.
 echo Server and Tunnel launched in dedicated terminal windows!
 echo Local URL: http://127.0.0.1:8000/
 echo Admin CMS: http://127.0.0.1:8000/admin/
-echo Credentials: admin / HunainathAdmin2026!
 echo.
 pause

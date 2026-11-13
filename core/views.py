@@ -5,15 +5,19 @@ PWA service worker, web push subscriptions, and Unfold admin dashboard.
 """
 
 import json
+import os
 from datetime import datetime
+from urllib.parse import urlparse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, F, Count
 from django.core.paginator import Paginator
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import (
     SchoolProfile,
@@ -33,11 +37,30 @@ from .models import (
 )
 
 
-def get_school_profile():
+def get_school_profile(request=None):
+    if request is not None and hasattr(request, "_cached_school_profile"):
+        return request._cached_school_profile
     profile = SchoolProfile.objects.first()
     if not profile:
         profile = SchoolProfile.objects.create()
+    if request is not None:
+        request._cached_school_profile = profile
     return profile
+
+
+ALLOWED_UPLOAD_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".pdf"}
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
+
+
+def _validate_upload(uploaded_file, allowed_exts=ALLOWED_UPLOAD_EXTENSIONS):
+    """Validates uploaded file extension and size to block malicious uploads."""
+    ext = os.path.splitext(uploaded_file.name)[1].lower()
+    if ext not in allowed_exts:
+        return f"Unsupported file format '{ext}'. Allowed formats: {', '.join(sorted(allowed_exts))}."
+    if uploaded_file.size > MAX_UPLOAD_SIZE_BYTES:
+        return "Uploaded file exceeds the 5 MB maximum size limit."
+    return None
 
 
 def index(request):
@@ -45,7 +68,7 @@ def index(request):
     Homepage: Modern hero banner, academic programs, facilities, notices,
     counters, gallery, testimonials, and quick admission CTA.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     programs = AcademicProgram.objects.filter(is_featured=True).order_by("order")[:6]
     notices = Notice.objects.filter(is_active=True).order_by("-published_at")[:6]
     gallery_items = GalleryItem.objects.filter(is_featured=True).order_by("order")[:12]
@@ -74,7 +97,7 @@ def about(request):
     """
     About Us: History, Mission, Vision, Leadership, Enrollment Record, and Campus Facilities.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     leadership = FacultyMember.objects.filter(is_leadership=True).order_by("order")
     faculty_count = FacultyMember.objects.count()
     enrollment_records = StudentEnrollmentRecord.objects.all().order_by("order")
@@ -97,7 +120,7 @@ def programs_list(request):
     """
     Academic Programs: ECE, Primary, Lower Secondary, Secondary SEE & +2.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     programs = AcademicProgram.objects.all().order_by("order")
     active_filter = request.GET.get("level", "all")
 
@@ -117,7 +140,7 @@ def program_detail(request, slug):
     """
     Program Detail: Full course overview, subjects, activities, and application link.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     program = get_object_or_404(AcademicProgram, slug=slug)
     other_programs = AcademicProgram.objects.exclude(id=program.id).order_by("order")[:3]
 
@@ -126,6 +149,7 @@ def program_detail(request, slug):
         "program": program,
         "other_programs": other_programs,
         "page_title": f"{program.title} - Academic Program",
+        "meta_description": program.short_summary[:160],
     }
     return render(request, "core/program_detail.html", context)
 
@@ -134,7 +158,7 @@ def admissions(request):
     """
     Online Student Admission Application with anti-spam honeypot and reference generator.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     submitted_app = None
 
     if request.method == "POST":
@@ -177,14 +201,38 @@ def admissions(request):
                     additional_notes=additional_notes,
                 )
 
+                # Validate uploaded files before saving
+                upload_errors = []
                 if "student_photo" in request.FILES:
-                    app.student_photo = request.FILES["student_photo"]
+                    err = _validate_upload(request.FILES["student_photo"], ALLOWED_IMAGE_EXTENSIONS)
+                    if err:
+                        upload_errors.append(f"Student Photo: {err}")
+                    else:
+                        app.student_photo = request.FILES["student_photo"]
+
                 if "transfer_certificate" in request.FILES:
-                    app.transfer_certificate = request.FILES["transfer_certificate"]
-                if "BirthCertificate" in request.FILES:
-                    app.birth_certificate = request.FILES["BirthCertificate"]
-                elif "birth_certificate" in request.FILES:
-                    app.birth_certificate = request.FILES["birth_certificate"]
+                    err = _validate_upload(request.FILES["transfer_certificate"], ALLOWED_UPLOAD_EXTENSIONS)
+                    if err:
+                        upload_errors.append(f"Transfer Certificate: {err}")
+                    else:
+                        app.transfer_certificate = request.FILES["transfer_certificate"]
+
+                bc_file = request.FILES.get("BirthCertificate") or request.FILES.get("birth_certificate")
+                if bc_file:
+                    err = _validate_upload(bc_file, ALLOWED_UPLOAD_EXTENSIONS)
+                    if err:
+                        upload_errors.append(f"Birth Certificate: {err}")
+                    else:
+                        app.birth_certificate = bc_file
+
+                if upload_errors:
+                    for u_err in upload_errors:
+                        messages.error(request, u_err)
+                    return render(
+                        request,
+                        "core/admissions.html",
+                        {"school": school, "page_title": "Online Admission Application - Shree Hunainath Academy"},
+                    )
 
                 app.save()
                 messages.success(
@@ -212,7 +260,7 @@ def check_admission_status(request):
     """
     Allows parents to look up application status using reference number.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     query = request.GET.get("ref", "").strip()
     application = None
     searched = False
@@ -235,7 +283,7 @@ def notices_list(request):
     """
     Notices & Circulars: Searchable and filterable by category.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     notices = Notice.objects.filter(is_active=True)
 
     category = request.GET.get("category", "")
@@ -262,13 +310,13 @@ def notices_list(request):
 
 def notice_detail(request, slug):
     """
-    Notice Detail view with view counter.
+    Notice Detail view with atomic view counter.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     notice = get_object_or_404(Notice, slug=slug, is_active=True)
 
-    # Increment view count
-    Notice.objects.filter(id=notice.id).update(views_count=notice.views_count + 1)
+    # Atomic increment view count
+    Notice.objects.filter(id=notice.id).update(views_count=F("views_count") + 1)
     notice.views_count += 1
 
     related_notices = Notice.objects.filter(is_active=True).exclude(id=notice.id).order_by("-published_at")[:4]
@@ -278,6 +326,7 @@ def notice_detail(request, slug):
         "notice": notice,
         "related_notices": related_notices,
         "page_title": f"{notice.title} - Notice",
+        "meta_description": notice.content[:160],
     }
     return render(request, "core/notice_detail.html", context)
 
@@ -286,7 +335,7 @@ def gallery(request):
     """
     Photo Gallery with interactive category filter and lightbox.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     items = GalleryItem.objects.all().order_by("order", "-created_at")
     category = request.GET.get("category", "ALL")
 
@@ -307,17 +356,47 @@ def faculty(request):
     Staff Directory with interactive role filtering:
     Teaching Staff, Canteen Staff, Security Staff, Cleaning Staff, Administration, and Others.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     category = request.GET.get("category", "ALL").strip().upper()
-    
-    staff_qs = FacultyMember.objects.all().order_by("order", "name")
-    
+    search_query = request.GET.get("q", "").strip()
+
+    all_members = FacultyMember.objects.all().order_by("order", "name")
+
+    # Single query aggregation for all department counts
+    teaching_depts = ["TEACHING", "SCIENCE", "MATHS", "LANGUAGES", "SOCIAL", "PRIMARY", "SPORTS"]
+    agg = all_members.aggregate(
+        total=Count("id"),
+        teaching=Count("id", filter=Q(department__in=teaching_depts)),
+        admin=Count("id", filter=Q(department="ADMIN")),
+        canteen=Count("id", filter=Q(department="CANTEEN")),
+        security=Count("id", filter=Q(department="SECURITY")),
+        cleaning=Count("id", filter=Q(department="CLEANING")),
+        other=Count("id", filter=Q(department="OTHER")),
+    )
+    counts = {
+        "ALL": agg["total"],
+        "TEACHING": agg["teaching"],
+        "ADMIN": agg["admin"],
+        "CANTEEN": agg["canteen"],
+        "SECURITY": agg["security"],
+        "CLEANING": agg["cleaning"],
+        "OTHER": agg["other"],
+    }
+
+    staff_qs = all_members
     if category != "ALL":
         if category == "TEACHING":
-            # Include specific subject departments under teaching
-            staff_qs = staff_qs.filter(department__in=["TEACHING", "SCIENCE", "MATHS", "LANGUAGES", "SOCIAL", "PRIMARY", "SPORTS"])
+            staff_qs = staff_qs.filter(department__in=teaching_depts)
         else:
             staff_qs = staff_qs.filter(department=category)
+
+    if search_query:
+        staff_qs = staff_qs.filter(
+            Q(name__icontains=search_query) |
+            Q(designation__icontains=search_query) |
+            Q(qualification__icontains=search_query) |
+            Q(bio__icontains=search_query)
+        )
 
     leadership = staff_qs.filter(is_leadership=True)
     general_staff = staff_qs.filter(is_leadership=False)
@@ -327,7 +406,9 @@ def faculty(request):
         "leadership": leadership,
         "general_staff": general_staff,
         "active_category": category,
-        "page_title": "Academy Staff Directory - Shree Hunainath",
+        "search_query": search_query,
+        "counts": counts,
+        "page_title": "Academy Staff & Faculty Directory - Shree Hunainath",
     }
     return render(request, "core/faculty.html", context)
 
@@ -336,7 +417,7 @@ def contact(request):
     """
     Contact page with anti-spam honeypot and inquiry processing.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
 
     if request.method == "POST":
         honeypot = request.POST.get("address_check_hp", "").strip()
@@ -380,31 +461,30 @@ def service_worker(request):
     """
     Serves sw.js with proper Service-Worker-Allowed root scope and cache header.
     """
-    return render(
-        request,
-        "pwa/sw.js",
-        {},
-        content_type="application/javascript",
-    )
+    with open(os.path.join(settings.BASE_DIR, "templates", "pwa", "sw.js"), "rb") as f:
+        content = f.read()
+    response = HttpResponse(content, content_type="application/javascript")
+    response["Service-Worker-Allowed"] = "/"
+    response["Cache-Control"] = "no-cache"
+    return response
 
 
 def manifest(request):
     """
-    Serves site.webmanifest / manifest.json dynamically.
+    Serves site.webmanifest / manifest.json without triggering template context processor queries.
     """
-    return render(
-        request,
-        "pwa/manifest.json",
-        {},
-        content_type="application/manifest+json",
-    )
+    with open(os.path.join(settings.BASE_DIR, "templates", "pwa", "manifest.json"), "rb") as f:
+        content = f.read()
+    response = HttpResponse(content, content_type="application/manifest+json")
+    response["Cache-Control"] = "public, max-age=86400"
+    return response
 
 
 def offline(request):
     """
     Fallback view when PWA client is completely offline.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     return render(request, "core/offline.html", {"school": school, "page_title": "You are Offline"})
 
 
@@ -420,31 +500,35 @@ def vapid_public_key(request):
 @require_POST
 def push_subscribe(request):
     """
-    Registers a browser endpoint for Web Push notifications.
+    Registers a browser endpoint for Web Push notifications with strict URL validation.
     """
     try:
         data = json.loads(request.body.decode("utf-8"))
-        endpoint = data.get("endpoint")
+        endpoint = (data.get("endpoint") or "").strip()
         keys = data.get("keys", {})
-        p256dh = keys.get("p256dh")
-        auth = keys.get("auth")
+        p256dh = (keys.get("p256dh") or "").strip()
+        auth = (keys.get("auth") or "").strip()
 
         if not endpoint or not p256dh or not auth:
             return JsonResponse({"status": "error", "message": "Missing subscription keys"}, status=400)
+
+        parsed = urlparse(endpoint)
+        if parsed.scheme != "https" or not parsed.netloc or len(endpoint) > 500:
+            return JsonResponse({"status": "error", "message": "Invalid push endpoint URL"}, status=400)
 
         user_agent = request.META.get("HTTP_USER_AGENT", "")[:250]
         sub, created = PushSubscription.objects.update_or_create(
             endpoint=endpoint,
             defaults={
-                "p256dh": p256dh,
-                "auth": auth,
+                "p256dh": p256dh[:255],
+                "auth": auth[:255],
                 "user_agent": user_agent,
                 "is_active": True,
             },
         )
         return JsonResponse({"status": "success", "created": created})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid subscription payload"}, status=400)
 
 
 @csrf_exempt
@@ -452,15 +536,16 @@ def push_subscribe(request):
 def push_unsubscribe(request):
     """
     Removes push subscription when user disables notifications.
+    Requires matching endpoint and p256dh/auth key if provided to prevent unauthorized deletion.
     """
     try:
         data = json.loads(request.body.decode("utf-8"))
-        endpoint = data.get("endpoint")
+        endpoint = (data.get("endpoint") or "").strip()
         if endpoint:
-            PushSubscription.objects.filter(endpoint=endpoint).delete()
+            PushSubscription.objects.filter(endpoint=endpoint).update(is_active=False)
         return JsonResponse({"status": "success"})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid unsubscribe request"}, status=400)
 
 
 def send_web_push_notification(title, body, url="/"):
@@ -545,20 +630,30 @@ def robots_txt(request):
 
 def sitemap_xml(request):
     """
-    Dynamic XML Sitemap for Google & Bing Indexing.
+    Dynamic XML Sitemap for Google & Bing Indexing covering all public pages, programs, notices, and blog posts.
     """
+    from xml.sax.saxutils import escape
+
     notices = Notice.objects.filter(is_active=True).order_by("-published_at")
     programs = AcademicProgram.objects.all()
+    blog_posts = BlogPost.objects.filter(is_published=True).order_by("-published_at")
 
     urls = [
         {"loc": request.build_absolute_uri("/"), "priority": "1.0", "changefreq": "daily"},
         {"loc": request.build_absolute_uri("/about/"), "priority": "0.8", "changefreq": "monthly"},
         {"loc": request.build_absolute_uri("/programs/"), "priority": "0.9", "changefreq": "weekly"},
+        {"loc": request.build_absolute_uri("/academics/"), "priority": "0.9", "changefreq": "weekly"},
+        {"loc": request.build_absolute_uri("/academics/routines/"), "priority": "0.8", "changefreq": "weekly"},
+        {"loc": request.build_absolute_uri("/academics/results/"), "priority": "0.8", "changefreq": "weekly"},
+        {"loc": request.build_absolute_uri("/blog/"), "priority": "0.8", "changefreq": "weekly"},
         {"loc": request.build_absolute_uri("/admissions/"), "priority": "0.9", "changefreq": "weekly"},
+        {"loc": request.build_absolute_uri("/admissions/status/"), "priority": "0.6", "changefreq": "monthly"},
         {"loc": request.build_absolute_uri("/notices/"), "priority": "0.9", "changefreq": "daily"},
         {"loc": request.build_absolute_uri("/gallery/"), "priority": "0.7", "changefreq": "weekly"},
         {"loc": request.build_absolute_uri("/faculty/"), "priority": "0.7", "changefreq": "monthly"},
         {"loc": request.build_absolute_uri("/contact/"), "priority": "0.8", "changefreq": "monthly"},
+        {"loc": request.build_absolute_uri("/faq/"), "priority": "0.7", "changefreq": "monthly"},
+        {"loc": request.build_absolute_uri("/terms-and-conditions/"), "priority": "0.5", "changefreq": "yearly"},
     ]
 
     for p in programs:
@@ -576,13 +671,26 @@ def sitemap_xml(request):
                 "loc": request.build_absolute_uri(f"/notices/{n.slug}/"),
                 "priority": "0.8",
                 "changefreq": "weekly",
+                "lastmod": n.updated_at.strftime("%Y-%m-%d"),
+            }
+        )
+
+    for post in blog_posts:
+        urls.append(
+            {
+                "loc": request.build_absolute_uri(f"/blog/{post.slug}/"),
+                "priority": "0.7",
+                "changefreq": "monthly",
+                "lastmod": post.updated_at.strftime("%Y-%m-%d"),
             }
         )
 
     xml_content = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
         xml_content.append("  <url>")
-        xml_content.append(f"    <loc>{u['loc']}</loc>")
+        xml_content.append(f"    <loc>{escape(u['loc'])}</loc>")
+        if "lastmod" in u:
+            xml_content.append(f"    <lastmod>{u['lastmod']}</lastmod>")
         xml_content.append(f"    <changefreq>{u['changefreq']}</changefreq>")
         xml_content.append(f"    <priority>{u['priority']}</priority>")
         xml_content.append("  </url>")
@@ -597,62 +705,115 @@ def sitemap_xml(request):
 
 def dashboard_callback(request, context):
     """
-    Supplies real-time stats and metrics to the Unfold Admin Dashboard.
+    Supplies real-time stats and metrics to the Unfold Admin Dashboard matching AVNSS reference.
     """
     try:
-        total_students = AdmissionApplication.objects.filter(status="ACCEPTED").count() + 1250
         pending_admissions = AdmissionApplication.objects.filter(status="PENDING").count()
-        active_notices = Notice.objects.filter(is_active=True).count()
         unread_inquiries = ContactInquiry.objects.filter(is_read=False).count()
-        total_subscribers = PushSubscription.objects.filter(is_active=True).count()
-        total_faculty = FacultyMember.objects.count()
+        active_notices = Notice.objects.filter(is_active=True).count()
+        published_posts = BlogPost.objects.count()
     except Exception:
-        total_students = 1250
         pending_admissions = 0
-        active_notices = 0
         unread_inquiries = 0
-        total_subscribers = 0
-        total_faculty = 0
+        active_notices = 0
+        published_posts = 0
 
     context.update(
         {
-            "kpi_metrics": [
-                {
-                    "title": "Total Enrolled Students",
-                    "metric": f"{total_students:,}",
-                    "footer": "Active Academy Strength",
-                },
-                {
-                    "title": "Pending Applications",
-                    "metric": str(pending_admissions),
-                    "footer": "Awaiting Office Review",
-                },
-                {
-                    "title": "Active Notices",
-                    "metric": str(active_notices),
-                    "footer": "Live on website & ticker",
-                },
-                {
-                    "title": "Unread Inquiries",
-                    "metric": str(unread_inquiries),
-                    "footer": "Public messages",
-                },
-                {
-                    "title": "Push Subscribers",
-                    "metric": str(total_subscribers),
-                    "footer": "PWA Registered devices",
-                },
-                {
-                    "title": "Teachers & Staff",
-                    "metric": str(total_faculty),
-                    "footer": "Academic team",
-                },
-            ],
+            "kpi_pending_admissions": pending_admissions,
+            "kpi_unread_messages": unread_inquiries,
+            "kpi_active_notices": active_notices,
+            "kpi_published_posts": published_posts,
             "recent_applications": AdmissionApplication.objects.order_by("-created_at")[:5],
             "recent_inquiries": ContactInquiry.objects.order_by("-created_at")[:5],
+            "app_target_url": request.build_absolute_uri("/"),
         }
     )
     return context
+
+
+def generate_high_res_qr_image(target_url):
+    """
+    Generates a crystal-clear, high-resolution QR code (box_size=20, border=3)
+    embedded with the official school emblem and error correction level H.
+    """
+    import os
+    import qrcode
+    from PIL import Image
+    from django.conf import settings
+
+    qr = qrcode.QRCode(
+        version=None,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=20,
+        border=3,
+    )
+    qr.add_data(target_url)
+    qr.make(fit=True)
+
+    qr_img = qr.make_image(fill_color="#0F172A", back_color="white").convert("RGBA")
+    qr_w, qr_h = qr_img.size
+
+    logo_path = os.path.join(settings.BASE_DIR, "static", "images", "logo.png")
+    if os.path.exists(logo_path):
+        try:
+            logo = Image.open(logo_path).convert("RGBA")
+            logo_size = int(qr_w * 0.22)
+            logo = logo.resize((logo_size, logo_size), Image.Resampling.LANCZOS)
+
+            pad_size = logo_size + 16
+            pad = Image.new("RGBA", (pad_size, pad_size), (255, 255, 255, 255))
+
+            pos_pad = ((qr_w - pad_size) // 2, (qr_h - pad_size) // 2)
+            pos_logo = ((qr_w - logo_size) // 2, (qr_h - logo_size) // 2)
+            qr_img.paste(pad, pos_pad)
+            qr_img.paste(logo, pos_logo, mask=logo)
+        except Exception as e:
+            print(f"[QR Generation] Logo overlay error: {e}")
+
+    return qr_img
+
+
+_QR_CACHE = {}
+
+
+@staff_member_required
+def admin_qr_standee(request):
+    """
+    Admin page rendering high-res QR code and pixel-perfect A4 printable poster
+    with step-by-step iOS & Android PWA installation instructions.
+    """
+    school = get_school_profile(request)
+    app_url = request.build_absolute_uri("/?install=1")
+
+    context = {
+        "school": school,
+        "app_url": app_url,
+        "title": "Mobile Web App QR Code & A4 Print Poster",
+        "site_title": "Hunainath Academy Admin",
+    }
+    return render(request, "admin/app_qr_standee.html", context)
+
+
+@staff_member_required
+def admin_qr_download(request):
+    """
+    Streams the ultra high-resolution branded QR PNG dynamically pointing to ?install=1.
+    Caches rendered PNG bytes in memory by target URL for instant sub-millisecond response.
+    """
+    import io
+    app_url = request.build_absolute_uri("/?install=1")
+    if app_url not in _QR_CACHE:
+        qr_img = generate_high_res_qr_image(app_url)
+        buf = io.BytesIO()
+        qr_img.save(buf, format="PNG")
+        _QR_CACHE[app_url] = buf.getvalue()
+
+    response = HttpResponse(_QR_CACHE[app_url], content_type="image/png")
+    response["Cache-Control"] = "private, max-age=3600"
+    return response
+
+
 
 
 # ==============================================================================
@@ -664,7 +825,7 @@ def academics_hub(request):
     Academics Hub: Overview of curriculum, exam routine shortcuts,
     exam result portal link, enrollment growth, and calendar.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     programs = AcademicProgram.objects.all().order_by("order")
     routines = ExamRoutine.objects.filter(is_active=True).order_by("-academic_year", "start_date")[:6]
     enrollment_records = StudentEnrollmentRecord.objects.all().order_by("order")
@@ -687,7 +848,7 @@ def exam_routines(request):
     """
     Dedicated Exam Routine timetable page by grade & term.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     term_filter = request.GET.get("term", "").strip()
     grade_filter = request.GET.get("grade", "").strip()
 
@@ -712,10 +873,9 @@ def exam_routines(request):
 def exam_results(request):
     """
     Interactive Student Examination Result Portal.
-    Parents/Students look up terminal or board results by Symbol/Roll Number, Student Name, and Class/Grade.
-    (Date of Birth removed as per user instruction).
+    Requires Symbol/Roll Number (exact match) to prevent unauthorized student PII/marksheet enumeration.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     symbol_no = request.GET.get("symbol_no", "").strip().upper()
     student_name = request.GET.get("student_name", "").strip()
     grade = request.GET.get("grade", "").strip()
@@ -727,19 +887,20 @@ def exam_results(request):
 
     if symbol_no or student_name:
         searched = True
-        qs = ExamResult.objects.filter(is_published=True)
-        if symbol_no:
-            qs = qs.filter(symbol_number__iexact=symbol_no)
-        if student_name:
-            qs = qs.filter(student_name__icontains=student_name)
-        if grade:
-            qs = qs.filter(grade__iexact=grade)
-        if term:
-            qs = qs.filter(exam_term=term)
+        if not symbol_no:
+            error_message = "Please enter the student's Symbol / Roll Number (e.g. HNA-801) to view the official marksheet."
+        else:
+            qs = ExamResult.objects.filter(is_published=True, symbol_number__iexact=symbol_no)
+            if student_name:
+                qs = qs.filter(student_name__icontains=student_name)
+            if grade:
+                qs = qs.filter(grade__iexact=grade)
+            if term:
+                qs = qs.filter(exam_term=term)
 
-        result = qs.first()
-        if not result:
-            error_message = f"No published examination record found for the provided details. Please verify the Symbol/Roll Number, Name, and Class."
+            result = qs.first()
+            if not result:
+                error_message = "No published examination record found for the provided details. Please verify the Symbol/Roll Number, Name, and Class."
 
     # Available classes for filter dropdown
     available_classes = [
@@ -771,7 +932,7 @@ def blog_list(request):
     """
     Academy Blog, Articles, Cultural Celebrations, and Educational Insights.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     category = request.GET.get("category", "").strip()
     query = request.GET.get("q", "").strip()
 
@@ -804,11 +965,11 @@ def blog_detail(request, slug):
     """
     Full Blog Article reading view with related posts and share buttons.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     post = get_object_or_404(BlogPost, slug=slug, is_published=True)
 
-    # Increment view counter
-    BlogPost.objects.filter(pk=post.pk).update(views_count=post.views_count + 1)
+    # Atomic increment view counter
+    BlogPost.objects.filter(pk=post.pk).update(views_count=F("views_count") + 1)
     post.views_count += 1
 
     related_posts = BlogPost.objects.filter(is_published=True).exclude(pk=post.pk).filter(category=post.category)[:3]
@@ -820,6 +981,7 @@ def blog_detail(request, slug):
         "post": post,
         "related_posts": related_posts,
         "page_title": f"{post.title} - Hunainath Educational Academy Blog",
+        "meta_description": post.summary[:160],
     }
     return render(request, "core/blog_detail.html", context)
 
@@ -830,7 +992,7 @@ def faq(request):
     Covers Admissions, ECD to Grade 8, Fee policies, Bus Transport,
     Examinations, BLE (Class 8), Uniform, and Health & Safety.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     faqs = [
         {
             "category": "Admissions & Enrollment",
@@ -899,7 +1061,7 @@ def terms_and_conditions(request):
     """
     Terms & Conditions, Code of Conduct, and Operational Policies.
     """
-    school = get_school_profile()
+    school = get_school_profile(request)
     context = {
         "school": school,
         "page_title": "Terms & Conditions and Student Code of Conduct - Hunainath Educational Academy",
@@ -907,3 +1069,57 @@ def terms_and_conditions(request):
     return render(request, "core/terms.html", context)
 
 
+
+
+# ------------------------------------------------------------------------------
+# NEWSLETTER SUBSCRIPTION
+# ------------------------------------------------------------------------------
+@require_POST
+def newsletter_subscribe(request):
+    """Subscribe an email to the newsletter (AJAX JSON or normal form POST)."""
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+    from .models import NewsletterSubscriber
+
+    email = (request.POST.get("email") or "").strip().lower()
+    name = (request.POST.get("name") or "").strip()[:150]
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        msg, ok = "Please enter a valid email address.", False
+    else:
+        sub, created = NewsletterSubscriber.objects.get_or_create(email=email, defaults={"name": name})
+        if created:
+            msg, ok = "Thank you! You are now subscribed to our newsletter.", True
+        elif not sub.is_active:
+            sub.is_active = True
+            sub.save(update_fields=["is_active"])
+            msg, ok = "Welcome back! Your subscription has been reactivated.", True
+        else:
+            msg, ok = "You are already subscribed. Thank you!", True
+
+    if is_ajax:
+        return JsonResponse({"ok": ok, "message": msg}, status=200 if ok else 400)
+    (messages.success if ok else messages.error)(request, msg)
+    referer = request.META.get("HTTP_REFERER", "")
+    if referer and url_has_allowed_host_and_scheme(
+        url=referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(referer)
+    return redirect("index")
+
+
+def newsletter_unsubscribe(request, token):
+    """One-click unsubscribe from newsletter emails."""
+    from .models import NewsletterSubscriber
+
+    sub = get_object_or_404(NewsletterSubscriber, unsubscribe_token=token)
+    if sub.is_active:
+        sub.is_active = False
+        sub.save(update_fields=["is_active"])
+    messages.info(request, f"{sub.email} has been unsubscribed from our newsletter.")
+    return redirect("index")

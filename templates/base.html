@@ -4,21 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% if page_title %}{{ page_title }} | {% endif %}{{ school.name|default:"Shree Hunainath Educational Academy" }}</title>
+    <title>{% block title %}{% if page_title %}{{ page_title }} | {% endif %}{{ school.name|default:"Shree Hunainath Educational Academy" }}{% endblock %}</title>
 
     <!-- Meta & SEO Optimization -->
     <meta name="description"
-        content="{{ school.tagline|default:'Empowering Minds, Inspiring Futures' }} - Shree Hunainath Educational Academy in Garjamuni, Shuklaphanta-07, Kanchanpur, Nepal. Quality foundational education from Early Childhood Development (ECD) through Grade 8 (Basic Level).">
+        content="{% block meta_description %}{{ meta_description|default:school.tagline|default:'Empowering Minds, Inspiring Futures' }} - Shree Hunainath Educational Academy in Garjamuni, Shuklaphanta-07, Kanchanpur, Nepal. Quality foundational education from Early Childhood Development (ECD) through Grade 8 (Basic Level).{% endblock %}">
     <meta name="keywords"
         content="Hunainath Educational Academy, Shree Hunainath Academy, Shuklaphanta school, Garjamuni Kanchanpur, Nepal school admissions, BLE coaching, Sudurpashchim academy, Nursery to Grade 8">
-    <!-- Cache Busting and Service Worker Resync -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <!-- Service Worker Resync -->
     <script>
         // Force cleanup of any previous app service workers/caches that might intercept requests
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
                 for (var reg of registrations) {
                     if (reg.active && !reg.active.scriptURL.includes('/sw.js')) {
                         reg.unregister();
@@ -34,15 +33,16 @@
     <meta property="og:title"
         content="{% if page_title %}{{ page_title }} | {% endif %}{{ school.name|default:'Shree Hunainath Educational Academy' }}">
     <meta property="og:description"
-        content="{{ school.tagline|default:'Empowering Minds, Inspiring Futures' }} - Kanchanpur, Nepal.">
+        content="{{ meta_description|default:school.tagline|default:'Empowering Minds, Inspiring Futures' }} - Kanchanpur, Nepal.">
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}/static/images/logo.png">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title"
         content="{% if page_title %}{{ page_title }} | {% endif %}{{ school.name|default:'Shree Hunainath Educational Academy' }}">
-    <meta name="twitter:description" content="{{ school.tagline|default:'Empowering Minds, Inspiring Futures' }}">
+    <meta name="twitter:description"
+        content="{{ meta_description|default:school.tagline|default:'Empowering Minds, Inspiring Futures' }}">
     <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}/static/images/logo.png">
 
     <!-- Favicon & PWA App Manifest -->
@@ -55,11 +55,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Hunainath Academy">
 
-    <!-- Fonts: Plus Jakarta Sans, Outfit, Noto Sans Devanagari -->
+    <!-- Fonts: Plus Jakarta Sans, Outfit, Mukta & Noto Sans Devanagari (with font-display=swap & preconnect) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Mukta:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Bootstrap 5.3 & FontAwesome Icons -->
@@ -100,23 +102,21 @@
     {% if urgent_tickers %}
     <div class="top-ticker-bar">
         <div class="container-fluid px-lg-5">
-            <div class="row align-items-center g-2">
-                <div class="col-auto">
+            <div class="ticker-inner-flex">
+                <div class="ticker-badge-col">
                     <span class="ticker-badge">
                         <span class="ticker-pulse"></span>
                         <span>NOTICE</span>
                     </span>
                 </div>
-                <div class="col">
-                    <div class="ticker-marquee-wrap">
-                        <div class="ticker-marquee-content">
-                            {% for ticker in urgent_tickers %}
-                            <a href="{% url 'notice_detail' ticker.slug %}" class="ticker-item">
-                                <i class="fas fa-bullhorn text-warning me-1"></i> {{ ticker.title }}
-                                <span class="badge bg-white text-dark ms-1 py-0 px-1" style="font-size: 0.7rem;">{{ ticker.get_category_display }}</span>
-                            </a>
-                            {% endfor %}
-                        </div>
+                <div class="ticker-marquee-wrap">
+                    <div class="ticker-marquee-content">
+                        {% for ticker in urgent_tickers %}
+                        <a href="{% url 'notice_detail' ticker.slug %}" class="ticker-item">
+                            <i class="fas fa-bullhorn text-warning me-1"></i> {{ ticker.title }}
+                            <span class="badge bg-white text-dark ms-1 py-0 px-1" style="font-size: 0.7rem;">{{ ticker.get_category_display }}</span>
+                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -144,9 +144,9 @@
                             Hunainath <span style="color: #1E3A8A;">Educational</span> <span
                                 style="color: #D97706;">Academy</span>
                         </span>
-                        <span class="fw-semibold brand-subtitle-nepali mt-1 text-truncate"
-                            style="color: #64748B; display: block; font-family: 'Noto Sans Devanagari', sans-serif; letter-spacing: 0.3px;">
-                            {{ school.name_nepali|default:"श्री हुनैनाथ एजुकेशनल एकेडेमी" }} • गर्जामुनी, कञ्चनपुर
+                        <span class="brand-subtitle-nepali mt-1 text-truncate">
+                            <span class="nepali-name">{{ school.name_nepali|default:"श्री हुनैनाथ एजुकेशनल एकेडेमी" }}</span>
+                            <span class="nepali-loc"> • गर्जामुनी, कञ्चनपुर</span>
                         </span>
                     </div>
                 </a>
@@ -184,19 +184,25 @@
                                 <i class="fas fa-graduation-cap me-1 opacity-75"></i> Academics
                             </a>
                             <ul class="dropdown-menu border-0 shadow-lg rounded-4 p-2"
-                                aria-labelledby="academicsDropdown" style="min-width: 220px;">
+                                aria-labelledby="academicsDropdown" style="min-width: 250px;">
                                 <li>
-                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3 {% if request.resolver_match.url_name == 'exam_routines' %}active{% endif %}"
                                         href="{% url 'exam_routines' %}">
                                         <i class="fas fa-calendar-alt text-primary fs-5" style="width: 22px;"></i>
-                                        <span class="fw-bold text-dark fs-6">Exam Routines</span>
+                                        <div>
+                                            <span class="fw-bold text-dark fs-6 d-block lh-sm">Exam Routines</span>
+                                            <span class="text-muted extra-small">Terminal & Board Schedules</span>
+                                        </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3 {% if request.resolver_match.url_name == 'exam_results' %}active{% endif %}"
                                         href="{% url 'exam_results' %}">
                                         <i class="fas fa-poll-h text-primary fs-5" style="width: 22px;"></i>
-                                        <span class="fw-bold text-dark fs-6">Exam Results</span>
+                                        <div>
+                                            <span class="fw-bold text-dark fs-6 d-block lh-sm">Exam Results</span>
+                                            <span class="text-muted extra-small">Check Marks & GPA Portal</span>
+                                        </div>
                                     </a>
                                 </li>
                             </ul>
@@ -220,11 +226,61 @@
                                 <i class="fas fa-clipboard-list me-1 opacity-75"></i> Notices
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'faculty' %}active{% endif %}"
-                                href="{% url 'faculty' %}">
+                        <!-- Staff Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-custom dropdown-toggle {% if request.resolver_match.url_name == 'faculty' %}active{% endif %}"
+                                href="{% url 'faculty' %}" id="staffNavDropdown" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 <i class="fas fa-users-gear me-1 opacity-75"></i> Staff
                             </a>
+                            <ul class="dropdown-menu border-0 shadow-lg rounded-4 p-2"
+                                aria-labelledby="staffNavDropdown" style="min-width: 250px;">
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=ALL">
+                                        <i class="fas fa-users text-primary fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">All Staff Members</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider my-1">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=TEACHING">
+                                        <i class="fas fa-chalkboard-user text-primary fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">Teaching Staff</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=CANTEEN">
+                                        <i class="fas fa-utensils text-warning fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">Canteen Staff</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=SECURITY">
+                                        <i class="fas fa-shield-halved text-danger fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">Security Staff</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=CLEANING">
+                                        <i class="fas fa-broom text-success fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">Cleaning Staff</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item rounded-3 py-2 px-3 d-flex align-items-center gap-3"
+                                        href="{% url 'faculty' %}?category=ADMIN">
+                                        <i class="fas fa-user-tie text-secondary fs-5" style="width: 22px;"></i>
+                                        <span class="fw-bold text-dark fs-6">Administration</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
@@ -235,7 +291,7 @@
                     </ul>
 
                     <!-- Desktop Actions: Apply CTA -->
-                    <div class="d-none d-lg-flex align-items-center gap-3">
+                    <div class="d-none d-lg-flex align-items-center gap-3 flex-shrink-0 ms-2">
                         <a href="{% url 'admissions' %}" class="btn-cta-nav btn-ripple">
                             <span>Apply Now</span>
                             <i class="fas fa-arrow-right"></i>
@@ -269,13 +325,42 @@
 
     <!-- 5. HUNAINATH ACADEMY MANAGED LUXURY FOOTER (Seamless, No Inner Cards, 3D Animated Background) -->
     <footer class="footer-custom position-relative overflow-hidden">
-        <!-- Dynamic 3D Background Floating Mesh / Light Spheres -->
-        <div class="footer-3d-bg-wrap" aria-hidden="true">
-            <div class="footer-3d-mesh"></div>
-            <div class="footer-3d-orb footer-3d-orb-1"></div>
-            <div class="footer-3d-orb footer-3d-orb-2"></div>
-            <div class="footer-3d-orb footer-3d-orb-3"></div>
-            <div class="footer-3d-grid-plane"></div>
+        <!-- Elegant Flowing Silk & Liquid Wave Gradients Background -->
+        <div class="ft-flowing-waves-scene" aria-hidden="true">
+            <div class="ft-wave-glow ft-glow-blue"></div>
+            <div class="ft-wave-glow ft-glow-gold"></div>
+
+            <div class="ft-liquid-waves-wrap">
+                <svg class="ft-silk-waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28"
+                    preserveAspectRatio="none" shape-rendering="auto">
+                    <defs>
+                        <path id="gentle-wave"
+                            d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                        <linearGradient id="silk-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.35" />
+                            <stop offset="50%" stop-color="#3B82F6" stop-opacity="0.2" />
+                            <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.15" />
+                        </linearGradient>
+                        <linearGradient id="silk-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.18" />
+                            <stop offset="50%" stop-color="#0A2572" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#2563EB" stop-opacity="0.25" />
+                        </linearGradient>
+                        <linearGradient id="silk-grad-3" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#0F172A" stop-opacity="0.5" />
+                            <stop offset="50%" stop-color="#1E293B" stop-opacity="0.4" />
+                            <stop offset="100%" stop-color="#070B19" stop-opacity="0.6" />
+                        </linearGradient>
+                    </defs>
+                    <g class="silk-parallax">
+                        <use href="#gentle-wave" x="48" y="0" fill="url(#silk-grad-1)" />
+                        <use href="#gentle-wave" x="48" y="3" fill="url(#silk-grad-2)" />
+                        <use href="#gentle-wave" x="48" y="5" fill="rgba(245, 158, 11, 0.08)" />
+                        <use href="#gentle-wave" x="48" y="7" fill="url(#silk-grad-3)" />
+                    </g>
+                </svg>
+            </div>
+            <div class="ft-waves-ambient-vignette"></div>
         </div>
 
         <div class="container position-relative" style="z-index: 2;">
@@ -294,11 +379,13 @@
                                     style="height: 48px; width: 48px;">
                             </div>
                             <div class="d-flex flex-column justify-content-center text-start brand-text-group">
-                                <span class="fw-bold font-heading lh-1 brand-title text-white" style="font-size: 1.25rem;">
-                                    Hunainath <span style="color: #93C5FD;">Educational</span> <span style="color: #FBBF24;">Academy</span>
+                                <span class="fw-bold font-heading lh-1 brand-title text-white"
+                                    style="font-size: 1.25rem;">
+                                    Hunainath <span style="color: #93C5FD;">Educational</span> <span
+                                        style="color: #FBBF24;">Academy</span>
                                 </span>
-                                <span class="fw-semibold brand-subtitle-nepali mt-1" style="font-size: 0.78rem; color: #CBD5E1;">
-                                    {{ school.name_nepali|default:"श्री हुनैनाथ एजुकेशनल एकेडेमी" }} • गर्जामुनी
+                                <span class="brand-subtitle-nepali brand-subtitle-nepali-footer mt-1">
+                                    {{ school.name_nepali|default:"श्री हुनैनाथ एजुकेशनल एकेडेमी" }} • गर्जामुनी, कञ्चनपुर
                                 </span>
                             </div>
                         </div>
@@ -321,8 +408,7 @@
                                 class="social-spin-btn whatsapp" title="WhatsApp Chat">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
-                            <a href="mailto:bhattbashu35@gmail.com" class="social-spin-btn email"
-                                title="Send Email">
+                            <a href="mailto:bhattbashu35@gmail.com" class="social-spin-btn email" title="Send Email">
                                 <i class="fas fa-envelope"></i>
                             </a>
                             <a href="tel:+9779848701283" class="social-spin-btn phone" title="Call Principal Office">
@@ -335,17 +421,23 @@
                 <!-- Col 2: Quick Links -->
                 <div class="col-lg-2 col-6">
                     <div class="footer-content-block">
-                        <h6 class="fw-bold mb-3 text-white d-flex align-items-center gap-2" style="letter-spacing: 0.5px;">
+                        <h6 class="fw-bold mb-3 text-white d-flex align-items-center gap-2"
+                            style="letter-spacing: 0.5px;">
                             <i class="fas fa-compass text-warning small"></i> Quick Links
                         </h6>
                         <ul class="list-unstyled d-flex flex-column gap-2 small mb-0">
                             <li><a href="{% url 'index' %}" class="hover-white text-decoration-none">Home</a></li>
                             <li><a href="{% url 'about' %}" class="hover-white text-decoration-none">About Us</a></li>
-                            <li><a href="{% url 'programs' %}" class="hover-white text-decoration-none">ECD to Grade 8</a></li>
-                            <li><a href="{% url 'admissions' %}" class="hover-white text-decoration-none">Admissions</a></li>
-                            <li><a href="{% url 'faculty' %}" class="hover-white text-decoration-none">Staff Directory</a></li>
-                            <li><a href="{% url 'notices' %}" class="hover-white text-decoration-none">Notices & News</a></li>
-                            <li><a href="{% url 'gallery' %}" class="hover-white text-decoration-none text-warning"><i class="fas fa-images me-1"></i> Gallery</a></li>
+                            <li><a href="{% url 'programs' %}" class="hover-white text-decoration-none">ECD to Grade
+                                    8</a></li>
+                            <li><a href="{% url 'admissions' %}" class="hover-white text-decoration-none">Admissions</a>
+                            </li>
+                            <li><a href="{% url 'faculty' %}" class="hover-white text-decoration-none">Staff
+                                    Directory</a></li>
+                            <li><a href="{% url 'notices' %}" class="hover-white text-decoration-none">Notices &
+                                    News</a></li>
+                            <li><a href="{% url 'gallery' %}" class="hover-white text-decoration-none text-warning"><i
+                                        class="fas fa-images me-1"></i> Gallery</a></li>
                             <li><a href="{% url 'faq' %}" class="hover-white text-decoration-none">FAQ & Rules</a></li>
                         </ul>
                     </div>
@@ -354,13 +446,14 @@
                 <!-- Col 3: School Contact & Academic Badges -->
                 <div class="col-lg-3 col-6">
                     <div class="footer-content-block">
-                        <h6 class="fw-bold mb-3 text-white d-flex align-items-center gap-2" style="letter-spacing: 0.5px;">
+                        <h6 class="fw-bold mb-3 text-white d-flex align-items-center gap-2"
+                            style="letter-spacing: 0.5px;">
                             <i class="fas fa-id-badge text-warning small"></i> School Contact
                         </h6>
                         <ul class="list-unstyled d-flex flex-column gap-2 small mb-3 text-white-50">
                             <li class="d-flex align-items-start gap-2">
                                 <i class="fas fa-location-dot text-warning mt-1 flex-shrink-0"></i>
-                                <span>Garjamuni, Shuklaphanta-07, Kanchanpur, Nepal</span>
+                                <span>W85G+G48, Garjamuni, Sudurpashchim Province 10400, Nepal</span>
                             </li>
                             <li class="d-flex align-items-center gap-2">
                                 <i class="fas fa-user-tie text-info flex-shrink-0"></i>
@@ -368,18 +461,22 @@
                             </li>
                             <li class="d-flex align-items-center gap-2">
                                 <i class="fas fa-phone-volume text-success flex-shrink-0"></i>
-                                <a href="tel:+9779848701283" class="text-white text-decoration-none fw-bold hover-white">+977 984-8701283</a>
+                                <a href="tel:+9779848701283"
+                                    class="text-white text-decoration-none fw-bold hover-white">+977 984-8701283</a>
                             </li>
                             <li class="d-flex align-items-center gap-2">
                                 <i class="fas fa-envelope text-danger flex-shrink-0"></i>
-                                <a href="mailto:bhattbashu35@gmail.com" class="text-white text-decoration-none hover-white text-truncate">bhattbashu35@gmail.com</a>
+                                <a href="mailto:bhattbashu35@gmail.com"
+                                    class="text-white text-decoration-none hover-white text-truncate">bhattbashu35@gmail.com</a>
                             </li>
                         </ul>
                         <div class="d-flex flex-wrap gap-2 pt-2 border-top border-white border-opacity-10">
-                            <a href="{% url 'exam_routines' %}" class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-50 text-decoration-none py-1 px-2 hover-white">
+                            <a href="{% url 'exam_routines' %}"
+                                class="badge bg-primary bg-opacity-25 text-white border border-primary border-opacity-50 text-decoration-none py-1 px-2 hover-white">
                                 <i class="fas fa-calendar-alt text-warning me-1"></i> Routines
                             </a>
-                            <a href="{% url 'exam_results' %}" class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 text-decoration-none py-1 px-2 hover-white">
+                            <a href="{% url 'exam_results' %}"
+                                class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50 text-decoration-none py-1 px-2 hover-white">
                                 <i class="fas fa-poll text-success me-1"></i> Results
                             </a>
                         </div>
@@ -390,23 +487,48 @@
                 <div class="col-lg-3 col-12">
                     <div class="footer-content-block">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <h6 class="fw-bold text-white mb-0 d-flex align-items-center gap-2" style="letter-spacing: 0.5px;">
-                                <i class="fas fa-map-location-dot text-warning small"></i> Campus Map
+                            <h6 class="fw-bold text-white mb-0 d-flex align-items-center gap-2"
+                                style="letter-spacing: 0.5px;">
+                                <i class="fas fa-map-location-dot text-warning small"></i> Map
                             </h6>
-                            <a href="https://maps.google.com/?q=28.9113,80.3245" target="_blank" rel="noopener" class="extra-small text-warning text-decoration-none fw-semibold">
+                            <a href="https://www.google.com/maps/search/?api=1&query=W85G%2BG48%2C+Garjamuni%2C+Sudurpashchim+Province+10400" target="_blank" rel="noopener"
+                                class="extra-small text-warning text-decoration-none fw-semibold">
                                 Full Map &rarr;
                             </a>
                         </div>
-                        <div class="rounded-3 overflow-hidden shadow border border-secondary border-opacity-25" style="height: 140px; background: #0F172A;">
+                        <div class="rounded-3 overflow-hidden shadow border border-secondary border-opacity-25"
+                            style="height: 140px; background: #0F172A;">
                             <iframe
-                                src="https://maps.google.com/maps?q=28.9113,80.3245+(Hunainath+Educational+Academy)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                                src="https://maps.google.com/maps?q=W85G%2BG48%2C+Garjamuni%2C+Sudurpashchim+Province+10400+(Hunainath+Educational+Academy)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
                                 style="border:0; width: 100%; height: 100%;" allowfullscreen="" loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade" title="Hunainath Academy Location">
                             </iframe>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-2 pt-1 extra-small text-white-50">
+                        <div
+                            class="d-flex align-items-center justify-content-between mt-2 pt-1 extra-small text-white-50">
                             <span><i class="fas fa-clock text-warning me-1"></i> 9:00 AM – 4:00 PM</span>
-                            <a href="{% url 'contact' %}" class="text-warning text-decoration-none fw-semibold">Directions &rarr;</a>
+                            <a href="{% url 'contact' %}"
+                                class="text-warning text-decoration-none fw-semibold">Directions &rarr;</a>
+                        </div>
+
+                        <!-- Compact Newsletter Widget -->
+                        <div class="ft-nl mt-3">
+                            <h6 class="fw-bold text-white mb-2 d-flex align-items-center gap-2"
+                                style="letter-spacing: 0.5px;">
+                                <i class="fas fa-envelope-open-text text-warning small"></i> Newsletter
+                            </h6>
+                            <form id="newsletterForm" class="ft-nl-form" method="post"
+                                action="{% url 'newsletter_subscribe' %}" novalidate autocomplete="off">
+                                {% csrf_token %}
+                                <input type="email" name="email" id="newsletterEmail" placeholder="Your email"
+                                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                    data-lpignore="true" data-form-type="other" required aria-label="Email address">
+                                <button type="submit" id="newsletterSubmitBtn" class="ft-nl-btn" aria-label="Subscribe"
+                                    title="Subscribe">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            <div id="newsletterMsg" class="ft-nl-msg" role="status" aria-live="polite"></div>
                         </div>
                     </div>
                 </div>
@@ -414,18 +536,25 @@
 
             <!-- Bottom Line with Copyright, Linked Master Junction Attribution & Back to Top Button -->
             <div class="border-top border-secondary border-opacity-25 mt-4 pt-3 small text-secondary">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-center text-md-start">
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-center text-md-start">
                     <p class="mb-0 text-white-50 small">
-                        &copy; {{ current_year }} <strong>Shree Hunainath Educational Academy</strong>. All Rights Reserved.
+                        &copy; {{ current_year }} <strong>Shree Hunainath Educational Academy</strong>. All Rights
+                        Reserved.
                     </p>
                     <div class="d-flex align-items-center gap-3 flex-wrap justify-content-center">
                         <span class="text-white-50 small">
-                            Made with <i class="fas fa-heart text-danger mx-1" title="Made with love" style="animation: heartbeat 1.5s ease infinite;"></i> by 
-                            <a href="https://masterjunction.com.np" target="_blank" rel="noopener" class="text-warning text-decoration-none fw-bold hover-white" title="Master Junction - Digital Solutions">
+                            Made with <i class="fas fa-heart text-danger mx-1" title="Made with love"
+                                style="animation: heartbeat 1.5s ease infinite;"></i> by
+                            <a href="https://masterjunction.com.np" target="_blank" rel="noopener"
+                                class="text-warning text-decoration-none fw-bold hover-white"
+                                title="Master Junction - Digital Solutions">
                                 Master Junction
                             </a>
                         </span>
-                        <button type="button" class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 fw-bold footer-back-to-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Scroll back to top">
+                        <button type="button"
+                            class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 fw-bold footer-back-to-top-btn"
+                            onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Scroll back to top">
                             <i class="fas fa-arrow-up me-1"></i> Back to Top
                         </button>
                     </div>
@@ -434,196 +563,131 @@
         </div>
     </footer>
     {% if school.whatsapp_number %}
-    <!-- 6. FLOATING ACTIONS (WhatsApp Direct Support) -->
+    <!-- 6. FLOATING ACTIONS (WhatsApp Instant Direct Access) -->
     <div class="floating-actions-container">
-        <!-- Floating WhatsApp Button with Live Online Indicator -->
-        <div class="floating-btn-wrapper position-relative">
-            <a href="https://wa.me/{{ school.whatsapp_number|cut:' '|cut:'+'|cut:'-' }}?text=Hello%20Hunainath%20Academy%20Office"
-                target="_blank" rel="noopener" class="btn-float-action btn-float-whatsapp" title="Chat on WhatsApp"
-                aria-label="Chat with Academy on WhatsApp">
-                <i class="fab fa-whatsapp"></i>
-                <!-- Real-time Online Pulse Dot -->
-                <span class="whatsapp-online-pulse" title="We are Online"></span>
-            </a>
-            <div class="float-action-tooltip d-flex align-items-center gap-2">
-                <span class="online-indicator-dot"></span>
-                <span>Online • Chat on WhatsApp</span>
-            </div>
-        </div>
+        <!-- Floating WhatsApp Button with Direct Instant Launch -->
+        <a href="https://wa.me/9779848701283?text=Namaste!%20I%20would%20like%20to%20inquire%20about%20Hunainath%20Educational%20Academy."
+            target="_blank" rel="noopener noreferrer" class="btn-float-action btn-float-whatsapp"
+            title="Chat on WhatsApp" aria-label="Direct WhatsApp Chat with Hunainath Educational Academy">
+            <i class="fab fa-whatsapp"></i>
+            <!-- Green Live Online Dot -->
+            <span class="whatsapp-online-pulse" aria-hidden="true"></span>
+        </a>
     </div>
     {% endif %}
 
-    <!-- 7. PWA INSTALL FLOATING BANNER (Mobile / Desktop) -->
-    <div id="pwaInstallBanner">
-        <img src="/static/images/icons/icon-72x72.png" alt="App Icon" width="42" height="42"
-            class="rounded-circle shadow-sm">
-        <div class="flex-grow-1">
-            <div class="fw-bold fs-6 text-dark">Install Hunainath Educational Academy App</div>
-            <div class="text-muted extra-small">Instant offline access, exam routines & notices</div>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-sm btn-primary rounded-pill px-3 fw-bold"
-                onclick="triggerPWAInstall()">Install</button>
-            <button class="btn btn-sm btn-light rounded-pill px-2 text-muted" onclick="dismissPwaBanner()"><i
-                    class="fas fa-times"></i></button>
-        </div>
-    </div>
 
-    <!-- 8. NOTIFICATION ENABLING / SUBSCRIPTION MODAL (Global Modal Style) -->
-    <div class="modal fade academy-modal" id="enableNotificationModal" tabindex="-1" aria-labelledby="enableNotificationLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="enableNotificationLabel">
-                        <i class="fas fa-bell text-warning"></i>
-                        <span>Academy Notifications</span>
-                    </h5>
-                    <button type="button" class="btn-close-academy" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="modal-icon-badge badge-amber">
-                        <i class="fas fa-bell"></i>
+
+
+
+    <!-- 8A-1. DIRECT PWA APP INSTALL PROMPT MODAL (Appears on QR scan with full UI visible behind) -->
+    <div class="modal fade academy-modal" id="pwaDirectInstallModal" tabindex="-1"
+        aria-labelledby="pwaDirectInstallLabel" aria-hidden="true" data-bs-backdrop="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+            <div class="modal-content text-center p-4 border-0 shadow-2xl rounded-4"
+                style="background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(16px); border: 1.5px solid rgba(245, 158, 11, 0.35) !important;">
+                <div class="modal-body py-2">
+                    <!-- App Emblem -->
+                    <div class="position-relative d-inline-block mb-3">
+                        <img src="/static/images/logo.png" alt="Hunainath Academy Emblem"
+                            class="rounded-circle shadow-lg border-2 border-warning p-1 bg-white"
+                            style="width: 84px; height: 84px; object-fit: contain;">
+                        <span
+                            class="position-absolute bottom-0 end-0 bg-success text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                            style="width: 26px; height: 26px; font-size: 13px; border: 2px solid white;">
+                            <i class="fas fa-check"></i>
+                        </span>
                     </div>
-                    <h5 class="fw-bold text-dark mb-2">Stay Updated in Real Time</h5>
-                    <p class="text-muted small mb-4">
-                        Never miss urgent announcements from <strong>Shree Hunainath Educational Academy</strong>. Get notified directly on your device.
+
+                    <h4 class="fw-black text-dark mb-1" id="pwaDirectInstallLabel" style="letter-spacing: -0.02em;">
+                        Install School Web App
+                    </h4>
+                    <p class="text-primary fw-bold small mb-2">
+                        Shree Hunainath Educational Academy
+                    </p>
+                    <p class="text-muted small mb-4" style="line-height: 1.55;">
+                        Install the official app on your device for rapid offline access, instant notifications, fee
+                        records, and live circulars.
                     </p>
 
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-primary bg-opacity-10 text-primary">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Exam Routines & Results</strong>
-                            <span class="text-muted extra-small">Instant alerts when new exam routines or grades are published.</span>
-                        </div>
+                    <!-- Device Specific Action Button -->
+                    <div id="pwaDirectInstallNativeBox" class="mb-3">
+                        <button type="button"
+                            class="btn btn-warning w-100 py-3 rounded-pill fw-black text-dark shadow d-flex align-items-center justify-content-center gap-2"
+                            onclick="executeDirectInstall()" style="font-size: 1.05rem;">
+                            <i class="fas fa-download"></i>
+                            <span>Install App Now</span>
+                        </button>
                     </div>
 
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-warning bg-opacity-10 text-warning">
-                            <i class="fas fa-bullhorn"></i>
+                    <!-- iOS Specific Share Sheet Guide (Shows automatically on iPhone / iPad) -->
+                    <div id="pwaIosGuideBox" class="bg-light p-3 rounded-3 text-start border mb-3"
+                        style="display: none;">
+                        <div class="fw-bold text-dark small mb-1.5 d-flex align-items-center gap-2">
+                            <i class="fab fa-apple text-dark fs-5"></i>
+                            <span>To Install on iPhone:</span>
                         </div>
-                        <div>
-                            <strong class="d-block text-dark small">Urgent Holidays & Notices</strong>
-                            <span class="text-muted extra-small">Timely updates regarding school holidays, events, and closures.</span>
-                        </div>
+                        <ol class="small text-muted ps-3 mb-0" style="line-height: 1.6;">
+                            <li>Tap the <strong>Share</strong> button <i
+                                    class="fas fa-arrow-up-from-bracket text-primary"></i> at the bottom of Safari.</li>
+                            <li>Scroll down and tap <strong>"Add to Home Screen"</strong> <i
+                                    class="far fa-plus-square text-dark"></i>.</li>
+                            <li>Tap <strong>"Add"</strong> in the top right corner.</li>
+                        </ol>
                     </div>
 
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Admission Deadlines</strong>
-                            <span class="text-muted extra-small">Important dates for new admissions and academic sessions.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer-custom">
-                    <button type="button" class="btn btn-modal-primary w-100" id="btnConfirmEnablePush" onclick="performPushSubscription()">
-                        <i class="fas fa-bell"></i>
-                        <span>Enable Notifications Now</span>
-                    </button>
-                    <button type="button" class="btn btn-modal-secondary w-100" data-bs-dismiss="modal">
-                        Maybe Later
+                    <!-- Secondary Dismiss Action -->
+                    <button type="button" class="btn btn-link text-muted text-decoration-none small fw-semibold"
+                        data-bs-dismiss="modal">
+                        Continue to Website <i class="fas fa-arrow-right ms-1"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 8B. iOS PWA INSTALL INSTRUCTIONS MODAL (Global Modal Style) -->
-    <div class="modal fade academy-modal" id="iosInstallModal" tabindex="-1" aria-labelledby="iosInstallLabel" aria-hidden="true">
+    <!-- 8A-2. NOTIFICATION SUCCESS "DONE" CONFIRMATION POPUP -->
+    <div class="modal fade academy-modal" id="notificationDoneModal" tabindex="-1"
+        aria-labelledby="notificationDoneLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="iosInstallLabel">
-                        <i class="fab fa-apple text-warning"></i>
-                        <span>Install on iPhone / iPad</span>
-                    </h5>
-                    <button type="button" class="btn-close-academy" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="/static/images/icons/icon-192x192.png" width="70" height="70" class="rounded-4 mb-3 shadow-sm border border-warning" alt="Hunainath Academy App">
-                    <h5 class="fw-bold text-dark mb-1">Add to Your Home Screen</h5>
-                    <p class="text-muted small mb-4">Install <strong>Hunainath Educational Academy</strong> for full offline access, instant routine lookups, and fast navigation.</p>
-
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-primary bg-opacity-10 text-primary">
-                            <i class="fas fa-arrow-up-from-bracket"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Step 1: Tap Share</strong>
-                            <span class="text-muted extra-small">Tap the Share icon at the bottom of your Safari browser bar.</span>
-                        </div>
-                    </div>
-
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-plus-square"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Step 2: Add to Home Screen</strong>
-                            <span class="text-muted extra-small">Scroll down in the share options and tap <strong>"Add to Home Screen"</strong>.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer-custom">
-                    <button type="button" class="btn btn-modal-primary w-100" data-bs-dismiss="modal">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body py-4">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center shadow mb-3"
+                        style="width: 76px; height: 76px; font-size: 2.2rem; background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;">
                         <i class="fas fa-check"></i>
-                        <span>Got It, Thanks</span>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">Done! Notifications Enabled</h4>
+                    <p class="text-muted small mb-4" style="max-width: 360px; margin: 0 auto;">
+                        You are now subscribed to Shree Hunainath Educational Academy alerts. You will receive exam
+                        schedules, urgent notices, and holiday announcements in real time.
+                    </p>
+                    <button type="button" class="btn btn-modal-primary px-5 rounded-pill fw-bold"
+                        data-bs-dismiss="modal">
+                        <i class="fas fa-thumbs-up me-2"></i> Done, Understood
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 8C. UNIVERSAL INSTALL APP GUIDE MODAL (Global Modal Style) -->
-    <div class="modal fade academy-modal" id="universalInstallModal" tabindex="-1" aria-labelledby="universalInstallLabel" aria-hidden="true">
+    <!-- 8B. APP INSTALL SUCCESS CONFIRMATION MODAL -->
+    <div class="modal fade academy-modal" id="installSuccessModal" tabindex="-1" aria-labelledby="installSuccessLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="universalInstallLabel">
-                        <i class="fas fa-mobile-screen-button text-warning"></i>
-                        <span>Install Academy App</span>
-                    </h5>
-                    <button type="button" class="btn-close-academy" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="/static/images/icons/icon-192x192.png" width="72" height="72" class="rounded-4 mb-3 shadow-sm border border-warning" alt="Hunainath Academy App">
-                    <h5 class="fw-bold text-dark mb-1">Hunainath Educational Academy App</h5>
-                    <p class="text-muted small mb-4">Install on Android, Windows PC, or Mac for rapid offline access and instant school notices.</p>
-
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-primary bg-opacity-10 text-primary">
-                            <i class="fas fa-desktop"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Chrome / Edge (PC & Mac)</strong>
-                            <span class="text-muted extra-small">Look for the install button in the address bar or choose <strong>Menu (&vellip;) &rarr; Install App</strong>.</span>
-                        </div>
-                    </div>
-
-                    <div class="feature-pill-box">
-                        <div class="feature-icon-circle bg-success bg-opacity-10 text-success">
-                            <i class="fas fa-mobile-alt"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block text-dark small">Android Phone / Tablet</strong>
-                            <span class="text-muted extra-small">Tap your browser menu (<strong>&vellip;</strong>) and select <strong>"Add to Home Screen"</strong>.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer-custom">
-                    <button type="button" class="btn btn-modal-primary w-100" data-bs-dismiss="modal">
+            <div class="modal-content text-center p-4">
+                <div class="modal-body py-4">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center shadow mb-3"
+                        style="width: 76px; height: 76px; font-size: 2.2rem; background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;">
                         <i class="fas fa-check"></i>
-                        <span>Understood</span>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">App Successfully Installed!</h4>
+                    <p class="text-muted small mb-4" style="max-width: 360px; margin: 0 auto;">
+                        Hunainath Educational Academy is now added to your home screen. You can launch it anytime for
+                        rapid offline access and instant school notices.
+                    </p>
+                    <button type="button" class="btn btn-modal-primary px-5 rounded-pill fw-bold"
+                        data-bs-dismiss="modal">
+                        <i class="fas fa-thumbs-up me-2"></i> Done, Understood
                     </button>
                 </div>
             </div>
@@ -631,7 +695,8 @@
     </div>
 
     <!-- 9. NOTIFICATION RECOVERY & UNBLOCK GUIDE MODAL (Global Modal Style) -->
-    <div class="modal fade academy-modal" id="notifRecoveryModal" tabindex="-1" aria-labelledby="notifRecoveryLabel" aria-hidden="true">
+    <div class="modal fade academy-modal" id="notifRecoveryModal" tabindex="-1" aria-labelledby="notifRecoveryLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -648,7 +713,8 @@
                         <i class="fas fa-bell-slash"></i>
                     </div>
                     <h5 class="fw-bold text-dark mb-2">Unblock Notifications in Settings</h5>
-                    <p class="text-muted small mb-4">Notifications were previously denied. Allow them in your browser to receive urgent alerts and routine updates:</p>
+                    <p class="text-muted small mb-4">Notifications were previously denied. Allow them in your browser to
+                        receive urgent alerts and routine updates:</p>
 
                     <div class="feature-pill-box">
                         <div class="feature-icon-circle bg-primary bg-opacity-10 text-primary">
@@ -656,7 +722,8 @@
                         </div>
                         <div>
                             <strong class="d-block text-dark small">Tap Site Permissions</strong>
-                            <span class="text-muted extra-small">In the browser address bar, tap the <strong>Padlock / Tune icon <i class="fas fa-sliders text-primary"></i></strong>.</span>
+                            <span class="text-muted extra-small">In the browser address bar, tap the <strong>Padlock /
+                                    Tune icon <i class="fas fa-sliders text-primary"></i></strong>.</span>
                         </div>
                     </div>
 
@@ -666,7 +733,8 @@
                         </div>
                         <div>
                             <strong class="d-block text-dark small">Allow Notifications</strong>
-                            <span class="text-muted extra-small">Locate <strong>Notifications</strong> and change from <em>Blocked</em> to <strong>"Allow"</strong>.</span>
+                            <span class="text-muted extra-small">Locate <strong>Notifications</strong> and change from
+                                <em>Blocked</em> to <strong>"Allow"</strong>.</span>
                         </div>
                     </div>
 
@@ -676,7 +744,8 @@
                         </div>
                         <div>
                             <strong class="d-block text-dark small">Refresh the Page</strong>
-                            <span class="text-muted extra-small">Reload the website to activate real-time notifications.</span>
+                            <span class="text-muted extra-small">Reload the website to activate real-time
+                                notifications.</span>
                         </div>
                     </div>
                 </div>
@@ -703,7 +772,7 @@
                 <div class="d-flex flex-column">
                     <span class="fw-extrabold text-white fs-5 lh-1 font-heading"
                         style="letter-spacing: -0.01em;">Hunainath</span>
-                    <span class="text-white-50 small mt-1" style="font-size: 0.73rem;">Educational Academy</span>
+                    <span class="text-warning small mt-1 fw-bold" style="font-size: 0.78rem; font-family: 'Mukta', 'Noto Sans Devanagari', sans-serif; line-height: 1.4;">{{ school.name_nepali|default:"श्री हुनैनाथ एजुकेशनल एकेडेमी" }}</span>
                 </div>
             </div>
             <button type="button" class="btn-drawer-close" data-bs-dismiss="offcanvas" aria-label="Close">
@@ -779,6 +848,7 @@
                             </a>
                         </div>
                     </div>
+
                 </li>
 
                 <li class="nav-item">
@@ -804,13 +874,21 @@
                 </li>
             </ul>
 
-            <!-- Drawer Footer CTAs (AVNSS Style: Enable Notifications + Apply Now) -->
+            <!-- Drawer Footer CTAs (Mobile Device Only) -->
             <div class="drawer-footer-actions pt-3 mt-auto">
+                <!-- Mobile Web App Install Button -->
+                <button type="button"
+                    class="btn btn-drawer-install-app w-100 mb-2 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
+                    onclick="triggerPWAInstall()">
+                    <i class="fas fa-mobile-screen-button text-primary"></i>
+                    <span>Install App</span>
+                </button>
                 <button type="button" class="btn btn-drawer-notification w-100 mb-2 py-2 fw-bold"
                     onclick="togglePushNotifications()">
                     <i class="fas fa-bell me-2 text-warning"></i> Enable Notifications
                 </button>
-                <a href="{% url 'admissions' %}" class="btn btn-drawer-apply w-100 py-3 fw-bold text-white shadow">
+                <a href="/admissions/" class="btn btn-drawer-apply w-100 fw-bold text-white shadow"
+                    style="display: flex; align-items: center; justify-content: center; position: relative; z-index: 1065; cursor: pointer; text-decoration: none; box-sizing: border-box;">
                     <span>Apply Now</span>
                     <i class="fas fa-arrow-right ms-2"></i>
                 </a>
@@ -818,10 +896,10 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/pwa.js"></script>
+    <!-- Scripts (Deferred for optimal performance & TBT reduction) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="/static/js/main.js" defer></script>
+    <script src="/static/js/pwa.js" defer></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 

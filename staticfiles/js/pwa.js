@@ -18,31 +18,29 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Audio Chime Player for Notifications
-const notificationAudio = new Audio('/static/sounds/notification.wav');
-notificationAudio.preload = 'auto';
+// Audio Chime Player for Admin Push Notifications
+// Audio is strictly played ONLY when a verified push notification arrives from the server.
+let notificationAudio = null;
 
-// Unlock Web Audio context / Audio element on first user gesture
-function unlockNotificationAudio() {
-    notificationAudio.play().then(() => {
-        notificationAudio.pause();
-        notificationAudio.currentTime = 0;
-    }).catch(() => {});
-    document.removeEventListener('click', unlockNotificationAudio);
-    document.removeEventListener('touchstart', unlockNotificationAudio);
+function getNotificationAudio() {
+    if (!notificationAudio) {
+        notificationAudio = new Audio('/static/sounds/notification.wav');
+        notificationAudio.preload = 'none';
+    }
+    return notificationAudio;
 }
-document.addEventListener('click', unlockNotificationAudio, { once: true });
-document.addEventListener('touchstart', unlockNotificationAudio, { once: true });
 
 // Listen for push notifications received from Service Worker while tab is open
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'PLAY_NOTIFICATION_SOUND') {
-            console.log('🔔 [PWA] Notification sound triggered by push event');
+        // ONLY trigger audio when an actual admin push notification arrives with valid payload
+        if (event.data && event.data.type === 'PLAY_NOTIFICATION_SOUND' && event.data.data && event.data.data.title) {
+            console.log('🔔 [PWA] Admin notification sound triggered by push event:', event.data.data.title);
             try {
-                notificationAudio.currentTime = 0;
-                notificationAudio.play().catch(e => {
-                    console.warn('[PWA] Autoplay audio error:', e);
+                const audio = getNotificationAudio();
+                audio.currentTime = 0;
+                audio.play().catch(e => {
+                    console.warn('[PWA] Notification sound play blocked by browser policy:', e);
                 });
             } catch (err) {
                 console.error('[PWA] Audio error:', err);
@@ -56,22 +54,76 @@ if ('clearAppBadge' in navigator) {
     navigator.clearAppBadge().catch(e => console.log('Badge clear error', e));
 }
 
-// Intercept Native Install Prompt
+// Handle Native Install Prompt directly
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    console.log('📱 [PWA] beforeinstallprompt event captured');
+    console.log('📱 [PWA] Native install prompt captured');
 
-    // Only present installation prompts/banners on mobile or handheld devices (screen width <= 768px or touch mobile)
-    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-    const banner = document.getElementById('pwaInstallBanner');
-    
-    if (isMobileDevice && banner && !localStorage.getItem('pwa_dismissed')) {
-        banner.style.display = 'flex';
+    // If page was loaded with ?install=1 or from QR, present direct install modal
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('install') === '1' || sessionStorage.getItem('pwa_qr_scan') === '1') {
+        window.showDirectInstallModal();
     }
 });
 
-// App Installed Event
+// Show Direct Install Modal (Interface in background, install prompt floating on top)
+window.showDirectInstallModal = function () {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    const modalEl = document.getElementById('pwaDirectInstallModal');
+    if (!modalEl || typeof bootstrap === 'undefined') return;
+
+    const isApple = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const iosBox = document.getElementById('pwaIosGuideBox');
+    const nativeBox = document.getElementById('pwaDirectInstallNativeBox');
+
+    if (isApple) {
+        if (iosBox) iosBox.style.display = 'block';
+        if (nativeBox) nativeBox.style.display = 'none';
+    } else {
+        if (iosBox) iosBox.style.display = 'none';
+        if (nativeBox) nativeBox.style.display = 'block';
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+};
+
+// Auto-check on DOMContentLoaded for ?install=1
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('install') === '1') {
+        sessionStorage.setItem('pwa_qr_scan', '1');
+        // Wait a brief moment for interface to render in the background, then reveal modal
+        setTimeout(() => {
+            window.showDirectInstallModal();
+        }, 600);
+    }
+});
+
+// Direct Execute Install
+window.executeDirectInstall = async function () {
+    const modalEl = document.getElementById('pwaDirectInstallModal');
+    if (modalEl && typeof bootstrap !== 'undefined') {
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    }
+
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+            console.log('✅ PWA Install accepted');
+        }
+        deferredPrompt = null;
+    } else {
+        showToastNotification('📲 In your browser menu (⋮), tap "Add to Home Screen" or "Install App"');
+    }
+};
+
+// App Installed Event - Automatically pop up installSuccessModal
 window.addEventListener('appinstalled', () => {
     console.log('🎉 [PWA] App successfully installed!');
     const banner = document.getElementById('pwaInstallBanner');
@@ -79,7 +131,15 @@ window.addEventListener('appinstalled', () => {
     if (banner) banner.style.display = 'none';
     if (navInstallBtn) navInstallBtn.style.display = 'none';
     deferredPrompt = null;
-    showToastNotification('🎉 Hunainath Academy app is now installed on your device!');
+    
+    // Automatically display Success Popup
+    const successModalEl = document.getElementById('installSuccessModal');
+    if (successModalEl && typeof bootstrap !== 'undefined') {
+        const modal = new bootstrap.Modal(successModalEl);
+        modal.show();
+    } else {
+        showToastNotification('🎉 App Successfully Installed! Hunainath Academy is now on your home screen.');
+    }
 });
 
 // Detect Environment & Device Capabilities
@@ -87,43 +147,23 @@ const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSSt
 const isAndroidDevice = /Android/i.test(navigator.userAgent);
 const isStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-// Trigger Install Action (Universal for Android, Chrome, Edge, Safari, iOS, Windows, Mac)
+// Trigger Install Action
 window.triggerPWAInstall = async function () {
+    // Hide mobile offcanvas drawer immediately
+    const drawerEl = document.getElementById('mobileNavDrawer');
+    if (drawerEl && typeof bootstrap !== 'undefined') {
+        const drawerInstance = bootstrap.Offcanvas.getInstance(drawerEl);
+        if (drawerInstance) drawerInstance.hide();
+    }
+
     if (isStandaloneMode) {
         showToastNotification('✅ Hunainath Academy app is already installed and active!');
         return;
     }
 
-    if (deferredPrompt) {
-        // Native prompt supported (Chrome, Edge, Android Chrome, Samsung Internet)
-        deferredPrompt.prompt();
-        const choiceResult = await deferredPrompt.userChoice;
-        if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted PWA installation');
-        }
-        deferredPrompt = null;
-        const banner = document.getElementById('pwaInstallBanner');
-        if (banner) banner.style.display = 'none';
-    } else if (isIOSDevice) {
-        // iOS Safari manual install modal
-        const iosModal = document.getElementById('iosInstallModal');
-        if (iosModal && typeof bootstrap !== 'undefined') {
-            const modal = new bootstrap.Modal(iosModal);
-            modal.show();
-        } else {
-            alert("To install on iPhone/iPad: Tap the Share button in Safari, then tap 'Add to Home Screen'.");
-        }
-    } else {
-        // Universal modal for all browsers where beforeinstallprompt was already fired, or browser menu is used
-        const uniModal = document.getElementById('universalInstallModal');
-        if (uniModal && typeof bootstrap !== 'undefined') {
-            const modal = new bootstrap.Modal(uniModal);
-            modal.show();
-        } else {
-            showToastNotification('ℹ️ Tap your browser menu (⋮) and select "Install App" or "Add to Home Screen".');
-        }
-    }
+    window.showDirectInstallModal();
 };
+
 
 window.dismissPwaBanner = function () {
     const banner = document.getElementById('pwaInstallBanner');
@@ -228,42 +268,22 @@ async function checkPushSubscriptionState() {
 
 document.addEventListener('DOMContentLoaded', checkPushSubscriptionState);
 
-// Trigger Notification Modal
+// Trigger Notification directly without confusing intermediary modal
 window.openNotificationModal = async function () {
-    const modalEl = document.getElementById('enableNotificationModal');
-    if (!modalEl || typeof bootstrap === 'undefined') {
-        performPushSubscription();
-        return;
-    }
-
-    // Check if already subscribed
-    try {
-        if ('serviceWorker' in navigator && 'Notification' in window) {
-            const reg = await navigator.serviceWorker.ready;
-            if (reg.pushManager) {
-                const sub = await reg.pushManager.getSubscription();
-                const btn = document.getElementById('btnConfirmEnablePush');
-                if (sub) {
-                    if (btn) {
-                        btn.innerHTML = '<i class="fas fa-bell-slash"></i> <span>Disable Notifications</span>';
-                        btn.classList.add('btn-modal-danger');
-                    }
-                } else {
-                    if (btn) {
-                        btn.innerHTML = '<i class="fas fa-bell"></i> <span>Enable Notifications Now</span>';
-                        btn.classList.remove('btn-modal-danger');
-                    }
-                }
-            }
-        }
-    } catch (e) {}
-
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
+    await window.performPushSubscription();
 };
 
-window.togglePushNotifications = function () {
-    window.openNotificationModal();
+window.togglePushNotifications = async function () {
+    // Hide mobile offcanvas immediately if open
+    const drawerEl = document.getElementById('mobileNavDrawer');
+    if (drawerEl && typeof bootstrap !== 'undefined') {
+        const drawerInstance = bootstrap.Offcanvas.getInstance(drawerEl);
+        if (drawerInstance) {
+            drawerInstance.hide();
+        }
+    }
+    // Perform push subscription directly
+    await window.performPushSubscription();
 };
 
 window.performPushSubscription = async function () {
@@ -354,7 +374,15 @@ window.performPushSubscription = async function () {
             const result = await saveRes.json();
             if (result.status === 'success') {
                 checkPushSubscriptionState();
-                showToastNotification('🔔 Notifications enabled! You will receive urgent notices instantly.');
+                
+                // Automatically display the "Done!" popup modal
+                const doneModalEl = document.getElementById('notificationDoneModal');
+                if (doneModalEl && typeof bootstrap !== 'undefined') {
+                    const doneModal = new bootstrap.Modal(doneModalEl);
+                    doneModal.show();
+                } else {
+                    showToastNotification('🔔 Done! Notifications enabled! You will receive urgent notices instantly.');
+                }
             }
         }
     } catch (e) {

@@ -31,17 +31,17 @@
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
             <div class="d-flex flex-wrap gap-2">
-                <a href="{% url 'exam_routines' %}" class="btn btn-sm {% if not term_filter %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
-                    All Examinations
+                <a href="{% url 'exam_routines' %}" class="tab-pill-filter {% if not term_filter %}active{% endif %}">
+                    <i class="fas fa-layer-group me-1"></i> All Examinations
                 </a>
-                <a href="{% url 'exam_routines' %}?term=ANNUAL" class="btn btn-sm {% if term_filter == 'ANNUAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
-                    Annual / BLE Board
+                <a href="{% url 'exam_routines' %}?term=ANNUAL" class="tab-pill-filter {% if term_filter == 'ANNUAL' %}active{% endif %}">
+                    <i class="fas fa-graduation-cap me-1"></i> Annual / BLE Board
                 </a>
-                <a href="{% url 'exam_routines' %}?term=SECOND_TERMINAL" class="btn btn-sm {% if term_filter == 'SECOND_TERMINAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
-                    Second Terminal
+                <a href="{% url 'exam_routines' %}?term=SECOND_TERMINAL" class="tab-pill-filter {% if term_filter == 'SECOND_TERMINAL' %}active{% endif %}">
+                    <i class="fas fa-calendar-check me-1"></i> Second Terminal
                 </a>
-                <a href="{% url 'exam_routines' %}?term=FIRST_TERMINAL" class="btn btn-sm {% if term_filter == 'FIRST_TERMINAL' %}btn-primary text-white{% else %}btn-outline-secondary bg-white{% endif %} rounded-pill px-3 py-2 fw-bold">
-                    First Terminal
+                <a href="{% url 'exam_routines' %}?term=FIRST_TERMINAL" class="tab-pill-filter {% if term_filter == 'FIRST_TERMINAL' %}active{% endif %}">
+                    <i class="fas fa-clock me-1"></i> First Terminal
                 </a>
             </div>
 
@@ -49,9 +49,6 @@
                 {% if term_filter %}<input type="hidden" name="term" value="{{ term_filter }}">{% endif %}
                 <input type="text" name="grade" value="{{ grade_filter }}" placeholder="Filter by Class (e.g. 8)" class="form-control form-control-sm rounded-pill px-3" style="width: 200px;">
                 <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">Filter</button>
-                {% if grade_filter or term_filter %}
-                <a href="{% url 'exam_routines' %}" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Clear Filters"><i class="fas fa-times"></i></a>
-                {% endif %}
             </form>
         </div>
     </div>

@@ -1,0 +1,153 @@
+{% extends 'admin/base.html' %}
+
+{% load i18n %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6 w-full">
+
+    <!-- 1. TOP METRIC STAT CARDS (4-Column Layout Matching AVNSS Reference) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1: Pending Admissions -->
+        <a href="{% url 'admin:core_admissionapplication_changelist' %}?status__exact=PENDING"
+            class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined">description</span>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                    {{ kpi_pending_admissions|default:"0" }}
+                </div>
+                <div class="text-xs font-bold text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
+                    PENDING ADMISSIONS
+                </div>
+            </div>
+        </a>
+
+        <!-- Metric 2: Unread Messages -->
+        <a href="{% url 'admin:core_contactinquiry_changelist' %}?is_read__exact=0"
+            class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined">mail</span>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                    {{ kpi_unread_messages|default:"0" }}
+                </div>
+                <div class="text-xs font-bold text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
+                    UNREAD MESSAGES
+                </div>
+            </div>
+        </a>
+
+        <!-- Metric 3: Active Notices -->
+        <a href="{% url 'admin:core_notice_changelist' %}?is_active__exact=1"
+            class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-rose-50 dark:bg-rose-900/30 text-rose-500 dark:text-rose-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined">campaign</span>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                    {{ kpi_active_notices|default:"0" }}
+                </div>
+                <div class="text-xs font-bold text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
+                    ACTIVE NOTICES
+                </div>
+            </div>
+        </a>
+
+        <!-- Metric 4: Published Posts -->
+        <a href="{% url 'admin:core_blogpost_changelist' %}"
+            class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined">auto_stories</span>
+            </div>
+            <div>
+                <div class="text-3xl font-extrabold text-gray-900 dark:text-white leading-tight">
+                    {{ kpi_published_posts|default:"0" }}
+                </div>
+                <div class="text-xs font-bold text-gray-400 dark:text-gray-400 tracking-wider uppercase mt-0.5">
+                    PUBLISHED POSTS
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 2. QUICK PUBLISH ACTION BAR (Matching AVNSS Reference) -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm">
+        <!-- Interactive Prompt Row -->
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-blue-900 text-white font-bold flex items-center justify-center shrink-0 text-sm shadow-sm">
+                {{ request.user.username|slice:":1"|upper|default:"A" }}
+            </div>
+            <div class="flex-1 flex items-center justify-between border border-gray-200 dark:border-gray-700 rounded-full px-5 py-2.5 bg-gray-50/50 dark:bg-gray-900/30 text-gray-500 dark:text-gray-400 text-sm">
+                <span>What would you like to post to the website today?</span>
+                <span class="material-symbols-outlined text-gray-400 text-lg">add</span>
+            </div>
+        </div>
+
+        <!-- Quick Create Pills -->
+        <div class="flex items-center gap-2.5 flex-wrap">
+            <a href="{% url 'admin:core_notice_add' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-rose-200 dark:border-rose-900/50 bg-rose-50/40 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 font-semibold text-xs hover:bg-rose-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">campaign</span>
+                <span>Notice</span>
+            </a>
+
+            <a href="{% url 'admin:core_blogpost_add' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-200 dark:border-purple-900/50 bg-purple-50/40 dark:bg-purple-950/20 text-purple-600 dark:text-purple-400 font-semibold text-xs hover:bg-purple-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">article</span>
+                <span>Blog / Article</span>
+            </a>
+
+            <a href="{% url 'admin:core_examroutine_add' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200 dark:border-blue-900/50 bg-blue-50/40 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 font-semibold text-xs hover:bg-blue-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">event_note</span>
+                <span>Exam Routine</span>
+            </a>
+
+            <a href="{% url 'admin:core_notice_add' %}?category=EVENT"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/40 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 font-semibold text-xs hover:bg-emerald-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">schedule</span>
+                <span>School Event</span>
+            </a>
+
+            <a href="{% url 'admin:core_galleryitem_add' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-200 dark:border-amber-900/50 bg-amber-50/40 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 font-semibold text-xs hover:bg-amber-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">photo_camera</span>
+                <span>Gallery Photo</span>
+            </a>
+
+            <a href="{% url 'admin:core_examresult_add' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-sky-200 dark:border-sky-900/50 bg-sky-50/40 dark:bg-sky-950/20 text-sky-600 dark:text-sky-400 font-semibold text-xs hover:bg-sky-100/60 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base">analytics</span>
+                <span>Exam Result</span>
+            </a>
+
+            <a href="{% url 'admin_qr_standee' %}"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-600 bg-blue-900 text-white font-semibold text-xs hover:bg-blue-800 transition-colors shadow-2xs">
+                <span class="material-symbols-outlined text-base text-amber-400">qr_code_2</span>
+                <span>App QR & A4 Standee</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 3. LOWER SECTION: APPS LIST & RECENT ACTIONS (Standard Unfold Two-Column Layout) -->
+    <div class="flex flex-col lg:flex-row gap-6">
+        <div class="flex flex-col gap-5 grow">
+            {% include "unfold/helpers/app_list_default.html" with show_changelinks=True %}
+        </div>
+
+        {% include "unfold/helpers/history.html" %}
+    </div>
+
+</div>
+{% endblock %}
+
+
+

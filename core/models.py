@@ -270,7 +270,8 @@ class AdmissionApplication(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.reference_id:
-            year_suffix = "2026"
+            from django.utils import timezone
+            year_suffix = str(timezone.now().year)
             rand_token = uuid.uuid4().hex[:6].upper()
             self.reference_id = f"HNA-{year_suffix}-{rand_token}"
         super().save(*args, **kwargs)
@@ -561,3 +562,46 @@ class ExamResult(models.Model):
                 rows.append({"subject": sub.strip(), "score": val.strip()})
         return rows
 
+
+
+class NewsletterSubscriber(models.Model):
+    """
+    Email subscriber for the academy newsletter.
+    """
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=150, blank=True)
+    is_active = models.BooleanField(default=True)
+    unsubscribe_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-subscribed_at"]
+        verbose_name = "Newsletter Subscriber"
+        verbose_name_plural = "Newsletter Subscribers"
+
+    def __str__(self):
+        return self.email
+
+
+class Newsletter(models.Model):
+    """
+    A newsletter issue written by admins and emailed to all active subscribers.
+    """
+    STATUS_CHOICES = [("DRAFT", "Draft"), ("SENT", "Sent")]
+
+    subject = models.CharField(max_length=200)
+    preheader = models.CharField(max_length=200, blank=True, help_text="Short preview text shown in inboxes.")
+    content = models.TextField(help_text="Newsletter body. Plain text; line breaks are preserved. Basic HTML is allowed.")
+    cover_image = models.ImageField(upload_to="newsletters/", blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="DRAFT")
+    recipients_count = models.PositiveIntegerField(default=0)
+    sent_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Newsletter Issue"
+        verbose_name_plural = "Newsletter Issues"
+
+    def __str__(self):
+        return self.subject
