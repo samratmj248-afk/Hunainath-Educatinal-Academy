@@ -18,6 +18,7 @@ from django.conf import settings
 from django.db.models import Q, F, Count
 from django.core.paginator import Paginator
 from django.utils.http import url_has_allowed_host_and_scheme
+from django_ratelimit.decorators import ratelimit
 
 from .models import (
     SchoolProfile,
@@ -154,37 +155,58 @@ def program_detail(request, slug):
     return render(request, "core/program_detail.html", context)
 
 
+@ratelimit(key="ip", rate="10/m", block=True)
 def admissions(request):
     """
-    Online Student Admission Application with anti-spam honeypot and reference generator.
+    Admissions Overview Page: Requirements, Fees, Schedule, & Process.
+    Also accepts POST application submissions for backwards compatibility.
+    """
+    if request.method == "POST":
+        return apply_online(request)
+
+    school = get_school_profile(request)
+    context = {
+        "school": school,
+        "page_title": "Admissions - Shree Hunainath Educational Academy",
+    }
+    return render(request, "core/admissions.html", context)
+
+
+@ratelimit(key="ip", rate="10/m", block=True)
+def apply_online(request):
+    """
+    Dedicated Online Admission Application Form with anti-spam honeypot and reference generator.
     """
     school = get_school_profile(request)
-    submitted_app = None
 
     if request.method == "POST":
-        # Honeypot spam check (bots will fill this invisible field)
         honeypot = request.POST.get("website_url_hp", "").strip()
         if honeypot:
-            # Silently drop bot submission
             return redirect("admissions")
 
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
         student_name = request.POST.get("student_name", "").strip()
+        if not student_name and (first_name or last_name):
+            student_name = f"{first_name} {last_name}".strip()
+
         date_of_birth = request.POST.get("date_of_birth", "").strip()
         gender = request.POST.get("gender", "MALE")
-        grade_applying_for = request.POST.get("grade_applying_for", "").strip()
-        previous_school = request.POST.get("previous_school", "").strip()
-        previous_gpa = request.POST.get("previous_gpa", "").strip()
+        grade_applying_for = request.POST.get("grade_applying_for") or request.POST.get("applying_for_grade", "").strip()
+        previous_school = request.POST.get("previous_school") or request.POST.get("current_school", "").strip()
+        previous_gpa = request.POST.get("previous_gpa") or request.POST.get("current_grade", "").strip()
 
         parent_name = request.POST.get("parent_name", "").strip()
-        parent_phone = request.POST.get("parent_phone", "").strip()
-        parent_email = request.POST.get("parent_email", "").strip()
+        parent_phone = request.POST.get("parent_phone") or request.POST.get("phone", "").strip()
+        parent_email = request.POST.get("parent_email") or request.POST.get("email", "").strip()
         parent_occupation = request.POST.get("parent_occupation", "").strip()
         address = request.POST.get("address", "").strip()
-        additional_notes = request.POST.get("additional_notes", "").strip()
+        if not address:
+            address = "Garjamuni / Shuklaphanta, Kanchanpur"
+        additional_notes = request.POST.get("additional_notes") or request.POST.get("message", "").strip()
 
-        if student_name and date_of_birth and parent_name and parent_phone and grade_applying_for and address:
+        if student_name and date_of_birth and (parent_name or first_name) and parent_phone and grade_applying_for:
             try:
-                # Convert dob
                 dob_obj = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
                 app = AdmissionApplication(
                     student_name=student_name,
@@ -201,7 +223,6 @@ def admissions(request):
                     additional_notes=additional_notes,
                 )
 
-                # Validate uploaded files before saving
                 upload_errors = []
                 if "student_photo" in request.FILES:
                     err = _validate_upload(request.FILES["student_photo"], ALLOWED_IMAGE_EXTENSIONS)
@@ -230,7 +251,7 @@ def admissions(request):
                         messages.error(request, u_err)
                     return render(
                         request,
-                        "core/admissions.html",
+                        "core/apply_online.html",
                         {"school": school, "page_title": "Online Admission Application - Shree Hunainath Academy"},
                     )
 
@@ -253,9 +274,10 @@ def admissions(request):
         "school": school,
         "page_title": "Online Admission Application - Shree Hunainath Academy",
     }
-    return render(request, "core/admissions.html", context)
+    return render(request, "core/apply_online.html", context)
 
 
+@ratelimit(key="ip", rate="15/m", block=True)
 def check_admission_status(request):
     """
     Allows parents to look up application status using reference number.
@@ -413,6 +435,7 @@ def faculty(request):
     return render(request, "core/faculty.html", context)
 
 
+@ratelimit(key="ip", rate="10/m", block=True)
 def contact(request):
     """
     Contact page with anti-spam honeypot and inquiry processing.
@@ -498,6 +521,7 @@ def vapid_public_key(request):
 
 @csrf_exempt
 @require_POST
+@ratelimit(key="ip", rate="30/m", block=True)
 def push_subscribe(request):
     """
     Registers a browser endpoint for Web Push notifications with strict URL validation.
@@ -533,6 +557,7 @@ def push_subscribe(request):
 
 @csrf_exempt
 @require_POST
+@ratelimit(key="ip", rate="30/m", block=True)
 def push_unsubscribe(request):
     """
     Removes push subscription when user disables notifications.
@@ -870,6 +895,7 @@ def exam_routines(request):
     return render(request, "core/exam_routines.html", context)
 
 
+@ratelimit(key="ip", rate="15/m", block=True)
 def exam_results(request):
     """
     Interactive Student Examination Result Portal.
@@ -1075,6 +1101,7 @@ def terms_and_conditions(request):
 # NEWSLETTER SUBSCRIPTION
 # ------------------------------------------------------------------------------
 @require_POST
+@ratelimit(key="ip", rate="10/m", block=True)
 def newsletter_subscribe(request):
     """Subscribe an email to the newsletter (AJAX JSON or normal form POST)."""
     from django.core.validators import validate_email

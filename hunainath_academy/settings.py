@@ -28,11 +28,12 @@ DEBUG = os.getenv("DEBUG", "True").lower() in ("true", "1", "yes")
 # Allowed Hosts with support for comma-separated env values and ngrok wildcards
 ALLOWED_HOSTS = [
     h.strip()
-    for h in os.getenv("ALLOWED_HOSTS", "*").split(",")
+    for h in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0,.ngrok-free.app,.ngrok-free.dev").split(",")
     if h.strip()
 ]
-if "*" not in ALLOWED_HOSTS and DEBUG:
-    ALLOWED_HOSTS.append("*")
+# Only allow wildcard in development when explicitly set and not in production
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # CSRF Trusted Origins for Cloudflare, Ngrok and custom domains
 _env_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
@@ -181,8 +182,14 @@ X_FRAME_OPTIONS = "DENY"
 REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # Allows modern AJAX/PWA fetch clients to read CSRF token securely
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_AGE = 86400 * 7  # 7 days
+
+# Request and file size limits (DoS mitigation: 10MB max upload)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True").lower() in ("true", "1")

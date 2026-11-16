@@ -30,20 +30,6 @@
                         <span>Contact Us</span>
                     </a>
                 </div>
-
-                <!-- Fast Admission Tracking Link & Quick Badges -->
-                <div class="mt-4 pt-2 d-flex flex-wrap align-items-center gap-3">
-                    <a href="{% url 'admission_status' %}"
-                        class="text-white-50 text-decoration-none small d-inline-flex align-items-center gap-2">
-                        <i class="fas fa-magnifying-glass text-warning"></i>
-                        <span class="text-white">Already applied? Track your admission application status &rarr;</span>
-                    </a>
-                    <span class="text-white-50 d-none d-sm-inline">•</span>
-                    <a href="{% url 'gallery' %}"
-                        class="badge bg-white bg-opacity-10 text-warning text-decoration-none py-2 px-3 rounded-pill border border-warning border-opacity-25 small">
-                        <i class="fas fa-images me-1"></i> View 100% Real Facebook Photos
-                    </a>
-                </div>
             </div>
 
             <!-- Hero Right Showcase: Interactive Showcase of Genuine School Photos -->
@@ -594,10 +580,6 @@
                         class="btn btn-primary rounded-pill px-4 py-2 fw-bold text-white shadow-sm">
                         <i class="fas fa-landmark me-1"></i> Read Full Institutional Profile
                     </a>
-                    <a href="{% url 'contact' %}"
-                        class="btn btn-outline-dark rounded-pill px-4 py-2 fw-bold">
-                        <i class="fas fa-envelope text-primary me-1"></i> Contact Us
-                    </a>
                 </div>
             </div>
         </div>
@@ -662,48 +644,232 @@
 
 
 
-<!-- 8. COMMUNITY TESTIMONIALS & VOICES -->
-<section class="py-5" style="background: #f8fafc;">
-    <div class="container">
-        <div class="text-center mb-5">
+<!-- 8. COMMUNITY TESTIMONIALS & VOICES (Smooth Infinite Responsive Marquee Slider) -->
+<section class="py-5 overflow-hidden" style="background: #f8fafc;">
+    <div class="container mb-4">
+        <div class="text-center">
             <span class="section-tag"><i class="fas fa-heart text-danger"></i> Community Voices</span>
             <h2 class="section-title">What Parents & Alumni Say</h2>
             <p class="section-desc">Hear directly from parents and proud graduates whose educational foundations were
                 built at Hunainath Educational Academy.</p>
         </div>
+    </div>
 
-        <div class="row g-4">
-            {% for item in testimonials %}
-            <div class="col-lg-4 col-md-6">
-                <div class="bg-white p-4 rounded-4 shadow-sm border border-light h-100 d-flex flex-column">
-                    <div class="d-flex align-items-center gap-1 text-warning mb-3">
-                        {% for i in "12345"|make_list %}
-                        <i class="fas fa-star"></i>
-                        {% endfor %}
-                    </div>
-                    <p class="text-muted small fst-italic flex-grow-1" style="line-height: 1.7;">
-                        "{{ item.quote }}"
-                    </p>
-                    <div class="pt-3 border-top d-flex align-items-center gap-3">
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
-                            style="width: 44px; height: 44px;">
-                            {{ item.name|slice:":1" }}
-                        </div>
+    {% if testimonials %}
+    <div class="testimonials-slider-container position-relative">
+        <!-- Subtle Side Gradient Masks -->
+        <div class="slider-fade-edge-left"></div>
+        <div class="slider-fade-edge-right"></div>
+
+        <div class="testimonials-marquee-track">
+            <!-- First Set -->
+            <div class="testimonials-marquee-group">
+                {% for item in testimonials %}
+                <div class="testimonial-card-slide">
+                    <div class="bg-white p-4 rounded-4 shadow-sm border border-light h-100 d-flex flex-column justify-content-between testimonial-inner-box">
                         <div>
-                            <div class="fw-bold text-dark fs-6">{{ item.name }}</div>
-                            <div class="text-muted extra-small">{{ item.role }}</div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-1 text-warning">
+                                    {% for i in "12345"|make_list %}
+                                    <i class="fas fa-star" style="font-size: 0.9rem;"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="text-secondary small fst-italic mb-3" style="line-height: 1.7; font-size: 0.93rem;">
+                                "{{ item.quote }}"
+                            </p>
+                        </div>
+                        <div class="pt-3 border-top d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                                style="width: 44px; height: 44px; font-size: 1.1rem; flex-shrink: 0; background: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 100%) !important;">
+                                {{ item.name|slice:":1" }}
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="fw-bold text-dark fs-6 text-truncate">{{ item.name }}</div>
+                                <div class="text-muted extra-small text-truncate">{{ item.role }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="col-12 text-center py-4">
-                <p class="text-muted">Testimonials will be showcased here.</p>
+
+            <!-- Second Set (Duplicate for Continuous Seamless Infinite Loop) -->
+            <div class="testimonials-marquee-group" aria-hidden="true">
+                {% for item in testimonials %}
+                <div class="testimonial-card-slide">
+                    <div class="bg-white p-4 rounded-4 shadow-sm border border-light h-100 d-flex flex-column justify-content-between testimonial-inner-box">
+                        <div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-1 text-warning">
+                                    {% for i in "12345"|make_list %}
+                                    <i class="fas fa-star" style="font-size: 0.9rem;"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="text-secondary small fst-italic mb-3" style="line-height: 1.7; font-size: 0.93rem;">
+                                "{{ item.quote }}"
+                            </p>
+                        </div>
+                        <div class="pt-3 border-top d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                                style="width: 44px; height: 44px; font-size: 1.1rem; flex-shrink: 0; background: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 100%) !important;">
+                                {{ item.name|slice:":1" }}
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="fw-bold text-dark fs-6 text-truncate">{{ item.name }}</div>
+                                <div class="text-muted extra-small text-truncate">{{ item.role }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
+    {% else %}
+    <div class="container text-center py-4">
+        <p class="text-muted">Testimonials will be showcased here.</p>
+    </div>
+    {% endif %}
 </section>
+
+<style>
+/* Testimonials Infinite Animated Slider */
+.testimonials-slider-container {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0 25px;
+}
+
+.testimonials-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: testimonialScroll 32s linear infinite;
+}
+
+.testimonials-marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.testimonials-marquee-group {
+    display: flex;
+    gap: 24px;
+    padding-right: 24px;
+}
+
+.testimonial-card-slide {
+    width: 360px;
+    flex-shrink: 0;
+}
+
+.testimonial-inner-box {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 20px !important;
+    transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.testimonial-inner-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.1) !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* Edge Gradients */
+.slider-fade-edge-left,
+.slider-fade-edge-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 70px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.slider-fade-edge-left {
+    left: 0;
+    background: linear-gradient(to right, #f8fafc 0%, rgba(248, 250, 252, 0) 100%);
+}
+
+.slider-fade-edge-right {
+    right: 0;
+    background: linear-gradient(to left, #f8fafc 0%, rgba(248, 250, 252, 0) 100%);
+}
+
+@keyframes testimonialScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonial-card-slide {
+        width: 300px;
+    }
+    .testimonials-marquee-group {
+        gap: 16px;
+        padding-right: 16px;
+    }
+    .testimonials-marquee-track {
+        animation-duration: 24s;
+    }
+    .slider-fade-edge-left,
+    .slider-fade-edge-right {
+        width: 25px;
+    }
+}
+
+/* Premium Glowing CTA Apply Button */
+.btn-cta-glow-apply {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    padding: 2px;
+    background: linear-gradient(135deg, #FDE047 0%, #F59E0B 50%, #D97706 100%);
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4), 0 0 20px rgba(253, 224, 71, 0.25);
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    overflow: hidden;
+}
+
+.btn-cta-glow-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 34px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+    color: #0F172A;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.btn-cta-glow-apply:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 35px rgba(245, 158, 11, 0.55), 0 0 30px rgba(253, 224, 71, 0.45);
+}
+
+.btn-cta-glow-apply:hover .btn-cta-glow-content {
+    background: #FFFFFF;
+    color: #1E3A8A;
+}
+
+.btn-cta-glow-apply .transition-arrow {
+    transition: transform 0.3s ease;
+}
+
+.btn-cta-glow-apply:hover .transition-arrow {
+    transform: translateX(4px);
+}
+</style>
 
 <!-- 10. CALL TO ACTION BANNER -->
 <section class="container pt-4 pb-0 mb-4">
@@ -724,13 +890,13 @@
             </div>
             <div class="col-lg-4 text-lg-end">
                 <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-3">
-                    <a href="{% url 'admissions' %}"
-                        class="btn btn-warning rounded-pill px-4 py-3 fw-bold text-dark shadow-sm">
-                        <i class="fas fa-file-pen me-1"></i> Apply Online
-                    </a>
-                    <a href="{% url 'contact' %}"
-                        class="btn btn-outline-light rounded-pill px-4 py-3 fw-bold">
-                        <i class="fas fa-phone me-1"></i> Contact
+                    <a href="{% url 'apply_online' %}"
+                        class="btn-cta-glow-apply text-decoration-none">
+                        <span class="btn-cta-glow-bg"></span>
+                        <span class="btn-cta-glow-content">
+                            <i class="fas fa-file-pen me-2"></i> Apply Online
+                            <i class="fas fa-arrow-right ms-2 transition-arrow"></i>
+                        </span>
                     </a>
                 </div>
             </div>

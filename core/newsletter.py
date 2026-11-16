@@ -8,8 +8,18 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import strip_tags
+import bleach
 
 from .models import Newsletter, NewsletterSubscriber, SchoolProfile
+
+ALLOWED_NEWSLETTER_TAGS = [
+    "p", "b", "i", "strong", "em", "u", "a", "ul", "ol", "li", "br", "span", "h1", "h2", "h3", "h4"
+]
+ALLOWED_NEWSLETTER_ATTRS = {
+    "a": ["href", "title", "target", "rel"],
+    "span": ["style"],
+    "p": ["style"],
+}
 
 
 def _site_url(request=None):
@@ -29,12 +39,20 @@ def send_newsletter(newsletter: Newsletter, request=None, recipients=None):
     base_url = _site_url(request)
     cover_url = f"{base_url}{newsletter.cover_image.url}" if newsletter.cover_image else ""
 
+    sanitized_content = bleach.clean(
+        newsletter.content,
+        tags=ALLOWED_NEWSLETTER_TAGS,
+        attributes=ALLOWED_NEWSLETTER_ATTRS,
+        strip=True
+    )
+
     connection = get_connection()
     messages = []
     for sub in subscribers:
         unsubscribe_url = base_url + reverse("newsletter_unsubscribe", args=[sub.unsubscribe_token])
         ctx = {
             "newsletter": newsletter,
+            "sanitized_content": sanitized_content,
             "subscriber": sub,
             "school": school,
             "site_url": base_url,

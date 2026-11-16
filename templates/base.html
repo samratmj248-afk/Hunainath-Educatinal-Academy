@@ -166,13 +166,13 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'index' %}active{% endif %}"
                                 href="{% url 'index' %}">
-                                <i class="fas fa-home me-1 opacity-75"></i> Home
+                                Home
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
                                 href="{% url 'about' %}">
-                                <i class="fas fa-landmark me-1 opacity-75"></i> About Us
+                                About Us
                             </a>
                         </li>
 
@@ -181,7 +181,7 @@
                             <a class="nav-link nav-link-custom dropdown-toggle {% if 'academics' in request.resolver_match.url_name or 'programs' in request.resolver_match.url_name %}active{% endif %}"
                                 href="#" id="academicsDropdown" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <i class="fas fa-graduation-cap me-1 opacity-75"></i> Academics
+                                Academics
                             </a>
                             <ul class="dropdown-menu border-0 shadow-lg rounded-4 p-2"
                                 aria-labelledby="academicsDropdown" style="min-width: 250px;">
@@ -211,19 +211,19 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if 'blog' in request.resolver_match.url_name %}active{% endif %}"
                                 href="{% url 'blog_list' %}">
-                                <i class="fas fa-newspaper me-1 opacity-75"></i> Blog
+                                Blog
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if 'admissions' in request.resolver_match.url_name %}active{% endif %}"
                                 href="{% url 'admissions' %}">
-                                <i class="fas fa-user-plus me-1 opacity-75"></i> Admissions
+                                Admissions
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if 'notices' in request.resolver_match.url_name %}active{% endif %}"
                                 href="{% url 'notices' %}">
-                                <i class="fas fa-clipboard-list me-1 opacity-75"></i> Notices
+                                Notices
                             </a>
                         </li>
                         <!-- Staff Dropdown -->
@@ -231,7 +231,7 @@
                             <a class="nav-link nav-link-custom dropdown-toggle {% if request.resolver_match.url_name == 'faculty' %}active{% endif %}"
                                 href="{% url 'faculty' %}" id="staffNavDropdown" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <i class="fas fa-users-gear me-1 opacity-75"></i> Staff
+                                Staff
                             </a>
                             <ul class="dropdown-menu border-0 shadow-lg rounded-4 p-2"
                                 aria-labelledby="staffNavDropdown" style="min-width: 250px;">
@@ -285,7 +285,7 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
                                 href="{% url 'contact' %}">
-                                <i class="fas fa-envelope me-1 opacity-75"></i> Contact
+                                Contact
                             </a>
                         </li>
                     </ul>

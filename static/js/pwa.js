@@ -19,32 +19,61 @@ if ('serviceWorker' in navigator) {
 }
 
 // Audio Chime Player for Admin Push Notifications
-// Audio is strictly played ONLY when a verified push notification arrives from the server.
 let notificationAudio = null;
 
 function getNotificationAudio() {
     if (!notificationAudio) {
         notificationAudio = new Audio('/static/sounds/notification.wav');
-        notificationAudio.preload = 'none';
+        notificationAudio.preload = 'auto';
     }
     return notificationAudio;
+}
+
+// Unlock audio permission on user interaction so subsequent background/push events can play freely
+function unlockAudioPlayback() {
+    try {
+        const audio = getNotificationAudio();
+        // Play muted/briefly to prime the browser AudioContext & HTMLAudioElement
+        audio.volume = 1.0;
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                console.log('🔊 [PWA] Audio player primed & unlocked for admin notices.');
+            }).catch(() => {
+                // Ignore silent unlock aborts
+            });
+        }
+    } catch (e) {
+        // Safe failover
+    }
+}
+
+// Ring chime sound function
+function playNoticeChimeSound() {
+    try {
+        const audio = getNotificationAudio();
+        audio.currentTime = 0;
+        audio.volume = 1.0;
+        const p = audio.play();
+        if (p !== undefined) {
+            p.catch(e => {
+                console.warn('[PWA] Notification sound play restricted by browser policy:', e);
+            });
+        }
+    } catch (err) {
+        console.error('[PWA] Audio error:', err);
+    }
 }
 
 // Listen for push notifications received from Service Worker while tab is open
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
-        // ONLY trigger audio when an actual admin push notification arrives with valid payload
-        if (event.data && event.data.type === 'PLAY_NOTIFICATION_SOUND' && event.data.data && event.data.data.title) {
-            console.log('🔔 [PWA] Admin notification sound triggered by push event:', event.data.data.title);
-            try {
-                const audio = getNotificationAudio();
-                audio.currentTime = 0;
-                audio.play().catch(e => {
-                    console.warn('[PWA] Notification sound play blocked by browser policy:', e);
-                });
-            } catch (err) {
-                console.error('[PWA] Audio error:', err);
-            }
+        // Trigger audio when an admin push notification arrives
+        if (event.data && event.data.type === 'PLAY_NOTIFICATION_SOUND') {
+            console.log('🔔 [PWA] Admin notification sound ringing for:', event.data.data ? event.data.data.title : 'Notice');
+            playNoticeChimeSound();
         }
     });
 }
@@ -261,6 +290,16 @@ async function checkPushSubscriptionState() {
                 if (icon) icon.className = 'far fa-bell';
             }
         });
+
+        // Hide "Stay Notified Instantly" promo card if notifications are enabled
+        const isNotifEnabled = (typeof Notification !== 'undefined' && Notification.permission === 'granted') || !!sub;
+        document.querySelectorAll('.notification-promo-card, #noticePushAlertCard').forEach(card => {
+            if (isNotifEnabled) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = '';
+            }
+        });
     } catch (err) {
         console.warn('Subscription check error', err);
     }
@@ -374,6 +413,12 @@ window.performPushSubscription = async function () {
             const result = await saveRes.json();
             if (result.status === 'success') {
                 checkPushSubscriptionState();
+
+                // Unlock and play instant test confirmation chime so user immediately hears the ringtone
+                unlockAudioPlayback();
+                setTimeout(() => {
+                    playNoticeChimeSound();
+                }, 200);
                 
                 // Automatically display the "Done!" popup modal
                 const doneModalEl = document.getElementById('notificationDoneModal');
@@ -381,7 +426,7 @@ window.performPushSubscription = async function () {
                     const doneModal = new bootstrap.Modal(doneModalEl);
                     doneModal.show();
                 } else {
-                    showToastNotification('🔔 Done! Notifications enabled! You will receive urgent notices instantly.');
+                    showToastNotification('🔔 Done! Notifications enabled! Chime test rung.');
                 }
             }
         }

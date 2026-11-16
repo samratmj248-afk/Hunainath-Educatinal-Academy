@@ -108,7 +108,39 @@ class NoticeAdmin(ModelAdmin):
     list_filter = ("category", "priority", "is_ticker", "is_active", "published_at")
     search_fields = ("title", "content")
     prepopulated_fields = {"slug": ("title",)}
-    actions = ["make_active", "make_inactive", "enable_ticker", "disable_ticker"]
+    actions = ["make_active", "make_inactive", "enable_ticker", "disable_ticker", "broadcast_push_notice"]
+
+    def save_model(self, request, obj, form, change):
+        is_new = obj.pk is None
+        super().save_model(request, obj, form, change)
+        # When creating a new active notice or urgent ticker, automatically broadcast push notification with chime sound
+        if (is_new or not change) and obj.is_active:
+            try:
+                from .views import send_web_push_notification
+                notice_url = f"/notices/{obj.slug}/" if obj.slug else "/notices/"
+                count = send_web_push_notification(
+                    title=f"📢 Notice: {obj.title}",
+                    body=obj.content[:140] if obj.content else "A new official notice has been published by Shree Hunainath Academy.",
+                    url=notice_url
+                )
+                if count > 0:
+                    messages.success(request, f"🔔 Web push notification with audio chime broadcast to {count} device(s)!")
+            except Exception as e:
+                print(f"[NoticeAdmin] Broadcast push error: {e}")
+
+    @admin.action(description="🔔 Broadcast push notification & ring chime for selected notices")
+    def broadcast_push_notice(self, request, queryset):
+        from .views import send_web_push_notification
+        total_sent = 0
+        for obj in queryset:
+            notice_url = f"/notices/{obj.slug}/" if obj.slug else "/notices/"
+            sent = send_web_push_notification(
+                title=f"📢 Notice: {obj.title}",
+                body=obj.content[:140] if obj.content else "Official announcement from Shree Hunainath Academy.",
+                url=notice_url
+            )
+            total_sent += sent
+        messages.success(request, f"🔔 Successfully broadcast notice push notification to {total_sent} subscriber device(s)!")
 
     @display(description="Category", label=True)
     def category_badge(self, obj):
@@ -294,6 +326,45 @@ class ExamRoutineAdmin(ModelAdmin):
     list_display = ("title", "grade", "exam_term", "academic_year", "start_date", "end_date", "is_active")
     list_filter = ("exam_term", "academic_year", "is_active")
     search_fields = ("title", "grade", "instructions")
+    fieldsets = (
+        ("Routine Information", {
+            "fields": (
+                "title",
+                ("exam_term", "academic_year"),
+                "grade",
+                ("start_date", "end_date"),
+                "is_active",
+            )
+        }),
+        ("Routine Uploads (PDF & Image)", {
+            "fields": (
+                "routine_pdf",
+                "routine_image",
+            ),
+            "description": "Upload an official routine PDF file and/or a readable image timetable for students and parents."
+        }),
+        ("Exam Instructions & Hall Rules", {
+            "fields": (
+                "instructions",
+            )
+        }),
+    )
+
+    def save_model(self, request, obj, form, change):
+        is_new = obj.pk is None
+        super().save_model(request, obj, form, change)
+        if (is_new or not change) and obj.is_active:
+            try:
+                from .views import send_web_push_notification
+                count = send_web_push_notification(
+                    title=f"📅 Exam Routine: {obj.title}",
+                    body=f"New exam timetable published for {obj.grade} ({obj.get_exam_term_display()}). Tap to view/download.",
+                    url="/academics/routines/"
+                )
+                if count > 0:
+                    messages.success(request, f"🔔 Web push notification with audio chime broadcast to {count} device(s)!")
+            except Exception as e:
+                print(f"[ExamRoutineAdmin] Broadcast push error: {e}")
 
 
 @admin.register(ExamResult)

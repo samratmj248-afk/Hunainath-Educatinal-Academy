@@ -22,37 +22,75 @@
 </section>
 
 <!-- Notice Content & Document View -->
-<section class="py-5 bg-white">
-    <div class="container py-3">
-        <div class="row g-5">
+<section class="py-5" style="background-color: #f8fafc;">
+    <div class="container py-2">
+        <div class="row g-4 g-lg-5">
             <div class="col-lg-8">
-                <article class="p-4 p-md-5 bg-light rounded-4 border shadow-sm mb-4">
-                    <div class="notice-body-text fs-6 text-dark" style="line-height: 1.9;">
-                        {{ notice.content|linebreaks }}
+                <!-- Premium Official Circular Card -->
+                <article class="bg-white rounded-4 border shadow-sm mb-4 overflow-hidden" style="border-color: #e2e8f0 !important; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06) !important;">
+                    <!-- Circular Top Accent Header -->
+                    <div class="px-4 py-3 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2" style="background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 32px; height: 32px;">
+                                <i class="fas fa-file-signature fs-6"></i>
+                            </span>
+                            <span class="fw-bold text-dark small font-heading">Official Academy Circular</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-1 extra-small fw-bold">
+                                <i class="fas fa-check-circle me-1"></i> Verified & Active
+                            </span>
+                        </div>
                     </div>
 
-                    {% if notice.attachment %}
-                    <div class="mt-5 p-4 bg-white rounded-3 border d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div class="d-flex align-items-center gap-3">
-                            <i class="fas fa-file-pdf text-danger fs-1"></i>
-                            <div>
-                                <h4 class="h6 fw-bold mb-0 text-dark">Official Attachment Document</h4>
-                                <span class="text-muted extra-small">Download circular PDF / Image</span>
-                            </div>
+                    <!-- Circular Content Body -->
+                    <div class="p-4 p-md-5">
+                        <div class="notice-body-text text-dark" style="font-size: 1.05rem; line-height: 1.95; color: #1e293b; letter-spacing: 0.01em;">
+                            {{ notice.content|linebreaks }}
                         </div>
-                        <a href="{{ notice.attachment.url }}" target="_blank" download class="btn btn-primary rounded-pill px-4 fw-bold">
-                            <i class="fas fa-download me-2"></i> Download File
-                        </a>
+
+                        <!-- Formal Footer Stamp / Verification Tag -->
+                        <div class="mt-4 pt-4 border-top d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; background: rgba(30, 58, 138, 0.08); color: #1E3A8A;">
+                                    <i class="fas fa-stamp fs-5"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark font-heading" style="font-size: 0.92rem;">Hunainath Administration Desk</h6>
+                                    <span class="text-muted extra-small">Office of the Principal • Garjamuni, Kanchanpur</span>
+                                </div>
+                            </div>
+                            <span class="text-muted extra-small d-inline-flex align-items-center gap-1">
+                                <i class="far fa-clock text-warning"></i> Ref: {{ notice.published_at|date:"Y-m-d" }}/{{ notice.id }}
+                            </span>
+                        </div>
+
+                        {% if notice.attachment %}
+                        <div class="mt-4 p-3 p-md-4 rounded-3 border d-flex align-items-center justify-content-between flex-wrap gap-3" style="background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%); border-color: #bfdbfe !important;">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-3 p-2 bg-white shadow-sm border border-light">
+                                    <i class="fas fa-file-pdf text-danger fs-2"></i>
+                                </div>
+                                <div>
+                                    <h4 class="h6 fw-bold mb-0 text-dark">Official Attachment Document</h4>
+                                    <span class="text-muted extra-small">Download circular PDF / Image</span>
+                                </div>
+                            </div>
+                            <a href="{{ notice.attachment.url }}" target="_blank" download class="btn btn-primary rounded-pill px-4 py-2 fw-bold shadow-sm">
+                                <i class="fas fa-download me-2"></i> Download File
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </article>
 
-                <div class="d-flex justify-content-between align-items-center pt-3">
-                    <a href="{% url 'notices' %}" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
-                        &larr; Back to Notice Board
+                <!-- Navigation & Share Bar -->
+                <div class="d-flex justify-content-between align-items-center pt-2 flex-wrap gap-3">
+                    <a href="{% url 'notices' %}" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
+                        <i class="fas fa-arrow-left"></i> Back to Notice Board
                     </a>
-                    <button onclick="navigator.share ? navigator.share({title: '{{ notice.title|escapejs }}', url: window.location.href}) : alert('URL copied: ' + window.location.href)" class="btn btn-light border rounded-pill px-4 fw-bold text-dark">
-                        <i class="fas fa-share-nodes me-2"></i> Share Circular
+                    <button onclick="navigator.share ? navigator.share({title: '{{ notice.title|escapejs }}', url: window.location.href}) : (navigator.clipboard.writeText(window.location.href), alert('Notice link copied to clipboard!'))" class="btn btn-primary rounded-pill px-4 py-2 fw-bold text-white shadow-sm d-inline-flex align-items-center gap-2">
+                        <i class="fas fa-share-nodes"></i> Share Circular
                     </button>
                 </div>
             </div>
@@ -74,7 +112,7 @@
                     </ul>
                 </div>
 
-                <div class="p-4 rounded-4 bg-primary text-white shadow-sm">
+                <div id="noticePushAlertCard" class="p-4 rounded-4 bg-primary text-white shadow-sm notification-promo-card">
                     <h4 class="h6 fw-bold text-white mb-2"><i class="fas fa-bell me-2"></i>Stay Notified Instantly</h4>
                     <p class="small text-white-50 mb-3">Enable web push notifications to get new exam schedules and results on your phone.</p>
                     <button onclick="togglePushNotifications()" class="btn btn-warning rounded-pill w-100 fw-bold text-dark btn-sm">

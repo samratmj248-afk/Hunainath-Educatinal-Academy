@@ -496,6 +496,8 @@ class ExamRoutine(models.Model):
     grade = models.CharField(max_length=50, help_text="e.g. Grade 1 - 8, or Grade 8 (BLE)")
     start_date = models.DateField(help_text="Exam commencement date")
     end_date = models.DateField(help_text="Exam completion date")
+    routine_pdf = models.FileField(upload_to="academics/routines/pdf/", blank=True, null=True, help_text="Upload Timetable PDF file")
+    routine_image = models.ImageField(upload_to="academics/routines/images/", blank=True, null=True, help_text="Upload Timetable Routine Image (PNG/JPG)")
     routine_file = models.FileField(upload_to="academics/routines/", blank=True, null=True, help_text="PDF or Image of full timetable")
     instructions = models.TextField(blank=True, default="1. Students must arrive 15 minutes before exam starts.\n2. Admit card and complete school uniform mandatory.\n3. Electronic devices and cheat sheets strictly prohibited.")
     is_active = models.BooleanField(default=True)

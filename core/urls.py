@@ -17,6 +17,7 @@ urlpatterns = [
     path("blog/", views.blog_list, name="blog_list"),
     path("blog/<slug:slug>/", views.blog_detail, name="blog_detail"),
     path("admissions/", views.admissions, name="admissions"),
+    path("admissions/apply/", views.apply_online, name="apply_online"),
     path("admissions/status/", views.check_admission_status, name="admission_status"),
     path("notices/", views.notices_list, name="notices"),
     path("notices/<slug:slug>/", views.notice_detail, name="notice_detail"),

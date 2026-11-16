@@ -20,7 +20,7 @@ class SecurityHeadersMiddleware:
 
         # Content Security Policy (permits CDNs used for premium styling & icons)
         csp_directives = [
-            "default-src 'self' https: data: blob:",
+            "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://static.cloudflareinsights.com",
             "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com",
             "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net",
