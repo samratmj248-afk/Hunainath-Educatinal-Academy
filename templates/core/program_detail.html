@@ -18,7 +18,7 @@
                 <p class="text-white-50 fs-5 mb-0">{{ program.grade_span }}</p>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                <a href="{% url 'admissions' %}?grade={{ program.grade_span|urlencode }}" class="btn btn-warning rounded-pill px-4 py-3 fw-bold text-dark shadow-sm">
+                <a href="{% url 'apply_online' %}" class="btn btn-warning rounded-pill px-4 py-3 fw-bold text-dark shadow-sm">
                     <i class="fas fa-file-pen me-1"></i> Apply for {{ program.title }}
                 </a>
             </div>

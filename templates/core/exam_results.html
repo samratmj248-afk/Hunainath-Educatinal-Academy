@@ -2,6 +2,41 @@
 
 {% block extra_head %}
 <style>
+/* Pure Brilliant Golden Button */
+.btn-bright-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFD000 !important;
+    background: linear-gradient(180deg, #FFF385 0%, #FFD000 50%, #FFB700 100%) !important;
+    color: #051329 !important;
+    font-weight: 850;
+    font-size: 1rem;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 35px rgba(255, 215, 0, 0.95);
+    border: 2.5px solid #FFFFFF !important;
+    transition: all 0.25s ease-in-out;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+}
+
+.btn-bright-gold:hover {
+    background: #FFFFFF !important;
+    color: #0A1931 !important;
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3), 0 0 45px rgba(255, 235, 59, 1);
+    border-color: #FFF385 !important;
+}
+
+.btn-bright-gold .arrow-icon {
+    transition: transform 0.25s ease;
+}
+
+.btn-bright-gold:hover .arrow-icon {
+    transform: translateX(4px);
+}
+
     /* ------------------------------------------------------------------
    EXACT 1-PAGE A4 STUDENT MARKSHEET PRINT ENGINE
    ------------------------------------------------------------------ */
@@ -214,8 +249,10 @@
                     Date of Birth.</p>
             </div>
             <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                <a href="{% url 'exam_routines' %}" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold">
-                    <i class="fas fa-calendar-alt text-warning me-1"></i> View Exam Routines
+                <a href="{% url 'exam_routines' %}" class="btn-bright-gold">
+                    <i class="fas fa-calendar-alt me-2" style="font-size: 1.1rem;"></i>
+                    <span>View Exam Routines</span>
+                    <i class="fas fa-arrow-right ms-2 arrow-icon"></i>
                 </a>
             </div>
         </div>

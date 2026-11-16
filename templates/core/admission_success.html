@@ -2,9 +2,47 @@
 
 {% block extra_head %}
 <style>
-    @media print {
+    .success-badge-pulse {
+        width: 88px;
+        height: 88px;
+        font-size: 2.6rem;
+        background: linear-gradient(135deg, #10B981, #059669);
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.15), 0 10px 25px rgba(16, 185, 129, 0.3);
+        animation: pulseSubtle 2.5s infinite;
+    }
 
-        /* Hide top nav, tickers, notice bar, footer, floating buttons, action buttons */
+    @keyframes pulseSubtle {
+        0%, 100% {
+            box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.15), 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(16, 185, 129, 0.22), 0 14px 30px rgba(16, 185, 129, 0.4);
+        }
+    }
+
+    .tracking-code-card {
+        background: linear-gradient(135deg, #051329 0%, #0F2A4A 100%);
+        border: 2px solid rgba(255, 208, 0, 0.55);
+        box-shadow: 0 12px 30px rgba(5, 19, 41, 0.25);
+    }
+
+    .tracking-code-text {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.85rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: #FFD000;
+        text-shadow: 0 2px 10px rgba(255, 208, 0, 0.35);
+    }
+
+    .instruction-card {
+        background: #FFFBEB;
+        border: 2px solid #FDE68A;
+        border-left: 6px solid #D97706 !important;
+    }
+
+    @media print {
+        /* Hide all outer web layout elements */
         .top-ticker-bar,
         .ticker-badge,
         .ticker-marquee-wrap,
@@ -88,6 +126,24 @@
             font-size: 9.5pt;
         }
 
+        .tracking-code-card {
+            background: #F3F4F6 !important;
+            border: 2px dashed #000000 !important;
+            color: #000000 !important;
+        }
+
+        .tracking-code-text {
+            color: #000000 !important;
+            text-shadow: none !important;
+        }
+
+        .instruction-card {
+            background: #FAFAFA !important;
+            border: 1px solid #000000 !important;
+            border-left: 5px solid #000000 !important;
+            color: #000000 !important;
+        }
+
         .no-print {
             display: none !important;
         }
@@ -109,50 +165,92 @@
 <section class="py-5 bg-light min-vh-75 d-flex align-items-center">
     <div class="container py-3">
         <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-9">
+            <div class="col-lg-8 col-md-10">
                 <div class="card border-0 rounded-4 shadow-lg overflow-hidden p-4 p-md-5 bg-white slip-print-card">
 
                     <!-- Official Print School Header (Only Visible When Printing) -->
                     <div class="print-school-header">
-                        <h2 style="font-size: 16pt; font-weight: 800; margin: 0; text-transform: uppercase;">Shree
-                            Hunainath Educational Academy</h2>
-                        <p style="margin: 2px 0; font-size: 10pt; font-weight: 600;">श्री हुनैनाथ एजुकेशनल एकेडेमी •
-                            Garjamuni, Shuklaphanta-07, Kanchanpur</p>
-                        <p style="margin: 2px 0; font-size: 9pt;">Official Student Admission Registration Slip (Session
-                            2083 B.S.)</p>
+                        <h2 style="font-size: 16pt; font-weight: 800; margin: 0; text-transform: uppercase;">Shree Hunainath Educational Academy</h2>
+                        <p style="margin: 2px 0; font-size: 10pt; font-weight: 600;">श्री हुनैनाथ एजुकेशनल एकेडेमी • Garjamuni, Shuklaphanta-07, Kanchanpur</p>
+                        <p style="margin: 2px 0; font-size: 9pt;">Official Student Admission Registration Slip (Session 2083 B.S.)</p>
                     </div>
 
                     <!-- Screen Confirmation Badge & Checkmark -->
-                    <div class="text-center mb-3 no-print">
-                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center shadow mb-2"
-                            style="width: 72px; height: 72px; font-size: 2rem;">
+                    <div class="text-center mb-4 no-print">
+                        <div class="rounded-circle text-white d-inline-flex align-items-center justify-content-center success-badge-pulse mb-3">
                             <i class="fas fa-check"></i>
                         </div>
                         <div>
-                            <span
-                                class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 mb-1 fs-6">Submission
-                                Confirmed</span>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 mb-2 fs-6">
+                                <i class="fas fa-shield-alt me-1"></i> Verified Submission
+                            </span>
                         </div>
-                        <h1 class="h4 fw-bold text-dark mb-1">Application Successfully Received!</h1>
-                        <p class="text-muted small mb-0">
-                            Your admission application has been registered. Keep your tracking reference ID safe for
-                            tracking and school office verification.
+                        <h1 class="h3 fw-bold text-dark mb-2">Thank You! Application Submitted Successfully</h1>
+                        <p class="text-muted small mb-0" style="max-width: 580px; margin: 0 auto;">
+                            We have received your admission application for <strong>{{ application.student_name }}</strong>. Please save your application code below and visit the school administration office to complete the admission process.
                         </p>
                     </div>
 
-                    <!-- Clean Admission Details Box -->
-                    <div class="bg-light p-3 p-md-4 rounded-3 border mb-3 text-start">
-                        <div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-2">
-                            <span class="text-muted small fw-bold">Tracking Reference ID:</span>
-                            <span class="fw-bold fs-5 text-primary" style="letter-spacing: 0.5px;">{{ application.reference_id }}</span>
+                    <!-- Highlighted Tracking Reference Code Card -->
+                    <div class="tracking-code-card rounded-4 p-4 mb-4 text-center text-white position-relative overflow-hidden">
+                        <div class="small text-uppercase fw-bold text-warning mb-1" style="letter-spacing: 1px;">
+                            Your Official Application Tracking Code
                         </div>
-                        <div class="d-flex justify-content-between pb-2">
-                            <span class="text-muted small">Applicant Student:</span>
-                            <span class="fw-bold text-dark">{{ application.student_name }}</span>
+                        <div class="tracking-code-text my-2" id="referenceCodeText">
+                            {{ application.reference_id }}
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-2 mt-2 no-print">
+                            <button type="button" class="btn btn-sm btn-outline-light rounded-pill px-3 fw-semibold" id="copyCodeBtn" onclick="copyReferenceCode()">
+                                <i class="fas fa-copy me-1"></i> <span id="copyBtnLabel">Copy Code</span>
+                            </button>
+                            <span class="text-white-50 small">| Keep this code safe</span>
+                        </div>
+                    </div>
+
+                    <!-- Mandatory Next Step: Visit School Administration Desk -->
+                    <div class="instruction-card rounded-3 p-3 p-md-4 mb-4 text-start">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-warning bg-opacity-25 text-warning-emphasis d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; font-size: 1.25rem;">
+                                <i class="fas fa-school-flag"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold text-dark mb-1">
+                                    Next Step: Please Visit the School Administration Desk
+                                </h5>
+                                <p class="text-secondary small mb-2">
+                                    To finalize the enrollment and collect the student's admission welcome package, please visit the school campus in person with your tracking code:
+                                </p>
+                                <ul class="list-unstyled small text-secondary mb-0 d-flex flex-column gap-1">
+                                    <li class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-danger"></i>
+                                        <span><strong>Location:</strong> Garjamuni, Shuklaphanta Municipality-07, Kanchanpur, Sudurpashchim</span>
+                                    </li>
+                                    <li class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-clock text-primary"></i>
+                                        <span><strong>Office Hours:</strong> Sunday – Friday: 9:00 AM – 4:00 PM</span>
+                                    </li>
+                                    <li class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-file-invoice text-success"></i>
+                                        <span><strong>What to Bring:</strong> Your Tracking Code (<strong>{{ application.reference_id }}</strong>), 1 passport size photo, and student's birth certificate / transfer document</span>
+                                    </li>
+                                    <li class="d-flex align-items-center gap-2">
+                                        <i class="fas fa-phone-volume text-info"></i>
+                                        <span><strong>Admissions Helpline:</strong> <a href="tel:+9779848701283" class="fw-bold text-dark text-decoration-none">+977 984-8701283</a> / <a href="mailto:bhattbashu35@gmail.com" class="text-dark text-decoration-none">bhattbashu35@gmail.com</a></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clean Admission Details Summary -->
+                    <div class="bg-light p-3 p-md-4 rounded-3 border mb-4 text-start">
+                        <div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-2">
+                            <span class="text-muted small fw-bold">Applicant Student:</span>
+                            <span class="fw-bold text-dark fs-6">{{ application.student_name }}</span>
                         </div>
                         <div class="d-flex justify-content-between pb-2">
                             <span class="text-muted small">Grade Applied For:</span>
-                            <span class="fw-bold text-dark">{{ application.grade_applying_for }}</span>
+                            <span class="fw-bold text-primary">{{ application.grade_applying_for }}</span>
                         </div>
                         <div class="d-flex justify-content-between pb-2">
                             <span class="text-muted small">Parent / Guardian:</span>
@@ -160,47 +258,26 @@
                         </div>
                         <div class="d-flex justify-content-between pb-2">
                             <span class="text-muted small">Parent Contact Number:</span>
-                            <span class="fw-bold text-primary">{{ application.parent_phone }}</span>
+                            <span class="fw-bold text-dark">{{ application.parent_phone }}</span>
                         </div>
                         {% if application.address %}
                         <div class="d-flex justify-content-between pb-2">
-                            <span class="text-muted small">Address:</span>
-                            <span class="text-dark small text-end" style="max-width: 60%;">{{ application.address }}</span>
+                            <span class="text-muted small">Residential Address:</span>
+                            <span class="text-dark small text-end" style="max-width: 65%;">{{ application.address }}</span>
                         </div>
                         {% endif %}
-                        <div class="d-flex justify-content-between pt-1 border-top">
-                            <span class="text-muted small">Current Status:</span>
-                            <span class="badge bg-warning text-dark fw-bold">{{ application.get_status_display }}</span>
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <span class="text-muted small">Application Status:</span>
+                            <span class="badge bg-warning text-dark fw-bold px-2 py-1">{{ application.get_status_display }}</span>
                         </div>
-                    </div>
-
-                    <!-- Clean School Contact & Verification Detail (Single Page Format) -->
-                    <div class="p-3 rounded-3 border mb-4 text-start"
-                        style="background: #f8fafc; border-left: 4px solid #1D4ED8 !important;">
-                        <h6 class="fw-bold text-dark mb-2 small d-flex align-items-center gap-2">
-                            <i class="fas fa-school text-primary"></i>
-                            <span>School Administration & Verification Office</span>
-                        </h6>
-                        <ul class="list-unstyled small text-muted mb-0 d-flex flex-column gap-1">
-                            <li><i class="fas fa-map-marker-alt text-danger me-2"></i><strong>Location:</strong>
-                                Garjamuni, Shuklaphanta Municipality-07, Kanchanpur</li>
-                            <li><i class="fas fa-clock text-warning me-2"></i><strong>Office Hours:</strong> Sunday –
-                                Friday: 9:00 AM – 4:00 PM</li>
-                            <li><i class="fas fa-phone-alt text-success me-2"></i><strong>Principal Office
-                                    Contact:</strong> <a href="tel:+9779848701283"
-                                    class="fw-bold text-dark text-decoration-none">+977 984-8701283</a></li>
-                            <li><i class="fas fa-envelope text-info me-2"></i><strong>Email:</strong>
-                                bhattbashu35@gmail.com</li>
-                        </ul>
                     </div>
 
                     <!-- On-Screen Action Buttons (Excluded from Print) -->
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 no-print">
-                        <button onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 gap-sm-3 no-print">
+                        <button type="button" onclick="window.print()" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
                             <i class="fas fa-print me-2 text-primary"></i> Print Slip
                         </button>
-                        <a href="{% url 'admission_status' %}?ref={{ application.reference_id }}"
-                            class="btn btn-primary rounded-pill px-4 fw-bold">
+                        <a href="{% url 'admission_status' %}?ref={{ application.reference_id }}" class="btn btn-primary rounded-pill px-4 fw-bold">
                             <i class="fas fa-magnifying-glass me-2"></i> Track Application
                         </a>
                         <a href="{% url 'index' %}" class="btn btn-light rounded-pill px-4 fw-bold text-dark border">
@@ -210,10 +287,8 @@
 
                     <!-- Slip Footer Note (Only Visible When Printing) -->
                     <div class="print-only-contact text-center text-muted">
-                        <p class="mb-1"><strong>Note:</strong> Please present this reference slip along with student
-                            birth certificate copy at the administration desk.</p>
-                        <p class="mb-0">Shree Hunainath Educational Academy • Phone: +977 984-8701283 • Garjamuni,
-                            Kanchanpur</p>
+                        <p class="mb-1"><strong>Note:</strong> Please present this reference slip along with student birth certificate copy at the administration desk.</p>
+                        <p class="mb-0">Shree Hunainath Educational Academy • Phone: +977 984-8701283 • Garjamuni, Shuklaphanta-07, Kanchanpur</p>
                     </div>
 
                 </div>
@@ -221,4 +296,44 @@
         </div>
     </div>
 </section>
+
+<script>
+function copyReferenceCode() {
+    const code = "{{ application.reference_id }}";
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).then(() => {
+            showCopiedState();
+        }).catch(() => {
+            fallbackCopy(code);
+        });
+    } else {
+        fallbackCopy(code);
+    }
+}
+
+function fallbackCopy(text) {
+    const tempInput = document.createElement("input");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    showCopiedState();
+}
+
+function showCopiedState() {
+    const btnLabel = document.getElementById("copyBtnLabel");
+    const btn = document.getElementById("copyCodeBtn");
+    if (btnLabel && btn) {
+        btnLabel.textContent = "Copied!";
+        btn.classList.remove("btn-outline-light");
+        btn.classList.add("btn-warning", "text-dark");
+        setTimeout(() => {
+            btnLabel.textContent = "Copy Code";
+            btn.classList.remove("btn-warning", "text-dark");
+            btn.classList.add("btn-outline-light");
+        }, 2200);
+    }
+}
+</script>
 {% endblock %}

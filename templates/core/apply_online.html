@@ -131,22 +131,55 @@
                                     <input type="text" class="form-control form-control-lg rounded-3 fs-6" id="last_name" name="last_name" placeholder="Student Last Name" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label-custom" for="date_of_birth">
+                                    <label class="form-label-custom" for="dob_year">
                                         Date of Birth <span class="text-danger">*</span>
                                     </label>
-                                    <input type="date" class="form-control form-control-lg rounded-3 fs-6" id="date_of_birth" name="date_of_birth" required>
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <select class="form-select form-select-lg rounded-3 fs-6" id="dob_year" required aria-label="Birth Year">
+                                                <option value="" selected disabled>Year</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-5">
+                                            <select class="form-select form-select-lg rounded-3 fs-6" id="dob_month" required aria-label="Birth Month">
+                                                <option value="" selected disabled>Month</option>
+                                                <option value="01">Jan (01)</option>
+                                                <option value="02">Feb (02)</option>
+                                                <option value="03">Mar (03)</option>
+                                                <option value="04">Apr (04)</option>
+                                                <option value="05">May (05)</option>
+                                                <option value="06">Jun (06)</option>
+                                                <option value="07">Jul (07)</option>
+                                                <option value="08">Aug (08)</option>
+                                                <option value="09">Sep (09)</option>
+                                                <option value="10">Oct (10)</option>
+                                                <option value="11">Nov (11)</option>
+                                                <option value="12">Dec (12)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <select class="form-select form-select-lg rounded-3 fs-6" id="dob_day" required aria-label="Birth Day">
+                                                <option value="" selected disabled>Day</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="date_of_birth" name="date_of_birth" required>
+                                    <div class="mt-2 py-1 px-2 rounded-2 bg-light border d-flex align-items-center justify-content-between">
+                                        <span class="small text-muted"><i class="far fa-calendar-check text-primary me-1"></i> Selected Date:</span>
+                                        <span class="small fw-bold text-dark font-monospace" id="dob_display_badge">Please select Year, Month & Day</span>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label-custom" for="email">
                                         Email <span class="text-danger">*</span>
                                     </label>
-                                    <input type="email" class="form-control form-control-lg rounded-3 fs-6" id="email" name="email" placeholder="example@domain.com" required>
+                                    <input type="email" class="form-control form-control-lg rounded-3 fs-6" id="email" name="email" placeholder="example@domain.com" required maxlength="120">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label-custom" for="phone">
                                         Phone Number <span class="text-danger">*</span>
                                     </label>
-                                    <input type="tel" class="form-control form-control-lg rounded-3 fs-6" id="phone" name="phone" placeholder="98XXXXXXXX" required>
+                                    <input type="tel" class="form-control form-control-lg rounded-3 fs-6" id="phone" name="phone" placeholder="98XXXXXXXX (10 digits)" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required maxlength="10">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label-custom" for="applying_for_grade">
@@ -199,7 +232,7 @@
                                     <label class="form-label-custom" for="parent_phone">
                                         Parent/Guardian Phone
                                     </label>
-                                    <input type="tel" class="form-control form-control-lg rounded-3 fs-6" id="parent_phone" name="parent_phone" placeholder="Emergency contact phone">
+                                    <input type="tel" class="form-control form-control-lg rounded-3 fs-6" id="parent_phone" name="parent_phone" placeholder="Emergency contact phone (10 digits)" pattern="[0-9]{10}" maxlength="10">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label-custom" for="parent_email">
@@ -246,5 +279,106 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const yearSelect = document.getElementById('dob_year');
+    const monthSelect = document.getElementById('dob_month');
+    const daySelect = document.getElementById('dob_day');
+    const hiddenDob = document.getElementById('date_of_birth');
+    const form = document.getElementById('onlineAdmissionForm');
+
+    // Populate years: school students Nursery to Grade 8 are typically born between 2008 and 2024
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear;  // Allow current year down to 1995 for parents/students of all ages
+    const endYear = 1995;
+    for (let y = startYear; y >= endYear; y--) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+    }
+
+    // Populate days helper based on year and month
+    function updateDays() {
+        const year = parseInt(yearSelect.value, 10);
+        const month = parseInt(monthSelect.value, 10);
+        const currentSelectedDay = daySelect.value;
+
+        // Clear existing days
+        daySelect.innerHTML = '<option value="" selected disabled>Day</option>';
+
+        let maxDays = 31;
+        if (month && !isNaN(month)) {
+            if ([4, 6, 9, 11].includes(month)) {
+                maxDays = 30;
+            } else if (month === 2) {
+                if (year && !isNaN(year)) {
+                    const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+                    maxDays = isLeap ? 29 : 28;
+                } else {
+                    maxDays = 29;
+                }
+            }
+        }
+
+        for (let d = 1; d <= maxDays; d++) {
+            const opt = document.createElement('option');
+            const dStr = d < 10 ? '0' + d : '' + d;
+            opt.value = dStr;
+            opt.textContent = dStr;
+            if (currentSelectedDay === dStr) {
+                opt.selected = true;
+            }
+            daySelect.appendChild(opt);
+        }
+
+        syncHiddenDob();
+    }
+
+    function syncHiddenDob() {
+        const y = yearSelect.value;
+        const m = monthSelect.value;
+        const d = daySelect.value;
+        const displayBadge = document.getElementById('dob_display_badge');
+        if (y && m && d) {
+            hiddenDob.value = `${y}-${m}-${d}`;
+            if (displayBadge) {
+                // Get month name
+                const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const monthIdx = parseInt(m, 10);
+                const mName = monthNames[monthIdx] || m;
+                displayBadge.innerHTML = `<span class="text-primary">${y}-${m}-${d}</span> <span class="text-secondary fw-normal">(${mName} ${parseInt(d, 10)}, ${y})</span>`;
+            }
+        } else {
+            hiddenDob.value = '';
+            if (displayBadge) {
+                displayBadge.textContent = 'Please select Year, Month & Day';
+            }
+        }
+    }
+
+    yearSelect.addEventListener('change', updateDays);
+    monthSelect.addEventListener('change', updateDays);
+    daySelect.addEventListener('change', syncHiddenDob);
+
+    // Initial days population (1 to 31)
+    updateDays();
+
+    // Validate before submission
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            syncHiddenDob();
+            if (!hiddenDob.value) {
+                e.preventDefault();
+                alert('Please select a valid Year, Month, and Day for Date of Birth.');
+                if (!yearSelect.value) yearSelect.focus();
+                else if (!monthSelect.value) monthSelect.focus();
+                else daySelect.focus();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
 

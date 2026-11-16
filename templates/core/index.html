@@ -822,48 +822,35 @@
     }
 }
 
-/* Premium Glowing CTA Apply Button */
+/* Premium Brilliant Golden CTA Apply Button */
 .btn-cta-glow-apply {
-    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9999px;
-    padding: 2px;
-    background: linear-gradient(135deg, #FDE047 0%, #F59E0B 50%, #D97706 100%);
-    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4), 0 0 20px rgba(253, 224, 71, 0.25);
-    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-    overflow: hidden;
-}
-
-.btn-cta-glow-content {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    background: #FFD000 !important;
+    background: linear-gradient(180deg, #FFF59D 0%, #FFD000 50%, #FFB700 100%) !important;
+    color: #051329 !important;
+    font-weight: 850;
+    font-size: 1.05rem;
     padding: 14px 34px;
     border-radius: 9999px;
-    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
-    color: #0F172A;
-    font-weight: 800;
-    font-size: 1.05rem;
-    letter-spacing: 0.3px;
-    position: relative;
-    z-index: 1;
-    transition: all 0.3s ease;
+    border: 2.5px solid #FFFFFF !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 35px rgba(255, 215, 0, 0.95);
+    transition: all 0.25s ease-in-out;
+    letter-spacing: 0.25px;
+    text-decoration: none !important;
 }
 
 .btn-cta-glow-apply:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 16px 35px rgba(245, 158, 11, 0.55), 0 0 30px rgba(253, 224, 71, 0.45);
-}
-
-.btn-cta-glow-apply:hover .btn-cta-glow-content {
-    background: #FFFFFF;
-    color: #1E3A8A;
+    background: #FFFFFF !important;
+    color: #0A1931 !important;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 45px rgba(255, 235, 59, 1);
+    border-color: #FFF385 !important;
 }
 
 .btn-cta-glow-apply .transition-arrow {
-    transition: transform 0.3s ease;
+    transition: transform 0.25s ease;
 }
 
 .btn-cta-glow-apply:hover .transition-arrow {
@@ -890,13 +877,9 @@
             </div>
             <div class="col-lg-4 text-lg-end">
                 <div class="d-flex flex-column flex-sm-row justify-content-lg-end gap-3">
-                    <a href="{% url 'apply_online' %}"
-                        class="btn-cta-glow-apply text-decoration-none">
-                        <span class="btn-cta-glow-bg"></span>
-                        <span class="btn-cta-glow-content">
-                            <i class="fas fa-file-pen me-2"></i> Apply Online
-                            <i class="fas fa-arrow-right ms-2 transition-arrow"></i>
-                        </span>
+                    <a href="{% url 'apply_online' %}" class="btn-cta-glow-apply">
+                        <i class="fas fa-file-pen me-2"></i> Apply Online
+                        <i class="fas fa-arrow-right ms-2 transition-arrow"></i>
                     </a>
                 </div>
             </div>
