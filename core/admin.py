@@ -6,8 +6,27 @@ Provides modern Tailwind styling, badges, filters, search, and bulk management.
 from django.contrib import admin
 from django.utils.html import format_html
 from django.contrib import messages
+from django.contrib.auth.models import Group, User
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin, UserAdmin as BaseUserAdmin
 from unfold.admin import ModelAdmin
 from unfold.decorators import display
+from unfold.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
+
+# Unregister default Django Auth admins and re-register with Unfold ModelAdmin
+admin.site.unregister(Group)
+admin.site.unregister(User)
+
+
+@admin.register(Group)
+class GroupAdmin(ModelAdmin, BaseGroupAdmin):
+    pass
+
+
+@admin.register(User)
+class UserAdmin(ModelAdmin, BaseUserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    change_password_form = AdminPasswordChangeForm
 
 from .models import (
     SchoolProfile,
