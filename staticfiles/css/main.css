@@ -1052,10 +1052,11 @@ body.offcanvas-open {
 
 .hero-title .text-gold {
   display: inline;
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFF59D 35%, #FFD54F 70%, #FFB300 100%);
+  color: #0A225C !important;
+  background: linear-gradient(135deg, #0A225C 0%, #0F3894 40%, #1D5EFF 80%, #60A5FA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 20px rgba(255, 213, 79, 0.4));
+  filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 4px 18px rgba(10, 34, 92, 0.45));
   font-weight: 900;
   letter-spacing: -0.015em;
 }
