@@ -13,17 +13,22 @@
         content="Hunainath Educational Academy, Shree Hunainath Academy, Shuklaphanta school, Garjamuni Kanchanpur, Nepal school admissions, BLE coaching, Sudurpashchim academy, Nursery to Grade 8">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-    <!-- Service Worker Resync -->
+    <!-- Service Worker Cache Management & Auto-Refresh -->
     <script>
-        // Force cleanup of any previous app service workers/caches that might intercept requests
+        // Ensure browser never serves stale cached versions of the page or styles
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(function (registrations) {
                 for (var reg of registrations) {
-                    if (reg.active && !reg.active.scriptURL.includes('/sw.js')) {
-                        reg.unregister();
-                    }
+                    reg.unregister();
                 }
             });
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (var name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
         }
     </script>
 

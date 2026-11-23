@@ -45,4 +45,10 @@ class SecurityHeadersMiddleware:
         response["X-Content-Type-Options"] = "nosniff"
         response["X-XSS-Protection"] = "1; mode=block"
 
+        # Prevent browser stale caching during active design updates
+        if not request.path.startswith("/static/"):
+            response["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+            response["Pragma"] = "no-cache"
+            response["Expires"] = "0"
+
         return response
