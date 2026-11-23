@@ -50,20 +50,58 @@ function unlockAudioPlayback() {
     }
 }
 
-// Ring chime sound function
+// Ring chime sound function (Robust HTMLAudioElement + Web Audio API synthesizer fallback)
 function playNoticeChimeSound() {
+    let played = false;
     try {
         const audio = getNotificationAudio();
         audio.currentTime = 0;
         audio.volume = 1.0;
         const p = audio.play();
         if (p !== undefined) {
-            p.catch(e => {
-                console.warn('[PWA] Notification sound play restricted by browser policy:', e);
+            p.then(() => {
+                played = true;
+                console.log('🔔 [PWA] Notification sound played successfully');
+            }).catch(e => {
+                console.warn('[PWA] Audio file play failed, triggering Web Audio fallback:', e);
+                playWebAudioChimeFallback();
             });
         }
     } catch (err) {
-        console.error('[PWA] Audio error:', err);
+        console.warn('[PWA] Audio error, using fallback:', err);
+        playWebAudioChimeFallback();
+    }
+}
+
+// Mobile Web Audio API fallback chime synthesizer (Guaranteed to play on iOS Safari & Android Chrome)
+function playWebAudioChimeFallback() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') {
+            ctx.resume();
+        }
+
+        const playTone = (freq, start, duration) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime + start);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + start);
+            osc.stop(ctx.currentTime + start + duration);
+        };
+
+        // Dual harmonious school chime (E5 -> G#5 -> B5)
+        playTone(659.25, 0, 0.4);
+        playTone(830.61, 0.15, 0.4);
+        playTone(987.77, 0.3, 0.6);
+    } catch (e) {
+        console.warn('[PWA] Web Audio fallback error:', e);
     }
 }
 
@@ -291,9 +329,9 @@ async function checkPushSubscriptionState() {
             }
         });
 
-        // Hide "Stay Notified Instantly" promo card if notifications are enabled
+        // Hide "Stay Notified Instantly" promo card and mobile drawer notification button if notifications are enabled
         const isNotifEnabled = (typeof Notification !== 'undefined' && Notification.permission === 'granted') || !!sub;
-        document.querySelectorAll('.notification-promo-card, #noticePushAlertCard').forEach(card => {
+        document.querySelectorAll('.notification-promo-card, #noticePushAlertCard, .btn-drawer-notification, #drawerNotificationBtn').forEach(card => {
             if (isNotifEnabled) {
                 card.style.display = 'none';
             } else {
@@ -414,11 +452,16 @@ window.performPushSubscription = async function () {
             if (result.status === 'success') {
                 checkPushSubscriptionState();
 
-                // Unlock and play instant test confirmation chime so user immediately hears the ringtone
+                // Immediately hide the enable notification button on mobile drawer
+                document.querySelectorAll('.btn-drawer-notification, #drawerNotificationBtn').forEach(el => {
+                    el.style.display = 'none';
+                });
+
+                // Immediately ring chime sound
                 unlockAudioPlayback();
                 setTimeout(() => {
                     playNoticeChimeSound();
-                }, 200);
+                }, 100);
                 
                 // Automatically display the "Done!" popup modal
                 const doneModalEl = document.getElementById('notificationDoneModal');
@@ -426,7 +469,7 @@ window.performPushSubscription = async function () {
                     const doneModal = new bootstrap.Modal(doneModalEl);
                     doneModal.show();
                 } else {
-                    showToastNotification('🔔 Done! Notifications enabled! Chime test rung.');
+                    showToastNotification('🔔 Done! Notifications enabled! Chime sound rung.');
                 }
             }
         }
