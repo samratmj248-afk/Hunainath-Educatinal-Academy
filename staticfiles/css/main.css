@@ -1006,20 +1006,21 @@ body.offcanvas-open {
    ============================================================================== */
 .hero-section {
   position: relative;
-  background: linear-gradient(105deg, #D97706 0%, #B45309 18%, #1D4ED8 65%, #1E3A8A 100%);
+  background: linear-gradient(108deg, #FD9F00 0%, #FA8900 18%, #1B459E 58%, #0047BA 85%, #00369E 100%);
   color: #ffffff;
-  padding: 95px 0 105px;
+  padding: 85px 0 95px;
   overflow: hidden;
-  border-bottom: 4px solid #F59E0B;
+  border-bottom: 4px solid #FD9F00;
 }
 
 .hero-backdrop-pattern {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 12% 35%, rgba(251, 191, 36, 0.45) 0%, transparent 50%),
-    radial-gradient(circle at 88% 45%, rgba(37, 99, 235, 0.5) 0%, transparent 55%),
-    radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
+    radial-gradient(circle at 5% 30%, rgba(255, 184, 0, 0.75) 0%, transparent 45%),
+    radial-gradient(circle at 35% 50%, rgba(255, 235, 170, 0.25) 0%, transparent 35%),
+    radial-gradient(circle at 85% 40%, rgba(0, 85, 255, 0.5) 0%, transparent 55%),
+    radial-gradient(circle at 98% 95%, rgba(255, 160, 0, 0.5) 0%, transparent 30%);
   pointer-events: none;
 }
 
@@ -1027,15 +1028,17 @@ body.offcanvas-open {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(245, 158, 11, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  padding: 6px 18px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 7px 20px;
   border-radius: var(--radius-pill);
   font-size: 0.88rem;
-  font-weight: 700;
-  color: #FDE047;
-  margin-bottom: 24px;
+  font-weight: 600;
+  color: #FFFFFF;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .hero-title {
@@ -1049,6 +1052,110 @@ body.offcanvas-open {
 .hero-title .text-gold {
   color: #FBBF24;
   text-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+}
+
+.hero-headline-top {
+  display: block;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 3.1rem;
+  font-weight: 850;
+  line-height: 1.15;
+  color: #FFFFFF;
+  letter-spacing: -0.015em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Managed Brand Lockup (Pixel-Perfect Reference Alignment, Transparent Background, Premium Typography) */
+.hero-brand-lockup-managed {
+  display: block;
+  max-width: 100%;
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.hero-brand-twoline-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.hero-brand-line-1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hero-vector-emblem {
+  width: 68px;
+  height: 60px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+  flex-shrink: 0;
+}
+
+.brand-text-hunainath {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
+  font-size: 3.8rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.hero-brand-line-2 {
+  display: block;
+  margin-left: 84px; /* Perfectly aligns with the start of 'Hunainath' text, exactly past the emblem width + gap */
+}
+
+.brand-text-academy {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 850;
+  color: #FFC700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Button replica styles */
+.btn-replica-enroll {
+  background: linear-gradient(135deg, #FFDE00 0%, #FF9900 100%) !important;
+  color: #051329 !important;
+  font-weight: 850 !important;
+  font-size: 1.05rem !important;
+  padding: 14px 34px !important;
+  border-radius: 9999px !important;
+  border: 2px solid #FFFFFF !important;
+  box-shadow: 0 6px 25px rgba(255, 153, 0, 0.55), 0 0 25px rgba(255, 222, 0, 0.4) !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+.btn-replica-enroll:hover {
+  background: #FFFFFF !important;
+  color: #0A1931 !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 222, 0, 0.8) !important;
+}
+
+.btn-replica-contact {
+  background: rgba(2, 37, 139, 0.75) !important;
+  color: #FFFFFF !important;
+  border: 2px solid rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  font-weight: 750 !important;
+  font-size: 1.05rem !important;
+  padding: 13px 32px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 6px 20px rgba(2, 37, 139, 0.45) !important;
+  transition: all 0.25s ease-in-out !important;
+}
+
+.btn-replica-contact:hover {
+  background: #FFFFFF !important;
+  color: #02258B !important;
+  border-color: #FFFFFF !important;
+  transform: translateY(-2px) scale(1.02) !important;
 }
 
 .hero-subtitle {
@@ -1859,6 +1966,13 @@ body.offcanvas-open {
   border-color: #E1306C;
 }
 
+.social-spin-btn.tiktok:hover {
+  background: #000000;
+  box-shadow: -2px -2px 14px rgba(37, 244, 238, 0.8), 2px 2px 14px rgba(254, 44, 85, 0.8);
+  border-color: #25F4EE;
+  color: #FFFFFF !important;
+}
+
 .social-spin-btn.whatsapp:hover {
   background: #25D366;
   box-shadow: 0 0 22px rgba(37, 211, 102, 0.75);
@@ -2137,6 +2251,26 @@ body.offcanvas-open {
 }
 
 @media (max-width: 767px) {
+  .hero-headline-top {
+    font-size: 1.85rem !important;
+    line-height: 1.25 !important;
+  }
+  .hero-brand-line-1 {
+    gap: 10px !important;
+  }
+  .hero-vector-emblem {
+    width: 46px !important;
+    height: 40px !important;
+  }
+  .brand-text-hunainath {
+    font-size: 2.3rem !important;
+  }
+  .hero-brand-line-2 {
+    margin-left: 56px !important;
+  }
+  .brand-text-academy {
+    font-size: 1.25rem !important;
+  }
   .hero-title {
     font-size: 1.85rem;
     line-height: 1.2;

@@ -8,25 +8,71 @@
         <div class="row align-items-center g-4 g-lg-5">
             <div class="col-lg-6 order-2 order-lg-1">
                 <div class="hero-pill-badge">
-                    <i class="fas fa-certificate text-warning"></i>
-                    <span>Affiliated to Ministry of Education • Basic Level Academy (Nursery - Class 8)</span>
+                    <i class="fas fa-graduation-cap text-warning"></i>
+                    <span>Affiliated to Ministry of Education • Basic Level Academy (Nursery – Class 8)</span>
                 </div>
-                <h1 class="hero-title">
-                    Empowering Minds, Inspiring Joyful Futures at <span class="text-gold">Hunainath Educational
-                        Academy</span>
+                <h1 class="hero-title hero-title-replica">
+                    <span class="hero-headline-top">Empowering Minds,<br>Inspiring Joyful Futures at</span>
                 </h1>
+
+                <div class="hero-brand-lockup-managed mb-3">
+                    <div class="hero-brand-twoline-layout">
+                        <!-- Line 1: Emblem + Hunainath -->
+                        <div class="hero-brand-line-1">
+                            <!-- High Precision Vector Cap & Open Book Emblem -->
+                            <div class="hero-vector-emblem flex-shrink-0">
+                                <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-100 h-100">
+                                    <defs>
+                                        <!-- Cap Gradient -->
+                                        <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#0F2D6B" />
+                                            <stop offset="100%" stop-color="#05173E" />
+                                        </linearGradient>
+                                        <!-- Book Golden Gradient -->
+                                        <linearGradient id="goldBookGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#FFE600" />
+                                            <stop offset="50%" stop-color="#FFB300" />
+                                            <stop offset="100%" stop-color="#FF8000" />
+                                        </linearGradient>
+                                        <!-- Drop shadow filter -->
+                                        <filter id="vectorGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.35" />
+                                        </filter>
+                                    </defs>
+                                    <g filter="url(#vectorGlow)">
+                                        <!-- Mortarboard Diamond Top (Crisp White Edging) -->
+                                        <polygon points="58,10 112,32 58,54 4,32" fill="url(#capGrad)" stroke="#FFFFFF" stroke-width="3.5" stroke-linejoin="round" />
+                                        <!-- Mortarboard Base Skullcap -->
+                                        <path d="M26,38 L26,54 C26,69 90,69 90,54 L90,38 Z" fill="#041233" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round" />
+                                        <!-- Golden Tassel Cord and Charm -->
+                                        <path d="M58,32 C34,35 15,40 10,58" stroke="#FFC000" stroke-width="3.2" stroke-linecap="round" fill="none" />
+                                        <circle cx="10" cy="62" r="5" fill="#FFA000" stroke="#FFFFFF" stroke-width="1.5" />
+                                        <!-- Golden Open Book Spine / Pages with White Trim -->
+                                        <path d="M8,80 C30,70 50,74 56,86 C46,68 20,64 5,72 Z" fill="url(#goldBookGrad)" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+                                        <path d="M108,80 C86,70 66,74 60,86 C70,68 96,64 111,72 Z" fill="url(#goldBookGrad)" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <span class="brand-text-hunainath">Hunainath</span>
+                        </div>
+                        <!-- Line 2: Educational Academy -->
+                        <div class="hero-brand-line-2">
+                            <span class="brand-text-academy">Educational Academy</span>
+                        </div>
+                    </div>
+                </div>
                 <p class="hero-subtitle">
                     Premier foundational and basic educational academy in Sudurpashchim Province. Featuring dedicated
                     Montessori early childhood care, bilingual teaching, digital computer learning, and character
                     building from Nursery to Grade 8.
                 </p>
                 <div class="hero-cta-group">
-                    <a href="{% url 'admissions' %}" class="btn-hero-primary btn-ripple">
+                    <a href="{% url 'admissions' %}" class="btn-replica-enroll text-decoration-none">
                         <span>Enroll for Session 2083 B.S.</span>
-                        <i class="fas fa-arrow-right"></i>
+                        <i class="fas fa-arrow-right ms-2"></i>
                     </a>
-                    <a href="{% url 'contact' %}" class="btn-hero-outline">
-                        <i class="fas fa-envelope text-primary"></i>
+                    <a href="{% url 'contact' %}" class="btn-replica-contact text-decoration-none">
+                        <i class="fas fa-envelope me-2" style="color: #38BDF8;"></i>
                         <span>Contact Us</span>
                     </a>
                 </div>
@@ -50,8 +96,9 @@
                                     decoding="async"
                                     style="object-position: center 25%;">
                                 <div class="carousel-caption-overlay">
-                                    <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-1">Community Action •
-                                        २०८३</span>
+                                    <span class="badge bg-warning text-dark fw-bold px-3 py-1 mb-1 d-inline-flex align-items-center gap-1">
+                                        <i class="fas fa-leaf text-success"></i> Community Action for a Greener Tomorrow • २०८३
+                                    </span>
                                     <h3 class="h6 text-white mb-0 fw-bold">५४औँ विश्व वातावरण दिवस सरसफाइ कार्यक्रम</h3>
                                 </div>
                             </div>
