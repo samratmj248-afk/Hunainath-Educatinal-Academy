@@ -1042,23 +1042,36 @@ body.offcanvas-open {
 }
 
 .hero-title {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 3.2rem;
   font-weight: 850;
-  line-height: 1.15;
+  line-height: 1.18;
   color: #ffffff;
   margin-bottom: 22px;
+}
+
+.hero-lead-text {
+  display: block;
+  color: #FFFFFF;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  font-weight: 850;
+  margin-bottom: 6px;
+}
+
+.hero-school-name {
+  display: block;
+  color: #FFD54F;
+  background: linear-gradient(135deg, #FFF9C4 0%, #FFD54F 40%, #FFA000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.5));
 }
 
 .hero-title .text-gold {
   display: inline;
-  color: #0A225C !important;
-  background: linear-gradient(135deg, #0A225C 0%, #0F3894 40%, #1D5EFF 80%, #60A5FA 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(255, 255, 255, 0.8)) drop-shadow(0 4px 18px rgba(10, 34, 92, 0.45));
-  font-weight: 900;
-  letter-spacing: -0.015em;
+  color: #FFD54F;
 }
 
 .hero-headline-top {
@@ -2266,29 +2279,24 @@ body.offcanvas-open {
 }
 
 @media (max-width: 767px) {
-  .hero-headline-top {
-    font-size: 1.85rem !important;
+  .hero-title {
+    font-size: 1.75rem !important;
     line-height: 1.25 !important;
   }
-  .hero-brand-line-1 {
-    gap: 10px !important;
+  .hero-lead-text {
+    font-size: 1.45rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 8px !important;
   }
-  .hero-official-emblem-img {
-    width: 48px !important;
-    height: auto !important;
-  }
-  .brand-text-hunainath {
-    font-size: 2.3rem !important;
-  }
-  .hero-brand-line-2 {
-    margin-left: 58px !important;
-  }
-  .brand-text-academy {
-    font-size: 1.25rem !important;
-  }
-  .hero-title {
-    font-size: 1.85rem;
-    line-height: 1.2;
+  .hero-school-name {
+    font-size: 1.85rem !important;
+    line-height: 1.2 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    background: linear-gradient(135deg, #FFF9C4 0%, #FFD54F 40%, #FFA000 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5)) !important;
   }
 
   .hero-pill-badge {
