@@ -130,6 +130,14 @@ a:hover {
   color: #F59E0B !important;
 }
 
+/* Hide notification buttons permanently once enabled */
+html.notifications-granted .btn-drawer-notification,
+html.notifications-granted #drawerNotificationBtn,
+html.notifications-granted .notification-promo-card,
+html.notifications-granted #noticePushAlertCard {
+  display: none !important;
+}
+
 /* ==============================================================================
    TOP ANNOUNCEMENT TICKER (Breaking Urgent Notices)
    ============================================================================== */

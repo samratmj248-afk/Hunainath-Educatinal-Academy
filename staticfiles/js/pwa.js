@@ -426,7 +426,16 @@ window.performPushSubscription = async function () {
                 return;
             }
 
-            // Get VAPID public key
+            // Immediately mark document and hide the enable button
+            document.documentElement.classList.add('notifications-granted');
+            document.querySelectorAll('.btn-drawer-notification, #drawerNotificationBtn').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+                el.remove(); // Remove completely from the DOM
+            });
+
+            // Play instant confirmation chime sound
+            unlockAudioPlayback();
+            playNoticeChimeSound();
             const resKey = await fetch('/api/push/vapid-key/');
             const dataKey = await resKey.json();
 
