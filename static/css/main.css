@@ -1077,20 +1077,28 @@ body.offcanvas-open {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 4px;
 }
 
 .hero-brand-line-1 {
   display: inline-flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.hero-vector-emblem {
-  width: 68px;
-  height: 60px;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+.hero-official-emblem-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.hero-official-emblem-img {
+  width: 66px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4));
+  display: block;
 }
 
 .brand-text-hunainath {
@@ -1105,7 +1113,7 @@ body.offcanvas-open {
 
 .hero-brand-line-2 {
   display: block;
-  margin-left: 84px; /* Perfectly aligns with the start of 'Hunainath' text, exactly past the emblem width + gap */
+  margin-left: 80px; /* Perfectly aligns with the start of 'Hunainath' text, exactly past the emblem width + gap */
 }
 
 .brand-text-academy {
@@ -2258,15 +2266,15 @@ body.offcanvas-open {
   .hero-brand-line-1 {
     gap: 10px !important;
   }
-  .hero-vector-emblem {
-    width: 46px !important;
-    height: 40px !important;
+  .hero-official-emblem-img {
+    width: 48px !important;
+    height: auto !important;
   }
   .brand-text-hunainath {
     font-size: 2.3rem !important;
   }
   .hero-brand-line-2 {
-    margin-left: 56px !important;
+    margin-left: 58px !important;
   }
   .brand-text-academy {
     font-size: 1.25rem !important;
