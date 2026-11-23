@@ -1043,15 +1043,17 @@ body.offcanvas-open {
 
 .hero-title {
   font-size: 3.2rem;
-  font-weight: 800;
+  font-weight: 850;
   line-height: 1.15;
   color: #ffffff;
   margin-bottom: 22px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
 }
 
 .hero-title .text-gold {
-  color: #FBBF24;
-  text-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+  color: #FFFFFF !important;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.4) !important;
+  font-weight: 900;
 }
 
 .hero-headline-top {
